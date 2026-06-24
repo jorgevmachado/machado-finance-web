@@ -1,0 +1,68 @@
+{
+  "auth": {
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Bem-vindo de volta! Digite suas credenciais abaixo.",
+      "credentialLabel": "E-mail ou nome de usuário",
+      "credentialPlaceholder": "voce@exemplo.com ou seu_usuario",
+      "passwordLabel": "Senha",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "noAccount": "Não tem uma conta?",
+      "signUp": "Cadastre-se"
+    },
+    "errors": {
+      "invalidCredential": "Digite seu e-mail ou nome de usuário.",
+      "invalidFullName": "Digite seu nome completo.",
+      "invalidBirthDate": "Informe sua data de nascimento.",
+      "invalidGender": "Selecione seu gênero.",
+      "invalidUsername": "Digite um nome de usuário.",
+      "invalidEmail": "Digite um e-mail válido.",
+      "passwordConfirmation": "A confirmação de senha não confere.",
+      "passwordRule": "A senha deve conter pelo menos 7 caracteres, uma letra maiúscula e um caractere especial.",
+      "defaultLogin": "Não foi possível entrar. Tente novamente.",
+      "accessDenied": "Você não tem permissão para acessar esta página."
+    },
+    "register": {
+      "title": "Criar uma conta",
+      "subtitle": "Preencha os dados abaixo para começar.",
+      "successTitle": "Conta criada!",
+      "successAction": "Ir para Entrar",
+      "fullName": "Nome completo",
+      "fullNamePlaceholder": "Ash Ketchum",
+      "email": "E-mail",
+      "emailPlaceholder": "voce@exemplo.com",
+      "username": "Nome de usuário",
+      "usernamePlaceholder": "ash_ketchum",
+      "gender": "Gênero",
+      "genderPlaceholder": "Selecione o gênero",
+      "genderMale": "Masculino",
+      "genderFemale": "Feminino",
+      "genderOther": "Outro",
+      "birthDate": "Data de nascimento",
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha",
+      "submit": "Criar conta",
+      "submitting": "Criando conta...",
+      "haveAccount": "Já tem uma conta?",
+      "signIn": "Entrar"
+    },
+    "messages": {
+      "accountCreated": "Conta criada! Faça login."
+    }
+  },
+  "navigation": {
+    "home": "Início",
+    "title": "Sistema Financeiro",
+    "income": "Receita",
+    "category": "Categoria",
+    "transaction": "Transação",
+    "account": "Conta",
+    "allocation": "Alocação",
+    "contribution": "Contribuição",
+    "sidebar": "Barra lateral",
+    "signOut": "Sair",
+    "subtitle": "Portal Financeiro"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "¡Bienvenido de nuevo! Ingresa tus credenciales abajo.",
+      "credentialLabel": "Correo o nombre de usuario",
+      "credentialPlaceholder": "tu@ejemplo.com o tu_usuario",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión...",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate"
+    },
+    "errors": {
+      "invalidCredential": "Ingresa tu correo o nombre de usuario.",
+      "invalidFullName": "Ingresa tu nombre completo.",
+      "invalidBirthDate": "Indica tu fecha de nacimiento.",
+      "invalidGender": "Selecciona tu género.",
+      "invalidUsername": "Ingresa un nombre de usuario.",
+      "invalidEmail": "Ingresa un correo válido.",
+      "passwordConfirmation": "La confirmación de contraseña no coincide.",
+      "passwordRule": "La contraseña debe tener al menos 7 caracteres, una letra mayúscula y un carácter especial.",
+      "defaultLogin": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+      "accessDenied": "No tienes permiso para acceder a esta página."
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "subtitle": "Completa los datos a continuación para comenzar.",
+      "successTitle": "¡Cuenta creada!",
+      "successAction": "Ir a Iniciar sesión",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ash Ketchum",
+      "email": "Correo",
+      "emailPlaceholder": "tu@ejemplo.com",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "ash_ketchum",
+      "gender": "Género",
+      "genderPlaceholder": "Selecciona género",
+      "genderMale": "Masculino",
+      "genderFemale": "Femenino",
+      "genderOther": "Otro",
+      "birthDate": "Fecha de nacimiento",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "haveAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Iniciar sesión"
+    },
+    "messages": {
+      "accountCreated": "¡Cuenta creada! Inicia sesión."
+    }
+  },
+  "navigation": {
+    "home": "Inicio",
+    "title": "Sistema financiero",
+    "income": "Ingresos",
+    "category": "Categoría",
+    "transaction": "Transacción",
+    "account": "Cuenta",
+    "allocation": "Asignación",
+    "contribution": "Contribution",
+    "sidebar": "Barra lateral",
+    "signOut": "Cerrar sesión",
+    "subtitle": "Portal de finanzas"
+  }
+}

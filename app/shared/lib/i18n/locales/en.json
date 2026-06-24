@@ -1,0 +1,68 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back! Enter your credentials below.",
+      "credentialLabel": "Email or Username",
+      "credentialPlaceholder": "you@example.com or your_username",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "errors": {
+      "invalidCredential": "Please enter your email or username.",
+      "invalidFullName": "Please enter your full name.",
+      "invalidBirthDate": "Please provide your birth date.",
+      "invalidGender": "Please select your gender.",
+      "invalidUsername": "Please enter a username.",
+      "invalidEmail": "Please enter a valid email address.",
+      "passwordConfirmation": "Password confirmation does not match.",
+      "passwordRule": "Password must contain at least 7 characters, one uppercase letter, and one special character.",
+      "defaultLogin": "Unable to sign in. Please try again.",
+      "accessDenied": "You do not have permission to access this page."
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Fill in the details below to get started.",
+      "successTitle": "Account created!",
+      "successAction": "Go to Sign in",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Ash Ketchum",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "username": "Username",
+      "usernamePlaceholder": "ash_ketchum",
+      "gender": "Gender",
+      "genderPlaceholder": "Select gender",
+      "genderMale": "Male",
+      "genderFemale": "Female",
+      "genderOther": "Other",
+      "birthDate": "Date of Birth",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "messages": {
+      "accountCreated": "Account created! Please log in."
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "title": "Finance System",
+    "income": "Income",
+    "category": "Category",
+    "transaction": "Transaction",
+    "account": "Account",
+    "allocation": "Allocation",
+    "contribution": "Contribution",
+    "sidebar": "Sidebar",
+    "signOut": "Sign out",
+    "subtitle": "Finance Portal"
+  }
+}

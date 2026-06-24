@@ -1,0 +1,47 @@
+import { documentCookie ,isBrowser, domain } from './business';
+
+
+class Cookies {
+  public get(key: string): string | undefined {
+    return documentCookie()
+      .split('; ')
+      .find((row) => row.startsWith(`${key}=`))
+      ?.split('=')[1];
+  }
+
+  public set(
+    key: string,
+    value: string,
+    domain: string,
+    expires: number = 365,
+  ) {
+    const date = new Date();
+    date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000);
+    const cookieValue = `${key}=${value}; expires=${date.toUTCString()}; path=/; domain=${domain}`;
+    document.cookie = cookieValue;
+    return document.cookie;
+  }
+
+  public remove(key: string, domain: string) {
+    document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain}`;
+    return document.cookie;
+  }
+  
+  public getAccessToken(): string | undefined {
+    if (isBrowser()) {
+      return this.get('accessToken');
+    }
+    return undefined;
+    
+  }
+
+  public setAccessToken(token: string) {
+    return this.set('accessToken', token, domain());
+  }
+
+  public removeAccessToken() {
+    return this.remove('accessToken', domain());
+  }
+}
+
+export const cookies = new Cookies();

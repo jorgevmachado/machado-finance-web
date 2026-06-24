@@ -1,0 +1,19 @@
+import type { Config } from 'jest';
+import nextJest from 'next/jest.js';
+
+const createJestConfig = nextJest({
+  dir: './',
+});
+
+const customJestConfig: Config = {
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+    '\\.(css|scss)$': 'identity-obj-proxy',
+  },
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/index\\.ts$', '/types\\.ts$', '/constants\\.ts$'],
+};
+
+export default createJestConfig(customJestConfig);
