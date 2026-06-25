@@ -6,10 +6,11 @@ import {
   authService ,
   isStrongPassword ,SignInParams ,SignUpParams ,
 } from '@/app/modules/auth';
-import type { AuthActionState } from '@/app/modules/auth/action-state';
+
 import { clearAuthCookie, setAuthCookie } from '@/app/modules/auth/server';
 
 import { ResponseError, createI18nMessage } from '@/app/shared';
+import { getStringValue ,toErrorState, type ActionState } from '@/app/actions/state';
 
 const INVALID_CREDENTIAL_MESSAGE = createI18nMessage('auth.errors.invalidCredential');
 const INVALID_FULL_NAME_MESSAGE = createI18nMessage('auth.errors.invalidFullName');
@@ -31,19 +32,6 @@ type RegisterUserPayload = {
   confirmPassword: string;
 };
 
-const getStringValue = (formData: FormData, key: string): string => {
-  const value = formData.get(key);
-
-  return typeof value === 'string' ? value.trim() : '';
-};
-
-const toErrorState = (message: string): AuthActionState => {
-  return {
-    status: 'error',
-    message,
-  };
-};
-
 const readLoginPayload = (formData: FormData): SignInParams => {
   return {
     credential: getStringValue(formData, 'credential'),
@@ -63,7 +51,7 @@ const readRegisterPayload = (formData: FormData): RegisterUserPayload => {
   };
 };
 
-const validateLoginPayload = ({ credential, password }: SignInParams): AuthActionState | null => {
+const validateLoginPayload = ({ credential, password }: SignInParams): ActionState | null => {
   if (!credential || credential.length === 0) {
     return toErrorState(INVALID_CREDENTIAL_MESSAGE);
   }
@@ -83,7 +71,7 @@ const validateRegisterPayload = ({
   gender,
   password,
   confirmPassword,
-}: RegisterUserPayload): AuthActionState | null => {
+}: RegisterUserPayload): ActionState | null => {
   if (!fullName || fullName.length < 3) {
     return toErrorState(INVALID_FULL_NAME_MESSAGE);
   }
@@ -115,14 +103,14 @@ const validateRegisterPayload = ({
   return null;
 };
 
-const mapLoginError = (error: unknown): AuthActionState => {
+const mapLoginError = (error: unknown): ActionState => {
   const responseError = error as ResponseError | undefined;
   const message = responseError?.message || DEFAULT_LOGIN_ERROR_MESSAGE;
 
   return toErrorState(message);
 };
 
-export async function loginAction(_: AuthActionState, formData: FormData): Promise<AuthActionState> {
+export async function loginAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const credentials = readLoginPayload(formData);
   const validationError = validateLoginPayload(credentials);
 
@@ -142,7 +130,7 @@ export async function loginAction(_: AuthActionState, formData: FormData): Promi
   redirect('/home');
 }
 
-export async function registerAction(_: AuthActionState, formData: FormData): Promise<AuthActionState> {
+export async function registerAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const payload = readRegisterPayload(formData);
   const validationError = validateRegisterPayload(payload);
 

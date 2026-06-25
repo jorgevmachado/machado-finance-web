@@ -1,3 +1,4 @@
 export { categoryBusiness } from './business';
+export { PersistCategory } from './components'; 
 export { CategoryService } from './service';
-export type { TCategory ,TCategoryFilter ,TCategoryType } from './types';
+export type { TCategory ,TCategoryCreate,TCategoryFilter ,TCategoryType, TCategoryUpdate } from './types';

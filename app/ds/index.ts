@@ -52,6 +52,10 @@ export {
   useLoading,
 } from './loading';
 export {
+  default as Modal,
+  useModal,
+} from './modal';
+export {
   buildVisiblePages,
   clampPage,
   default as Pagination,

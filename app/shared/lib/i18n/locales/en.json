@@ -1,4 +1,20 @@
 {
+  "form": {
+    "save": "Save",
+    "edit": "Edit",
+    "view": "View",
+    "create": "Create",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "nameLabel": "Name",
+    "typeLabel": "Type",
+    "submitting": "Submitting",
+    "namePlaceholder": "Enter name",
+    "typePlaceholder": "Select a type",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Enter description"
+  },
   "auth": {
     "login": {
       "title": "Sign in",
@@ -81,5 +97,28 @@
     "sidebar": "Sidebar",
     "signOut": "Sign out",
     "subtitle": "Finance Portal"
+  },
+  "category": {
+    "form": {
+      "subtitle": "Fill out the data to save the category.",
+      "typeHelper": "Choose the type that best describes this category."
+    },
+    "create": {
+      "title": "Create Category"
+    },
+    "edit": {
+      "title": "Edit Category {{name}}"
+    },
+    "types": {
+      "FOOD": "Food",
+      "OTHER": "Other",
+      "STUDIES": "Studies",
+      "UTILITY": "Utility",
+      "HEALTH": "Health",
+      "PERSONAL": "Personal",
+      "TRANSPORT": "Transport",
+      "ENTERTAINMENT": "Entertainment",
+      "GOVERNMENT_FEES": "Government Fees"
+    }
   }
 }

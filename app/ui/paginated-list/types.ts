@@ -24,11 +24,17 @@ export type PaginatedListState<TItem> = {
   errorMessage?: string;
 };
 
+export type PaginatedAction= {
+  label: string;
+  onClick: (item: unknown) => void;
+}
+
 export type PaginatedListProps<TItem, TFilters> = {
   meta: TPaginatedListResponse<TItem>['meta'];
   title?: string;
-  subtitle?: string;
   domain: string;
+  action?: PaginatedAction;
+  subtitle?: string;
   goToPage?: (page: number) => void;
   children?: React.ReactNode;
   isLoading?: boolean;

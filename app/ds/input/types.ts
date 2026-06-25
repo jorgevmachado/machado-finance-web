@@ -5,6 +5,7 @@ export type InputVariant = 'outline' | 'filled' | 'ghost';
 export type InputSize = 'sm' | 'md' | 'lg';
 
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> & {
+  label?: string;
   variant?: InputVariant;
   size?: InputSize;
   isInvalid?: boolean;

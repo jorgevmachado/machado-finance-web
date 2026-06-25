@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Badge ,Card ,Filters ,Pagination ,Text } from '@/app/ds';
+import { Badge ,Button ,Card ,Filters ,Pagination ,Text } from '@/app/ds';
 
 import { useAppTranslation } from '@/app/shared';
 
@@ -10,6 +10,7 @@ export default function PaginatedList<TItem ,TFilters>({
   meta ,
   title,
   domain ,
+  action,
   subtitle,
   goToPage ,
   children ,
@@ -28,18 +29,26 @@ export default function PaginatedList<TItem ,TFilters>({
           <div>
             { title && (
               <Text as="h1" className="text-3xl font-bold text-slate-950 sm:text-4xl">
-                { t( title ) }
+                { title }
               </Text>
             )}
             { subtitle && (
               <Text className="mt-1 max-w-2xl text-sm text-slate-600 sm:text-base">
-                { t(subtitle) }
+                { subtitle }
               </Text>
             ) }
           </div>
-          <Badge tone="info" variant="soft" size="lg">
-            { t('pagination.recordCount' ,{ count: meta.total }) }
-          </Badge>
+          <div>
+            <Badge tone="info" variant="soft" size="lg">
+              { t('pagination.recordCount' ,{ count: meta.total }) }
+            </Badge>
+            { action && (
+              <Button type="button" onClick={ () => action.onClick({}) } appearance="solid" tone="primary">
+                { action.label }
+              </Button>
+            )}
+          </div>
+
         </header>
         { inputFilters && inputFilters.length > 0 && (
           <Filters

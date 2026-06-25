@@ -7,6 +7,7 @@ import { MdClose } from 'react-icons/md';
 import { joinClass } from '@/app/utils';
 
 import { type InputProps, type InputSize, type InputVariant } from './types';
+import { Text } from '@/app/ds';
 
 const VARIANT_CLASS_MAP: Record<InputVariant, string> = {
   outline: 'border border-slate-200 bg-white text-slate-700 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100',
@@ -21,6 +22,7 @@ const SIZE_CLASS_MAP: Record<InputSize, string> = {
 };
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(({
+  label,
   variant = 'outline',
   size = 'md',
   isInvalid = false,
@@ -79,68 +81,83 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   const shouldShowClearButton = showClearButton && hasValue && !isLoading && !disabled && !readOnly;
 
   return (
-    <div className={joinClass([fullWidth && 'w-full', containerClassName])}>
-      <div className={wrapperClassName}>
-        {leadingIcon ? (
-          <span aria-hidden='true' className='inline-flex shrink-0 text-slate-500'>
-            {leadingIcon}
-          </span>
-        ) : null}
+    <div>
+      <label className="flex flex-col gap-1.5">
+        { label && (
+          <Text
+            size="xs"
+            color="text-slate-600"
+            weight="semibold"
+            tracking="wide"
+            className="uppercase">
+            { label }
+          </Text>
+        )}
+        <div className={joinClass([fullWidth && 'w-full', containerClassName])}>
+          <div className={wrapperClassName}>
+            {leadingIcon ? (
+              <span aria-hidden='true' className='inline-flex shrink-0 text-slate-500'>
+                {leadingIcon}
+              </span>
+            ) : null}
 
-        <input
-          {...inputProps}
-          ref={ref}
-          value={value}
-          disabled={disabled}
-          readOnly={readOnly}
-          placeholder={resolvedPlaceholder}
-          aria-invalid={isInvalid || undefined}
-          aria-busy={isLoading || undefined}
-          className={joinClass([
-            'w-full bg-transparent outline-none placeholder:text-slate-400',
-            'disabled:cursor-not-allowed',
-            className,
-          ])}
-          onChange={handleChange}
-        />
+            <input
+              {...inputProps}
+              ref={ref}
+              value={value}
+              disabled={disabled}
+              readOnly={readOnly}
+              placeholder={resolvedPlaceholder}
+              aria-invalid={isInvalid || undefined}
+              aria-busy={isLoading || undefined}
+              className={joinClass([
+                'w-full bg-transparent outline-none placeholder:text-slate-400',
+                'disabled:cursor-not-allowed',
+                className,
+              ])}
+              onChange={handleChange}
+            />
 
-        {isLoading ? (
-          <span
-            aria-hidden='true'
-            className='inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-400 border-t-transparent'
-          />
-        ) : null}
+            {isLoading ? (
+              <span
+                aria-hidden='true'
+                className='inline-block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-slate-400 border-t-transparent'
+              />
+            ) : null}
 
-        {shouldShowClearButton ? (
-          <button
-            type='button'
-            aria-label={clearButtonAriaLabel}
-            onClick={handleClear}
-            className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700'
-          >
-            <MdClose size={16} aria-hidden='true' />
-          </button>
-        ) : null}
+            {shouldShowClearButton ? (
+              <button
+                type='button'
+                aria-label={clearButtonAriaLabel}
+                onClick={handleClear}
+                className='inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-700'
+              >
+                <MdClose size={16} aria-hidden='true' />
+              </button>
+            ) : null}
 
-        {!isLoading && !shouldShowClearButton && trailingIcon ? (
-          <span aria-hidden='true' className='inline-flex shrink-0 text-slate-500'>
-            {trailingIcon}
-          </span>
-        ) : null}
-      </div>
+            {!isLoading && !shouldShowClearButton && trailingIcon ? (
+              <span aria-hidden='true' className='inline-flex shrink-0 text-slate-500'>
+                {trailingIcon}
+              </span>
+            ) : null}
+          </div>
 
-      {errorMessage ? (
-        <p className={joinClass(['mt-1 text-xs font-medium text-red-600', helperClassName])} role='alert'>
-          {errorMessage}
-        </p>
-      ) : null}
+          {errorMessage ? (
+            <p className={joinClass(['mt-1 text-xs font-medium text-red-600', helperClassName])} role='alert'>
+              {errorMessage}
+            </p>
+          ) : null}
 
-      {!errorMessage && helperText ? (
-        <p className={joinClass(['mt-1 text-xs text-slate-500', helperClassName])}>
-          {helperText}
-        </p>
-      ) : null}
+          {!errorMessage && helperText ? (
+            <p className={joinClass(['mt-1 text-xs text-slate-500', helperClassName])}>
+              {helperText}
+            </p>
+          ) : null}
+        </div>
+      </label>
     </div>
+
   );
 });
 

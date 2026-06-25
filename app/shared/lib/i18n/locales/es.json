@@ -1,4 +1,20 @@
 {
+  "form": {
+    "save": "Guardar",
+    "edit": "Editar",
+    "view": "Ver",
+    "create": "Crear",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "nameLabel": "Nombre",
+    "typeLabel": "Tipo",
+    "submitting": "Enviando",
+    "namePlaceholder": "Ingresar nombre",
+    "typePlaceholder": "Selecciona un tipo",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Ingresar descripción"
+  },
   "auth": {
     "login": {
       "title": "Iniciar sesión",
@@ -81,5 +97,28 @@
     "sidebar": "Barra lateral",
     "signOut": "Cerrar sesión",
     "subtitle": "Portal de finanzas"
+  },
+  "category": {
+    "form": {
+      "subtitle": "Completa los datos para guardar la categoría.",
+      "typeHelper": "Elige el tipo que mejor describe esta categoría."
+    },
+    "create": {
+      "title": "Crear categoría"
+    },
+    "edit": {
+      "title": "Editar categoría {{name}}"
+    },
+    "types": {
+      "FOOD": "Alimentación",
+      "OTHER": "Otros",
+      "STUDIES": "Estudios",
+      "UTILITY": "Servicios",
+      "HEALTH": "Salud",
+      "PERSONAL": "Personal",
+      "TRANSPORT": "Transporte",
+      "ENTERTAINMENT": "Entretenimiento",
+      "GOVERNMENT_FEES": "Tasas gubernamentales"
+    }
   }
 }

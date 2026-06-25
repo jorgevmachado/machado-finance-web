@@ -1,6 +1,11 @@
 import { BaseServiceAbstract } from '@/app/shared';
-import { TPaginatedListResponse } from '@/app/ds';
-import { TCategory ,TCategoryFilter } from '../types';
+import { TPaginatedListResponse } from '@/app/ui';
+import type {
+  TCategory ,
+  TCategoryCreate ,
+  TCategoryFilter ,
+  TCategoryUpdate,
+} from '../types';
 
 export class CategoryService extends BaseServiceAbstract {
   constructor(baseUrl: string ,token?: string) {
@@ -13,5 +18,13 @@ export class CategoryService extends BaseServiceAbstract {
 
   public async detail(identifier: string): Promise<TCategory> {
     return await this.get<TCategory>(`${this.pathUrl}/${identifier}`);
+  }
+
+  public async create(payload: TCategoryCreate): Promise<TCategory> {
+    return await this.post<TCategoryCreate, TCategory>(this.pathUrl ,{ body: payload });
+  }
+
+  public async update(param: string, payload: TCategoryUpdate): Promise<TCategory> {
+    return await this.path<TCategoryUpdate, TCategory>(`${this.pathUrl}/${param}` ,{ body: payload });
   }
 }

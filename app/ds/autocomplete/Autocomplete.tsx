@@ -12,6 +12,7 @@ const DEFAULT_MAX_OPTIONS = 8;
 const Autocomplete = ({
   name,
   value,
+  label,
   options,
   onValueChange,
   onSelectOption,
@@ -89,6 +90,7 @@ const Autocomplete = ({
         type='text'
         role='combobox'
         name={name}
+        label={label}
         value={inputValue}
         isLoading={isLoading}
         placeholder={resolvedPlaceholder}

@@ -1,9 +1,9 @@
 'use client';
 import { useAppTranslation } from '@/app/shared';
-import { FiltersProps ,Table ,useAlert } from '@/app/ds';
+import { FiltersProps ,Table ,useAlert ,useModal } from '@/app/ds';
 import { useMemo } from 'react';
 import { TCategory ,TCategoryFilter } from '@/app/modules';
-import { categoryBusiness } from '@/app/modules/finance';
+import { categoryBusiness ,PersistCategory } from '@/app/modules/finance';
 import { useRouter } from 'next/navigation';
 
 
@@ -13,8 +13,9 @@ import PaginatedList from '../../ui/paginated-list/PaginatedList';
 export default function CategoryPage() {
 
   const { t } = useAppTranslation();
-  const { showAlert } = useAlert();
   const router = useRouter();
+  const { showAlert } = useAlert();
+  const { openModal ,modal ,closeModal } = useModal();
 
 
   const initialInputFilters = useMemo<FiltersProps['filters']>(() => [
@@ -38,6 +39,7 @@ export default function CategoryPage() {
     meta,
     items,
     goToPage,
+    reload,
     isLoading,
     inputFilters,
     clearInputFilters,
@@ -50,11 +52,22 @@ export default function CategoryPage() {
   });
 
   const handleView = (id: string) => router.push(`/category/${id}`);
-  const handleEdit = (id: string) => router.push(`/category/${id}/edit`);
   const handleDelete = (id: string) => {
     showAlert({
       type: 'warning',
       message: `Ação de excluir categoria ${id} ainda não implementada.`,
+    });
+  };
+
+  const handlePersistModal = (item?: TCategory) => {
+    const handleReload = () => {
+      clearInputFilters();
+      void reload();
+      closeModal();
+    };
+    openModal({
+      title: item ? t('category.edit.title', { name: item.name }) : t('category.create.title'),
+      body: <PersistCategory category={item} onClose={handleReload} />,
     });
   };
   
@@ -62,13 +75,17 @@ export default function CategoryPage() {
     <PaginatedList
       meta={meta}
       domain="category"
+      action={{
+        label: t('form.create'),
+        onClick: () => handlePersistModal() ,
+      }}
       goToPage={goToPage}
       isLoading={isLoading}
       totalItems={items?.length}
       inputFilters={inputFilters}
       clearInputFilters={clearInputFilters}
       applyInputFilters={applyInputFilters}>
-
+      {modal}
       <Table
         items={items}
         headers={[
@@ -98,7 +115,7 @@ export default function CategoryPage() {
           } ,
           edit: {
             label: 'Edit' ,
-            onClick: (item) => handleEdit((item as TCategory).id) ,
+            onClick: (item) => handlePersistModal((item as TCategory)) ,
           } ,
           delete: {
             label: 'Delete' ,

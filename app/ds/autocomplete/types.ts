@@ -16,6 +16,7 @@ export type AutocompleteProps = Readonly<Omit<
 > & {
   name: string;
   value: string;
+  label?: string;
   options: ReadonlyArray<AutocompleteOption>;
   onValueChange?: (value: string) => void;
   onSelectOption?: (option: AutocompleteOption) => void;
