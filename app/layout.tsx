@@ -3,8 +3,9 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import './globals.css';
-import { getAuthenticatedUserBootstrap, getServerSession } from '@/app/shared/lib/auth/server';
-import { I18nProvider, UserProvider } from '@/app/shared';
+import { getAuthenticatedUserBootstrap, getServerSession } from '@/app/modules/auth/server';
+import { I18nProvider } from '@/app/shared';
+import { UserProvider } from '@/app/modules';
 import { AlertProvider ,BreadcrumbProvider ,LoadingProvider } from '@/app/ds';
 import { NavigationFrame } from '@/app/ui';
 

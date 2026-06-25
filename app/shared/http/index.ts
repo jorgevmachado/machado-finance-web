@@ -1,3 +1,3 @@
-export { getBaseUrl } from './business';
+export { buildQueryString,getBaseUrl } from './business';
 export { Http } from './http';
-export type { RequestConfig, ResponseError } from './types';
+export type { RequestConfig, ResponseError, TBffResponse } from './types';

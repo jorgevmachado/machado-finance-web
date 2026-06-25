@@ -1,7 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 
-import { getServerSession } from '@/app/shared/lib/auth/server';
+import { getServerSession } from '@/app/modules/auth/server';
 
 type ProtectedLayoutProps = {
   children: React.ReactNode;

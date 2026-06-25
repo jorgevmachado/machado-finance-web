@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation';
 import {
   authService ,
   isStrongPassword ,SignInParams ,SignUpParams ,
-} from '@/app/shared/lib/auth';
-import type { AuthActionState } from '@/app/shared/lib/auth/action-state';
-import { clearAuthCookie, setAuthCookie } from '@/app/shared/lib/auth/server';
+} from '@/app/modules/auth';
+import type { AuthActionState } from '@/app/modules/auth/action-state';
+import { clearAuthCookie, setAuthCookie } from '@/app/modules/auth/server';
 
 import { ResponseError, createI18nMessage } from '@/app/shared';
 

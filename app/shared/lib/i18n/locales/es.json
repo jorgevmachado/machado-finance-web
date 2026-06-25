@@ -52,6 +52,23 @@
       "accountCreated": "¡Cuenta creada! Inicia sesión."
     }
   },
+  "filters": {
+    "apply": "Aplicar filtros",
+    "clear": "Limpiar filtros",
+    "noOptions": "No se encontraron opciones.",
+    "name": "Nombre",
+    "order": "Orden",
+    "type": "Tipo",
+    "status": "Estado"
+  },
+  "pagination": {
+    "ariaLabel": "Paginación",
+    "goToPage": "Ir a la página {{page}}",
+    "previous": "Ir a la página anterior",
+    "next": "Ir a la página siguiente",
+    "recordCount": "{{count}} registros",
+    "recordCount_one": "{{count}} registro"
+  },
   "navigation": {
     "home": "Inicio",
     "title": "Sistema financiero",

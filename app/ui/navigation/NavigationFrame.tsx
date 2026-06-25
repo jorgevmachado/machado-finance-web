@@ -2,7 +2,8 @@
 
 import React ,{ useCallback ,useState } from 'react';
 
-import { RoleEnum ,useAppTranslation ,useUser } from '@/app/shared';
+import { useAppTranslation } from '@/app/shared';
+import { RoleEnum, useUser } from '@/app/modules';
 import { usePathname ,useRouter } from 'next/navigation';
 
 import { getAuthenticatedMenuItems } from './business';

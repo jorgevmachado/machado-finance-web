@@ -52,6 +52,23 @@
       "accountCreated": "Account created! Please log in."
     }
   },
+  "filters": {
+    "apply": "Apply filters",
+    "clear": "Clear filters",
+    "noOptions": "No options found.",
+    "name": "Name",
+    "order": "Order",
+    "type": "Type",
+    "status": "Status"
+  },
+  "pagination": {
+    "ariaLabel": "Pagination",
+    "goToPage": "Go to page {{page}}",
+    "previous": "Go to previous page",
+    "next": "Go to next page",
+    "recordCount": "{{count}} records",
+    "recordCount_one": "{{count}} record"
+  },
   "navigation": {
     "home": "Home",
     "title": "Finance System",

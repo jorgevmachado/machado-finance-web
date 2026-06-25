@@ -1,0 +1,1 @@
+export type { TIncome, TIncomeFilter } from './types';

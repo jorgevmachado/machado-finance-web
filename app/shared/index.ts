@@ -6,6 +6,6 @@ export {
   type ColorValue,
   useColor } from './color';
 export * from './cookies';
-export { getBaseUrl, Http, type RequestConfig, type ResponseError } from './http';
+export { buildQueryString, getBaseUrl, Http, type RequestConfig, type ResponseError, type TBffResponse } from './http';
 export * from './lib';
 export * from './service';

@@ -1,4 +1,4 @@
-import { getServerSession } from '@/app/shared/lib/auth/server';
+import { getServerSession } from '@/app/modules/auth/server';
 import { redirect } from 'next/navigation';
 
 export default async function RootPage() {

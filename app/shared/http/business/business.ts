@@ -18,3 +18,20 @@ export function serialize_url(value?: Record<string, unknown>): string | undefin
 
   return new URLSearchParams(value as Record<string, string>).toString();
 }
+
+export function buildQueryString<TFilters>(filters: TFilters,page?: number, limit?: number): string  {
+  const params = new URLSearchParams( page ? {
+    page: String(page),
+    limit: String(limit),
+  } : {});
+
+  Object.entries(filters as Record<string, string | undefined>).forEach(([key, value]) => {
+    if (!value) {
+      return;
+    }
+
+    params.set(key, value);
+  });
+
+  return params.toString();
+}

@@ -1,4 +1,5 @@
 export { default as joinClass } from './join-class';
+export { currencyFormatter } from './money';
 export {
   BACKGROUND_COLOR_CLASS_MAP ,
   BORDER_COLOR_CLASS_MAP,

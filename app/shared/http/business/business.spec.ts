@@ -1,7 +1,8 @@
 import {
-  formatUrl,
-  getBaseUrl,
-  serialize_url,
+  buildQueryString ,
+  formatUrl ,
+  getBaseUrl ,
+  serialize_url ,
 } from './business';
 
 describe('url utils', () => {
@@ -40,6 +41,13 @@ describe('url utils', () => {
     it('serializes params only when keys exist', () => {
       expect(serialize_url({ name: 'john', page: '1' })).toBe('name=john&page=1');
       expect(serialize_url({})).toBeUndefined();
+    });
+  });
+  
+  describe('buildQueryString', () => {
+    it('builds query strings', () => {
+      expect(buildQueryString({ name: 'john', status: undefined }, 2, 10)).toBe('page=2&limit=10&name=john');
+      expect(buildQueryString({ name: 'john' })).toBe('name=john');
     });
   });
 });

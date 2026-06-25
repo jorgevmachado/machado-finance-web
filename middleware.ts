@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { AUTH_COOKIE_NAME } from '@/app/shared/lib/auth/constants';
+import { AUTH_COOKIE_NAME } from '@/app/modules/auth/constants';
 
 type RoleEnum = 'USER' | 'ADMIN';
 
