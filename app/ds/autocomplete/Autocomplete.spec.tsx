@@ -362,6 +362,39 @@ describe('<Autocomplete />', () => {
     expect(onValueChange).toHaveBeenCalledWith('water');
   });
 
+  it('shows label in input while keeping selected value in callback', () => {
+    const onValueChange = jest.fn();
+    const onSelectOption = jest.fn();
+
+    const ControlledAutocomplete = () => {
+      const [value, setValue] = React.useState('');
+
+      return (
+        <Autocomplete
+          name='type'
+          value={value}
+          options={OPTIONS}
+          onSelectOption={onSelectOption}
+          onValueChange={(nextValue) => {
+            setValue(nextValue);
+            onValueChange(nextValue);
+          }}
+        />
+      );
+    };
+
+    render(<ControlledAutocomplete />);
+
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'fi' } });
+    fireEvent.mouseDown(screen.getByText('Fire Type'));
+
+    expect(onSelectOption).toHaveBeenCalledWith({ key: 'fire', value: 'fire', label: 'Fire Type' });
+    expect(onValueChange).toHaveBeenLastCalledWith('fire');
+    expect(screen.getByRole('combobox')).toHaveValue('Fire Type');
+  });
+
   it('displays option.label when available', () => {
     render(
       <Autocomplete
@@ -412,4 +445,3 @@ describe('<Autocomplete />', () => {
     expect(screen.getByText('water')).toBeInTheDocument();
   });
 });
-

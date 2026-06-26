@@ -9,6 +9,12 @@ import { type AutocompleteOption, type AutocompleteProps } from './types';
 
 const DEFAULT_MAX_OPTIONS = 8;
 
+const resolveDisplayValue = (optionValue: string, options: ReadonlyArray<AutocompleteOption>): string => {
+  const selectedOption = options.find((option) => option.value === optionValue);
+
+  return selectedOption?.label ?? optionValue;
+};
+
 const Autocomplete = ({
   name,
   value,
@@ -35,13 +41,13 @@ const Autocomplete = ({
 
   useLayoutEffect(() => {
     const timeoutId = globalThis.setTimeout(() => {
-      setInputValue(value);
+      setInputValue(resolveDisplayValue(value, options));
     }, 0);
 
     return () => {
       globalThis.clearTimeout(timeoutId);
     };
-  }, [value]);
+  }, [options, value]);
 
   const normalizedQuery = useMemo(() => {
     return inputValue.trim().toLowerCase();
@@ -76,7 +82,7 @@ const Autocomplete = ({
   }, [isLoading, loadingPlaceholder, name, placeholder]);
 
   const selectOption = (option: AutocompleteOption): void => {
-    setInputValue(option.value);
+    setInputValue(option.label ?? option.value);
     onValueChange?.(option.value);
     onSelectOption?.(option);
     setIsOptionsOpen(false);

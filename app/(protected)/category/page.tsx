@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { DeleteEntity ,usePaginatedList } from '@/app/ui';
 import PaginatedList from '../../ui/paginated-list/PaginatedList';
 import { ActionState } from '@/app/actions/state';
+import { CATEGORY_TYPES } from '@/app/modules/finance/category';
 
 export default function CategoryPage() {
 
@@ -30,8 +31,13 @@ export default function CategoryPage() {
     {
       name: 'type' ,
       label: t('filters.type') ,
-      type: 'text' ,
+      type: 'autocomplete' ,
       value: '' ,
+      options: CATEGORY_TYPES.map((type) => ({
+        key: type,
+        value: type,
+        label: t(`category.types.${type}`)
+      })),
       placeholder: 'Category Type' ,
     } ,
   ] ,[t]);
@@ -97,22 +103,20 @@ export default function CategoryPage() {
       applyInputFilters={applyInputFilters}>
       {modal}
       <Table
-        items={items}
+        items={items?.map((item) => ({
+          ...item,
+          type: t(`category.types.${item.type}`),
+        }))}
         headers={[
           {
-            value: 'id' ,
-            label: 'ID' ,
-            align: 'left'
-          } ,
-          {
             value: 'name' ,
-            label: 'Name' ,
+            label: t('filters.name') ,
             align: 'left' ,
             sortable: true ,
           },
           {
             value: 'type' ,
-            label: 'Type' ,
+            label: t('filters.type') ,
             align: 'left' ,
             sortable: true ,
           }

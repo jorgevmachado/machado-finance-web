@@ -19,4 +19,5 @@ export type FiltersProps = {
 export type FilterOption = {
   key: string;
   value: string;
+  label?: string;
 }
