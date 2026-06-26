@@ -1,4 +1,4 @@
-import { BaseServiceAbstract } from '@/app/shared';
+import { BaseServiceAbstract ,MessageResponse } from '@/app/shared';
 import { TPaginatedListResponse } from '@/app/ui';
 import type {
   TCategory ,
@@ -26,5 +26,9 @@ export class CategoryService extends BaseServiceAbstract {
 
   public async update(param: string, payload: TCategoryUpdate): Promise<TCategory> {
     return await this.path<TCategoryUpdate, TCategory>(`${this.pathUrl}/${param}` ,{ body: payload });
+  }
+
+  public async delete(param: string): Promise<MessageResponse> {
+    return await this.remove<MessageResponse>(`${this.pathUrl}/${param}`);
   }
 }

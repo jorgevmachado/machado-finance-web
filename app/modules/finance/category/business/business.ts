@@ -1,4 +1,5 @@
 import { type TCategoryFilter } from '@/app/modules/finance';
+import { ActionState } from '@/app/actions/state';
 
 export class CategoryBusiness {
   public INITIAL_FILTERS: TCategoryFilter = {
@@ -11,5 +12,9 @@ export class CategoryBusiness {
       name: filters.name?.trim() || undefined,
       type: filters.type || undefined,
     };
+  }
+
+  public getResponseMessage(actionState: ActionState) {
+    return `category.${actionState.status}.${actionState.type}`;
   }
 } 

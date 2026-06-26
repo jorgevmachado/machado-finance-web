@@ -104,10 +104,19 @@
       "typeHelper": "Choose the type that best describes this category."
     },
     "create": {
-      "title": "Create Category"
+      "title": "Create Category",
+      "success": "Category created successfully.",
+      "error": "An error occurred while creating the category."
     },
     "edit": {
-      "title": "Edit Category {{name}}"
+      "title": "Edit Category {{name}}",
+      "success": "Category edited successfully.",
+      "error": "An error occurred while editing the category."
+    },
+    "delete": {
+      "title": "Do you want to delete this category ?",
+      "success": "Category deleted successfully.",
+      "error": "An error occurred while deleting the category."
     },
     "types": {
       "FOOD": "Food",

@@ -25,3 +25,7 @@ export type TBffResponse = {
   message: string;
   i18nMessage: string;
 };
+
+export type MessageResponse = {
+  message: string;
+}

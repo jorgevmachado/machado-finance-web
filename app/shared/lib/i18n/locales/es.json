@@ -104,10 +104,19 @@
       "typeHelper": "Elige el tipo que mejor describe esta categoría."
     },
     "create": {
-      "title": "Crear categoría"
+      "title": "Crear categoría",
+      "success": "Categoría creada con éxito.",
+      "error": "Ocurrió un error al crear la categoría."
     },
     "edit": {
-      "title": "Editar categoría {{name}}"
+      "title": "Editar categoría {{name}}",
+      "success": "Categoría editada con éxito.",
+      "error": "Ocurrió un error al editar la categoría."
+    },
+    "delete": {
+      "title": "¿Quieres eliminar esta categoría?",
+      "success": "Categoría eliminada con éxito.",
+      "error": "Ocurrió un error al eliminar la categoría."
     },
     "types": {
       "FOOD": "Alimentación",

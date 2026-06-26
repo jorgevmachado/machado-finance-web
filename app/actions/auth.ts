@@ -151,6 +151,7 @@ export async function registerAction(_: ActionState, formData: FormData): Promis
   }
 
   return {
+    type: 'auth',
     status: 'success',
     message: createI18nMessage('auth.messages.accountCreated'),
   };

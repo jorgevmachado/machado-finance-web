@@ -7,8 +7,9 @@ import { categoryBusiness ,PersistCategory } from '@/app/modules/finance';
 import { useRouter } from 'next/navigation';
 
 
-import { usePaginatedList } from '@/app/ui';
+import { DeleteEntity ,usePaginatedList } from '@/app/ui';
 import PaginatedList from '../../ui/paginated-list/PaginatedList';
+import { ActionState } from '@/app/actions/state';
 
 export default function CategoryPage() {
 
@@ -52,22 +53,31 @@ export default function CategoryPage() {
   });
 
   const handleView = (id: string) => router.push(`/category/${id}`);
-  const handleDelete = (id: string) => {
-    showAlert({
-      type: 'warning',
-      message: `Ação de excluir categoria ${id} ainda não implementada.`,
-    });
+
+  const handleCloseModal = (actionState: ActionState) => {
+    if (actionState.status !== 'cancel') {
+      const message = categoryBusiness.getResponseMessage(actionState);
+      showAlert({
+        type: actionState.status === 'success' ? 'success' : 'error',
+        message: t(message)
+      });
+      clearInputFilters();
+      void reload();
+    }
+    closeModal();
   };
 
   const handlePersistModal = (item?: TCategory) => {
-    const handleReload = () => {
-      clearInputFilters();
-      void reload();
-      closeModal();
-    };
     openModal({
       title: item ? t('category.edit.title', { name: item.name }) : t('category.create.title'),
-      body: <PersistCategory category={item} onClose={handleReload} />,
+      body: <PersistCategory category={item} onClose={handleCloseModal} />,
+    });
+  };
+  
+  const handleDeleteModal = (id: string) => {
+    openModal({
+      title: t('category.delete.title'),
+      body: <DeleteEntity identifier={id} onClose={handleCloseModal} endpoint="/finance/category" />,
     });
   };
   
@@ -119,7 +129,7 @@ export default function CategoryPage() {
           } ,
           delete: {
             label: 'Delete' ,
-            onClick: (item) => handleDelete((item as TCategory).id) ,
+            onClick: (item) => handleDeleteModal((item as TCategory).id) ,
           } ,
         }}
       />

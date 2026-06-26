@@ -4,13 +4,13 @@ import type { TCategory ,TCategoryType } from '../../types';
 import React ,{ useActionState ,useEffect } from 'react';
 
 import { persistCategoryAction } from '@/app/actions/category';
-import { INITIAL_ACTION_STATE } from '@/app/actions/state';
+import { ActionState ,INITIAL_ACTION_STATE } from '@/app/actions/state';
 import { translateI18nMessage ,useAppTranslation } from '@/app/shared';
 import { Button ,Card ,Input ,Text } from '@/app/ds';
 
 type PersistCategoryProps = {
   category?: TCategory;
-  onClose: (type?: 'submitted' | 'canceled') => void;
+  onClose: (actionState: ActionState) => void;
 }
 
 type DraftCategory = {
@@ -53,8 +53,9 @@ export default function PersistCategory({ category, onClose }: PersistCategoryPr
   };
   
   useEffect(() => {
-    if (state.status === 'success') {
-      onClose('submitted');
+    if (state.status !== 'idle') {
+      onClose({ type: state.type,  status: state.status, message: state.message });
+      return;
     }
   } ,[onClose, state]);
 
@@ -133,7 +134,7 @@ export default function PersistCategory({ category, onClose }: PersistCategoryPr
             type="button"
             appearance="outline"
             tone="neutral"
-            onClick={() => onClose('canceled')}
+            onClick={() => onClose({ status: 'cancel', type: state.type, message: state.message })}
             disabled={isPending}
           >
             {t('form.cancel')}

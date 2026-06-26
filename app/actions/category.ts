@@ -56,7 +56,7 @@ const readUpdatePayload = (formData: FormData, category: TCategory): TCategoryUp
 
 
 const validateCreatePayload = ({ name, type, description }: TCategoryCreate): ActionState | null => {
-  if (!name || name.length < 3) {
+  if (!name || name.length < 3 || name.length > 40) {
     return toErrorState(INVALID_NAME_MESSAGE);
   }
 
@@ -64,7 +64,7 @@ const validateCreatePayload = ({ name, type, description }: TCategoryCreate): Ac
     return toErrorState(INVALID_TYPE_MESSAGE);
   }
   
-  if (!description || description.length < 3){
+  if (!description || description.length < 3 || description.length > 200){
     return toErrorState(INVALID_DESCRIPTION_MESSAGE);
   }
 
@@ -72,11 +72,11 @@ const validateCreatePayload = ({ name, type, description }: TCategoryCreate): Ac
 };
 
 const validateUpdatePayload = ({ name, description }: TCategoryUpdate): ActionState | null => {
-  if (name && name.length < 3) {
+  if (name && (name.length < 3  || name.length > 40)) {
     return toErrorState(INVALID_NAME_MESSAGE);
   }
 
-  if (description && description.length < 3){
+  if (description && (description.length < 3 || description.length > 200)){
     return toErrorState(INVALID_DESCRIPTION_MESSAGE);
   }
   return null;
@@ -117,6 +117,7 @@ async function createCategory(token: string, formData: FormData): Promise<Action
   }
 
   return {
+    type: 'create',
     status: 'success',
     message: createI18nMessage('category.messages.created'),
   };
@@ -143,6 +144,7 @@ async function updateCategory(token: string, category: TCategory, formData: Form
   }
 
   return {
+    type: 'update',
     status: 'success',
     message: createI18nMessage('category.messages.created'),
   };

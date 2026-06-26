@@ -1,12 +1,18 @@
 import { createI18nMessage ,ResponseError } from '@/app/shared';
 
+export type ActionStateType = 'create' | 'update' | 'delete' | 'other';
+
+export type ActionStateStatus = 'error' | 'idle' | 'cancel' | 'success' | 'unknown';
+
 export type ActionState = {
   item?: unknown;
-  status: 'idle' | 'success' | 'error';
+  type:  ActionStateType;
+  status: ActionStateStatus;
   message: string;
 };
 
 export const INITIAL_ACTION_STATE: ActionState = {
+  type: 'other',
   status: 'idle',
   message: '',
 };
@@ -19,8 +25,9 @@ export const getStringValue = (formData: FormData, key: string): string => {
   return typeof value === 'string' ? value.trim() : '';
 };
 
-export const toErrorState = (message: string): ActionState => {
+export const toErrorState = (message: string, type:  ActionStateType = 'other'): ActionState => {
   return {
+    type,
     status: 'error',
     message,
   };
