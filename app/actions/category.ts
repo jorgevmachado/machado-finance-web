@@ -10,7 +10,8 @@ import { createI18nMessage } from '@/app/shared';
 import {
   financeService ,TCategory ,
   TCategoryCreate ,
-  TCategoryType ,TCategoryUpdate ,
+  ECategoryType ,
+  TCategoryUpdate ,
 } from '@/app/modules/finance';
 import { getServerSession } from '@/app/modules/auth/session';
 import { isObjectEmpty } from '@/app/utils';
@@ -25,7 +26,7 @@ const DEFAULT_CREATE_ERROR_MESSAGE = createI18nMessage('category.errors.defaultC
 const readCreatePayload = (formData: FormData): TCategoryCreate => {
   return {
     name: formData.get('name') as string,
-    type: formData.get('type') as TCategoryType,
+    type: formData.get('type') as ECategoryType,
     description: formData.get('description') as string,
   };
 };
@@ -39,7 +40,7 @@ const readUpdatePayload = (formData: FormData, category: TCategory): TCategoryUp
     }
   }
   if (formData.has('type')){
-    const type = formData.get('type') as TCategoryType;
+    const type = formData.get('type') as ECategoryType;
     if (type !== category.type) {
       params.type = type;
     }

@@ -9,11 +9,10 @@ import { Text, Button } from '@/app/ds';
 
 import { loginAction } from '@/app/actions/auth';
 
-import { INITIAL_AUTH_ACTION_STATE } from '@/app/modules/auth';
-
+import { INITIAL_ACTION_STATE } from '@/app/actions/state';
 
 export default function LoginPage() {
-  const [state, formAction, isPending] = useActionState(loginAction, INITIAL_AUTH_ACTION_STATE);
+  const [state, formAction, isPending] = useActionState(loginAction, INITIAL_ACTION_STATE);
   const { t } = useAppTranslation();
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

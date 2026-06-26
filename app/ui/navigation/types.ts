@@ -1,10 +1,10 @@
 import type { IconType } from 'react-icons';
 
-import { RoleEnum } from '@/app/shared';
+import { EUserRole } from '@/app/modules';
 
 export type IMenuItem = {
   label: string;
-  roles: Array<RoleEnum>;
+  roles: Array<EUserRole>;
   href: string;
   icon: IconType;
   children?: Array<IMenuItem>;

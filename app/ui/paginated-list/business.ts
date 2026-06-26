@@ -1,5 +1,8 @@
-import { PaginatedListState ,TPaginatedMeta } from './types';
+import type { TPaginatedMeta } from '@/app/shared';
+
 import { type FiltersProps } from '@/app/ds';
+
+import { PaginatedListState } from './types';
 
 export const INITIAL_PAGINATION: TPaginatedMeta = {
   total: 0,

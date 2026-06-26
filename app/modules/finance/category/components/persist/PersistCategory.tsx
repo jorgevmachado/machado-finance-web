@@ -1,12 +1,18 @@
 'use client';
-
-import type { TCategory ,TCategoryType } from '../../types';
 import React ,{ useActionState ,useEffect } from 'react';
 
-import { persistCategoryAction } from '@/app/actions/category';
-import { ActionState ,INITIAL_ACTION_STATE } from '@/app/actions/state';
 import { translateI18nMessage ,useAppTranslation } from '@/app/shared';
+
+import { ActionState ,INITIAL_ACTION_STATE } from '@/app/actions/state';
+
+import { persistCategoryAction } from '@/app/actions/category';
+
 import { Button ,Card ,Input ,Text } from '@/app/ds';
+
+import type { TCategory } from '../../types';
+
+import { ECategoryType } from '../../enum';
+import { CATEGORY_TYPES } from '../../constants';
 
 type PersistCategoryProps = {
   category?: TCategory;
@@ -15,21 +21,9 @@ type PersistCategoryProps = {
 
 type DraftCategory = {
   name: string;
-  type: TCategoryType | '';
+  type: ECategoryType | '';
   description: string;
 }
-
-const CATEGORY_TYPES: Array<TCategoryType> = [
-  'FOOD',
-  'OTHER',
-  'STUDIES',
-  'UTILITY',
-  'HEALTH',
-  'PERSONAL',
-  'TRANSPORT',
-  'ENTERTAINMENT',
-  'GOVERNMENT_FEES',
-];
 
 const initDraftCategory = (category?: TCategory): DraftCategory => {
   return {

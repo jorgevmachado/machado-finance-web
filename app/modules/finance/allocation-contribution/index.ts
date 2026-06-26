@@ -1,1 +1,2 @@
-export type { TAllocationContribution, TAllocationContributionFilter } from './types';
+export { AllocationContributionService } from './service';
+export type { TAllocationContribution, TAllocationContributionCreate, TAllocationContributionFilter, TAllocationContributionUpdate } from './types';

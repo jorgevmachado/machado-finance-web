@@ -1,7 +1,6 @@
-import type { TFinance } from '@/app/modules';
+import type { TEntity ,TFinance } from '@/app/modules';
 
-export type StatusEnum = 'ACTIVE' | 'INACTIVE';
-export type RoleEnum = 'USER' | 'ADMIN';
+import { EUserRole ,EUserStatus } from './enum';
 
 export type LoginResponsePayload = {
   token_type: string;
@@ -24,18 +23,14 @@ export type RegisterResponse = {
   id: string;
   name: string;
   email: string;
-  status: StatusEnum;
+  status: EUserStatus;
 }
 
-export type TUser = {
-  id: string;
+export type TUser = TEntity & {
+  role: EUserRole;
   name: string;
   email: string;
-  username: string;
+  status: EUserStatus;
   finance?: TFinance;
-  status: StatusEnum;
-  role: RoleEnum;
-  created_at: string;
-  updated_at?: string;
-  deleted_at?: string;
+  username: string;
 };

@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { TUser } from '@/app/shared';
+import { TUser } from '../types';
 
 import { UserProviderProps } from './types';
 import { UserContext } from './UserContext';

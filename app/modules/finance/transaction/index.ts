@@ -1,1 +1,3 @@
-export type { TTransaction, TTransactionFilter, TTransactionStatus, TTransactionType } from './types';
+export { ETransactionStatus,ETransactionType } from './enum';
+export { TransactionService } from './service';
+export type { TTransaction, TTransactionCreate, TTransactionFilter, TTransactionUpdate } from './types';

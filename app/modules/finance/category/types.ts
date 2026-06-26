@@ -1,11 +1,11 @@
 import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
 
-export type TCategoryType = 'FOOD' | 'OTHER' | 'STUDIES' | 'UTILITY' | 'HEALTH' | 'PERSONAL' | 'TRANSPORT' | 'ENTERTAINMENT' | 'GOVERNMENT_FEES';
+import { ECategoryType } from './enum';
 
 export type TCategory = TEntity & {
   name: string;
-  type: TCategoryType;
+  type: ECategoryType;
   name_code: string;
   finance_id: string;
   description: string;
@@ -13,17 +13,17 @@ export type TCategory = TEntity & {
 
 export type TCategoryFilter = TPaginateBaseFilter & {
   name?: string;
-  type?: TCategoryType;
+  type?: ECategoryType;
 }
 
 export type TCategoryCreate = {
   name: string;
-  type: TCategoryType;
+  type: ECategoryType;
   description: string;
 }
 
 export type TCategoryUpdate = {
   name?: string;
-  type?: TCategoryType;
+  type?: ECategoryType;
   description?: string;
 }

@@ -3,7 +3,7 @@
 import React ,{ useCallback ,useState } from 'react';
 
 import { useAppTranslation } from '@/app/shared';
-import { RoleEnum, useUser } from '@/app/modules';
+import { EUserRole, useUser } from '@/app/modules';
 import { usePathname ,useRouter } from 'next/navigation';
 
 import { getAuthenticatedMenuItems } from './business';
@@ -15,7 +15,7 @@ import { Breadcrumb } from '@/app/ds';
 import { Sidebar } from '@/app/ui/navigation/sidebar';
 
 type NavigationFrameProps = {
-  role?: RoleEnum;
+  role?: EUserRole;
   children: React.ReactNode;
   isAuthenticated: boolean;
 }

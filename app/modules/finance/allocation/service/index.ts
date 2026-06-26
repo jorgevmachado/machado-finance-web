@@ -1,0 +1,2 @@
+export { AllocationService } from './service';
+

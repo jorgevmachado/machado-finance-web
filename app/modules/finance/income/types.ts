@@ -1,5 +1,5 @@
-import { TEntity } from '@/app/modules';
-import { TPaginateBaseFilter } from '@/app/ds';
+import type { TEntity } from '@/app/modules';
+import type { TPaginateBaseFilter } from '@/app/ui';
 
 export type TIncome = TEntity & {
   source: string;
@@ -13,4 +13,29 @@ export type TIncome = TEntity & {
   reference_month: number;
 }
 
-export type TIncomeFilter = TPaginateBaseFilter & {}
+export type TIncomeFilter = TPaginateBaseFilter & {
+  source?: string;
+  account_id?: string;
+  reference_year?: number;
+  reference_month?: number;
+}
+
+export type TIncomeCreate = {
+  source: string;
+  amount: number;
+  account_id: string;
+  received_at: string;
+  description: string;
+  reference_year: number;
+  reference_month: number;
+}
+
+export type TIncomeUpdate = {
+  source?: string;
+  amount?: number;
+  account_id: string;
+  received_at?: string;
+  description?: string;
+  reference_year?: number;
+  reference_month?: number;
+}

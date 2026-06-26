@@ -8,18 +8,25 @@ import {
   useState,
 } from 'react';
 
-import { UsePaginatedListResult ,UsePaginatedListProps, PaginatedListState, TPaginatedListResponse } from './types';
+import {
+  buildQueryString ,
+  type TPaginatedListResponse ,
+  useAppTranslation,
+} from '@/app/shared';
+
+import {
+  type FiltersProps ,
+  useLoading,
+  clampPage
+} from '@/app/ds';
+
+import { UsePaginatedListResult ,UsePaginatedListProps, PaginatedListState } from './types';
 
 import {
   buildInputFilterValueMap ,
   createInitialState ,
 } from './business';
-import {
-  FiltersProps ,
-  useLoading,
-  clampPage
-} from '@/app/ds';
-import { buildQueryString ,useAppTranslation } from '@/app/shared';
+
 
 const usePaginatedList = <TItem, TFilters>({
   endpoint,

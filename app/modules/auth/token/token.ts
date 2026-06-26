@@ -1,8 +1,8 @@
-import { LoginResponsePayload } from '@/app/modules/auth/types';
+import { LoginResponsePayload } from '../types';
 import {
   AUTH_TOKEN_MAX_AGE_IN_SECONDS ,
   INVALID_LOGIN_RESPONSE_MESSAGE,
-} from '@/app/modules/auth/constants';
+} from '../constants';
 
 type SessionPayload = {
   exp?: number;

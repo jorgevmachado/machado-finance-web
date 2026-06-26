@@ -1,34 +1,13 @@
-import { BaseServiceAbstract ,MessageResponse } from '@/app/shared';
-import { TPaginatedListResponse } from '@/app/ui';
+import { BaseServiceAbstract } from '@/app/shared';
+
 import type {
   TCategory ,
   TCategoryCreate ,
-  TCategoryFilter ,
   TCategoryUpdate,
 } from '../types';
 
-export class CategoryService extends BaseServiceAbstract {
+export class CategoryService extends BaseServiceAbstract<TCategory, TCategoryCreate, TCategoryUpdate> {
   constructor(baseUrl: string ,token?: string) {
     super(baseUrl ,'category' ,token);
-  }
-
-  async list(params: TCategoryFilter): Promise<TPaginatedListResponse<TCategory>> {
-    return this.get<TPaginatedListResponse<TCategory>>(this.pathUrl ,{ params });
-  }
-
-  public async detail(identifier: string): Promise<TCategory> {
-    return await this.get<TCategory>(`${this.pathUrl}/${identifier}`);
-  }
-
-  public async create(payload: TCategoryCreate): Promise<TCategory> {
-    return await this.post<TCategoryCreate, TCategory>(this.pathUrl ,{ body: payload });
-  }
-
-  public async update(param: string, payload: TCategoryUpdate): Promise<TCategory> {
-    return await this.path<TCategoryUpdate, TCategory>(`${this.pathUrl}/${param}` ,{ body: payload });
-  }
-
-  public async delete(param: string): Promise<MessageResponse> {
-    return await this.remove<MessageResponse>(`${this.pathUrl}/${param}`);
   }
 }

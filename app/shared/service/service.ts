@@ -1,6 +1,6 @@
-import { Http } from '../http';
+import { Http ,type MessageResponse, type TPaginatedListResponse } from '../http';
 
-export abstract class BaseServiceAbstract extends Http {
+export abstract class BaseServiceAbstract<T, C, U> extends Http {
   readonly pathUrl: string;
 
   protected constructor(
@@ -13,6 +13,27 @@ export abstract class BaseServiceAbstract extends Http {
     } : {};
     super(baseUrl ,{ headers });
     this.pathUrl = pathUrl;
+  }
+
+  async list(params?: Record<string, unknown>): Promise<TPaginatedListResponse<T> | Array<T>> {
+    const config = !params ? {} : { params };
+    return this.get<TPaginatedListResponse<T> | Array<T>>(this.pathUrl ,config);
+  }
+
+  public async detail(identifier: string): Promise<T> {
+    return await this.get<T>(`${this.pathUrl}/${identifier}`);
+  }
+
+  public async create(payload: C): Promise<T> {
+    return await this.post<C, T>(this.pathUrl ,{ body: payload });
+  }
+
+  public async update(param: string, payload: U): Promise<T> {
+    return await this.path<U, T>(`${this.pathUrl}/${param}` ,{ body: payload });
+  }
+
+  public async delete(param: string): Promise<MessageResponse> {
+    return await this.remove<MessageResponse>(`${this.pathUrl}/${param}`);
   }
 
 }

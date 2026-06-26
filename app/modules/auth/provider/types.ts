@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TUser } from '@/app/shared';
+import { TUser } from '../types';
 
 export type UserContextValue = {
   user?: TUser;

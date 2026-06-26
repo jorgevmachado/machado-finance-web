@@ -1,12 +1,11 @@
-import { TEntity } from '@/app/modules';
-import { TPaginateBaseFilter } from '@/app/ds';
+import type { TEntity } from '@/app/modules';
+import type { TPaginateBaseFilter } from '@/app/ui';
 
-export type TTransactionType = 'INCOME' | 'EXPENSE' | 'TRANSFER';
-export type TTransactionStatus = 'PAID' | 'PENDING' | 'CANCELLED';
+import { ETransactionStatus ,ETransactionType } from './enum';
 
 export type TTransaction = TEntity & {
-  type: TTransactionType;
-  status: TTransactionStatus;
+  type: ETransactionType;
+  status: ETransactionStatus;
   amount: number;
   paid_at: string;
   finance_id: string;
@@ -17,4 +16,31 @@ export type TTransaction = TEntity & {
   transaction_date: string;
 }
 
-export type TTransactionFilter = TPaginateBaseFilter & {}
+export type TTransactionFilter = TPaginateBaseFilter & {
+  type?: ETransactionType;
+  status?: ETransactionStatus;
+  account_id?: string;
+  category_id?: string;
+  allocation_id?: string;
+}
+
+export type TTransactionCreate = {
+  type: ETransactionType;
+  status: ETransactionStatus;
+  amount: number;
+  paid_at?: string;
+  account_id: string;
+  category_id: string;
+  description: string;
+  allocation_id: string;
+  transaction_date: string;
+}
+
+export type TTransactionUpdate = {
+  type?: ETransactionType;
+  status?: ETransactionStatus;
+  amount?: number;
+  paid_at?: string;
+  description?: string;
+  transaction_date?: string;
+}

@@ -1,11 +1,10 @@
-import { TEntity } from '@/app/modules';
-import { TPaginateBaseFilter } from '@/app/ds';
-
-export type TAccountType = 'PIX' | 'BANK' | 'CASH' | 'OTHER' | 'INVESTMENT' | 'CREDIT_CARD' | 'ACCOUNT_DEBIT';
+import type { TEntity } from '@/app/modules';
+import type { TPaginateBaseFilter } from '@/app/ui';
+import { EAccountType } from './enum';
 
 export type TAccount = TEntity & {
   name: string;
-  type: TAccountType;
+  type: EAccountType;
   is_active: boolean;
   finance_id: string;
   initial_balance: number;
@@ -13,3 +12,15 @@ export type TAccount = TEntity & {
 }
 
 export type TAccountFilter = TPaginateBaseFilter & {}
+
+export type TAccountCreate = {
+  name: string;
+  type: EAccountType;
+  initial_balance: number;
+}
+
+export type TAccountUpdate = {
+  name?: string;
+  type?: EAccountType;
+  initial_balance?: number;
+}
