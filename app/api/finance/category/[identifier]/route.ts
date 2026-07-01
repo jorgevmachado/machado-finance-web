@@ -28,3 +28,25 @@ export async function DELETE(
     return NextResponse.json({ message }, { status: 500 });
   }
 }
+
+export async function PUT(
+  request: NextRequest,
+  context: CategoryDeleteRouteContext
+): Promise<NextResponse> {
+  console.log('# => PUT');
+  const session = await getServerSession();
+
+  if (!session.isAuthenticated || !session.token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { identifier } = await context.params;
+    const payload = await request.json();
+    const response = await financeService(session.token).category.update(identifier, payload);
+    return NextResponse.json(response);
+  } catch (error) {
+    const message = error instanceof Error && error.message ? error.message : 'Could not update Category.';
+    return NextResponse.json({ message }, { status: 500 });
+  }
+}

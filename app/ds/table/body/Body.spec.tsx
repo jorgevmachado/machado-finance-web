@@ -241,6 +241,34 @@ describe('Body.tsx', () => {
     expect(mockOnRowClick).toHaveBeenCalled();
   });
 
+  it('should not call onRowClick for other keys', () => {
+    const { container } = render(
+      <table>
+        <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
+      </table>
+    );
+
+    const tbody = container.querySelector('tbody');
+    const firstRow = tbody?.querySelector('tr') as HTMLElement;
+
+    fireEvent.keyDown(firstRow, { key: 'Escape' });
+
+    expect(mockOnRowClick).not.toHaveBeenCalled();
+  });
+
+  it('should not make row interactive when onRowClick is not provided', () => {
+    const { container } = render(
+      <table>
+        <Body items={items} headers={headers} />
+      </table>
+    );
+
+    const firstRow = container.querySelector('tbody tr');
+
+    expect(firstRow).not.toHaveAttribute('role');
+    expect(firstRow).not.toHaveAttribute('tabindex');
+  });
+
   it('should apply condition color when conditionColor is provided', () => {
     const itemsWithCondition = [
       { id: '1', name: 'Active', isActive: true },
@@ -318,5 +346,29 @@ describe('Body.tsx', () => {
 
     const cells = container.querySelectorAll('td');
     expect(cells[0]).toHaveAttribute('align', 'right');
+  });
+
+  it('should format money from numeric string values', () => {
+    const itemsWithMoneyAsString = [
+      { id: '1', amount: '1234.56' },
+    ];
+
+    const headersWithMoney: TableHeaderItem[] = [
+      { label: 'ID', value: 'id', sortable: true },
+      {
+        label: 'Amount',
+        value: 'amount',
+        type: ETypeTableHeader.MONEY,
+        sortable: true,
+      },
+    ];
+
+    render(
+      <table>
+        <Body items={itemsWithMoneyAsString} headers={headersWithMoney} />
+      </table>,
+    );
+
+    expect(screen.getByText((content) => content.includes('1.234,56'))).toBeInTheDocument();
   });
 });

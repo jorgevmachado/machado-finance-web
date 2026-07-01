@@ -35,4 +35,8 @@ describe('digitsToDecimalString', () => {
     expect(digitsToDecimalString('R$ 0,00')).toEqual('0.00');
   });
 
+  it('should return empty string when value is undefined', () => {
+    expect(digitsToDecimalString()).toEqual('');
+  });
+
 });

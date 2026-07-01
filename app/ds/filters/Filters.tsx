@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+'use client';
+import React ,{ memo, useMemo, useState } from 'react';
 
+import { joinClass } from '@/app/utils';
 import { useAppTranslation } from '@/app/shared';
 import { Autocomplete ,Button ,Input ,Text } from '@/app/ds';
+
 import type { FiltersProps } from './types';
-import { joinClass } from '@/app/utils';
 
 const Filters = ({
   filters,
@@ -14,18 +16,19 @@ const Filters = ({
   filterCleanLabel = 'Clear filters',
 }: FiltersProps) => {
   const { t } = useAppTranslation();
-  const initDraftFilters = (nextFilters: FiltersProps['filters'], reset = false): Record<string, string> => {
+  const initDraftFilters = (nextFilters: FiltersProps['filters']): Record<string, string> => {
     const result = {} as Record<string, string>;
 
     for (const filter of nextFilters) {
-      result[filter.name] = reset ? '' : filter.value;
+      result[filter.name] = String(filter.value ?? '');
     }
 
     return result;
   };
 
-  const [draftFilters, setDraftFilters] = React.useState<Record<string, string>>(
-    initDraftFilters(filters));
+  const [draftFilters, setDraftFilters] = useState<Record<string, string>>(
+    () => initDraftFilters(filters),
+  );
 
   const updateDraftValue = (key: string, value: string) => {
     setDraftFilters((previousState) => ({
@@ -35,7 +38,7 @@ const Filters = ({
   };
 
   const handleClear = () => {
-    const resetFilters = initDraftFilters(filters, true);
+    const resetFilters = initDraftFilters(filters);
     setDraftFilters(resetFilters);
     onClear?.();
   };
@@ -71,16 +74,16 @@ const Filters = ({
               weight="semibold"
               tracking="wide"
               className="uppercase">
-              { label }
+              { t(label) }
             </Text>
             { type === 'autocomplete' && options ? (
               <Autocomplete
                 name={name}
                 value={draftFilters[name]}
-                options={options}
+                options={options.map((option) => ({ ...option, label: t(option.label ?? '') }))}
                 isLoading={isLoading}
                 noResultsText={t('filters.noOptions')}
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 onValueChange={(nextValue) => {
                   updateDraftValue(name, nextValue);
                 }}
@@ -89,7 +92,7 @@ const Filters = ({
               <Input
                 type="text"
                 value={draftFilters[name]}
-                placeholder={placeholder}
+                placeholder={t(placeholder)}
                 onValueChange={(nextValue) => {
                   updateDraftValue(name, nextValue);
                 }}
@@ -123,4 +126,4 @@ const Filters = ({
   );
 };
 
-export default React.memo(Filters);
+export default memo(Filters);

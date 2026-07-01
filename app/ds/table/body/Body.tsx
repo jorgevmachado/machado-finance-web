@@ -21,14 +21,6 @@ export default function Body({
   formattedDate
 }: BodyProps) {
 
-  const handleRowClick = (event: React.MouseEvent<HTMLTableRowElement>,item: unknown) => {
-    event.preventDefault();
-
-    if (onRowClick) {
-      onRowClick(item);
-    }
-  };
-
   const renderValue = (item: unknown, value: string) => {
     return value
       .split('.')
@@ -91,18 +83,23 @@ export default function Body({
       {items.map((item: unknown, index: number) => (
         <tr
           key={`table-row-${index}`}
-          role="button"
-          onClick={(event) => onRowClick && handleRowClick(event, item)}
-          tabIndex={0}
+          role={onRowClick ? 'button' : undefined}
+          onClick={onRowClick
+            ? (event) => {
+              event.preventDefault();
+              onRowClick(item);
+            }
+            : undefined}
+          tabIndex={onRowClick ? 0 : undefined}
           className={onRowClick ? 'cursor-pointer transition-colors hover:bg-slate-50' : ''}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-              if (onRowClick) {
+          onKeyDown={onRowClick
+            ? (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 onRowClick(item);
               }
             }
-          }}
+            : undefined}
         >
           {headers.map((header, index) => (
             <td

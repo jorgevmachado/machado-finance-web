@@ -11,7 +11,11 @@ export type TAccount = TEntity & {
   current_balance: number;
 }
 
-export type TAccountFilter = TPaginateBaseFilter & {}
+export type TAccountFilter = TPaginateBaseFilter & {
+  type?: EAccountType;
+  name?: string;
+  is_active?: boolean;
+}
 
 export type TAccountCreate = {
   name: string;
@@ -23,4 +27,10 @@ export type TAccountUpdate = {
   name?: string;
   type?: EAccountType;
   initial_balance?: number;
+}
+
+export type TDraftAccount = {
+  name: string;
+  type: EAccountType | '';
+  initial_balance: number | string;
 }

@@ -157,7 +157,7 @@ describe('<Filters />', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
     fireEvent.click(screen.getByRole('button', { name: 'Apply filters' }));
 
-    expect(onApply).toHaveBeenCalledWith({ name: '', type: '' });
+    expect(onApply).toHaveBeenCalledWith({ name: '', type: 'fire' });
   });
 
   it('renders custom label props', () => {
@@ -225,5 +225,30 @@ describe('<Filters />', () => {
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'kanto' } });
     expect(input).toHaveValue('kanto');
+  });
+
+  it('normalizes undefined filter values to empty string', () => {
+    const onApply = jest.fn();
+    const filtersWithUndefinedValue = [
+      {
+        name: 'name',
+        label: 'Name',
+        type: 'text',
+        value: undefined,
+        placeholder: 'Search by name',
+      },
+    ] as unknown as FiltersProps['filters'];
+
+    render(
+      <Filters
+        filters={filtersWithUndefinedValue}
+        onApply={onApply}
+        onClear={jest.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Apply filters' }));
+
+    expect(onApply).toHaveBeenCalledWith({ name: '' });
   });
 });

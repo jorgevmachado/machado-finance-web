@@ -312,6 +312,18 @@ describe('Table.tsx', () => {
     expect(container.firstChild).toBeNull();
   });
 
+  it('should handle undefined items safely using fallback empty list', () => {
+    const { container } = render(
+      <Table
+        items={undefined as unknown as Array<unknown>}
+        headers={headers}
+        showNotFoundError={false}
+      />,
+    );
+
+    expect(container.firstChild).toBeNull();
+  });
+
   it('should handle sortedColumn updates', () => {
     const { rerender, container } = render(
       <Table

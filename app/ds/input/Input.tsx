@@ -21,6 +21,75 @@ const SIZE_CLASS_MAP: Record<InputSize, string> = {
   lg: 'h-11 text-base',
 };
 
+const CURRENCY_LANGUAGE_MAP = {
+  'pt-BR': { locale: 'pt-BR', currency: 'BRL' },
+  en: { locale: 'en-US', currency: 'USD' },
+} as const;
+
+const MASK_TOKEN = '#';
+
+function applyStringMask(rawValue: string, maskPattern: string): string {
+  const onlyDigits = rawValue.replace(/\D/g, '');
+
+  if (!onlyDigits) {
+    return '';
+  }
+
+  let digitIndex = 0;
+  let maskedValue = '';
+
+  for (const character of maskPattern) {
+    if (character === MASK_TOKEN) {
+      if (digitIndex >= onlyDigits.length) {
+        break;
+      }
+      maskedValue += onlyDigits[digitIndex];
+      digitIndex += 1;
+      continue;
+    }
+
+    if (digitIndex < onlyDigits.length) {
+      maskedValue += character;
+    } else {
+      break;
+    }
+  }
+
+  return maskedValue;
+}
+
+function applyMask(rawValue: string, mask?: InputProps['mask']): string {
+  if (!mask) {
+    return rawValue;
+  }
+
+  if (typeof mask === 'function') {
+    return mask(rawValue);
+  }
+
+  return applyStringMask(rawValue, mask);
+}
+
+function formatMoney(rawValue: string, switchLanguage: InputProps['switchLanguage']): string {
+  const onlyDigits = rawValue.replace(/\D/g, '');
+
+  if (!onlyDigits) {
+    return '';
+  }
+
+  const mappedLocale = CURRENCY_LANGUAGE_MAP[switchLanguage ?? 'pt-BR'];
+  const value = Number.parseInt(onlyDigits, 10) / 100;
+
+  return new Intl.NumberFormat(mappedLocale.locale, {
+    style: 'currency',
+    currency: mappedLocale.currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+    .format(value)
+    .replace(/\u00A0/g, ' ');
+}
+
 const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   label,
   variant = 'outline',
@@ -41,6 +110,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   disabled,
   readOnly,
   value,
+  type = 'text',
+  mask,
+  switchLanguage = 'pt-BR',
   placeholder,
   containerClassName,
   inputWrapperClassName,
@@ -49,6 +121,23 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   ...inputProps
 }, ref) => {
   const hasValue = typeof value === 'string' && value.length > 0;
+  const isMoneyInput = type === 'money';
+
+  const formattedValue = useMemo(() => {
+    if (typeof value !== 'string') {
+      return value;
+    }
+
+    if (isMoneyInput) {
+      return formatMoney(value, switchLanguage);
+    }
+
+    if (mask) {
+      return applyMask(value, mask);
+    }
+
+    return value;
+  }, [isMoneyInput, mask, switchLanguage, value]);
 
   const resolvedPlaceholder = isLoading && loadingText ? loadingText : placeholder;
 
@@ -65,9 +154,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   }, [disabled, fullWidth, inputWrapperClassName, isInvalid, size, variant]);
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextRawValue = event.target.value;
+    const nextValue = isMoneyInput
+      ? formatMoney(nextRawValue, switchLanguage)
+      : applyMask(nextRawValue, mask);
+
+    if (nextValue !== nextRawValue) {
+      event.target.value = nextValue;
+    }
+
     onChange?.(event);
-    onValueChange?.(event.target.value, event);
-  }, [onChange, onValueChange]);
+    onValueChange?.(nextValue, event);
+  }, [isMoneyInput, mask, onChange, onValueChange, switchLanguage]);
 
   const handleClear = useCallback(() => {
     // istanbul ignore next – clear button is hidden when disabled/readOnly (shouldShowClearButton), so this guard is defensive only
@@ -104,7 +202,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
             <input
               {...inputProps}
               ref={ref}
-              value={value}
+              type={isMoneyInput ? 'text' : type}
+              inputMode={isMoneyInput ? 'decimal' : inputProps.inputMode}
+              value={formattedValue}
               disabled={disabled}
               readOnly={readOnly}
               placeholder={resolvedPlaceholder}
@@ -164,4 +264,3 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 Input.displayName = 'Input';
 
 export default React.memo(Input);
-

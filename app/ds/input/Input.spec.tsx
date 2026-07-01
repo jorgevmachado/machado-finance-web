@@ -37,6 +37,66 @@ describe('<Input />', () => {
     expect(onValueChange).toHaveBeenCalledWith('charizard', expect.any(Object));
   });
 
+  it('applies string mask and emits masked value', () => {
+    const onValueChange = jest.fn();
+
+    render(
+      <Input
+        value=''
+        onChange={() => undefined}
+        onValueChange={onValueChange}
+        mask='###.###.###-##'
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: '12345678901' },
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith('123.456.789-01', expect.any(Object));
+  });
+
+  it('formats money input with BRL when switchLanguage is pt-BR', () => {
+    render(
+      <Input
+        type='money'
+        switchLanguage='pt-BR'
+        value='123456'
+        onChange={() => undefined}
+      />,
+    );
+
+    const textbox = screen.getByRole('textbox');
+    expect(textbox).toHaveValue('R$ 1.234,56');
+    expect(textbox).toHaveAttribute('type', 'text');
+  });
+
+  it('defaults money locale mapping when switchLanguage is undefined', () => {
+    render(
+      <Input
+        type='money'
+        switchLanguage={undefined}
+        value='123456'
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('R$ 1.234,56');
+  });
+
+  it('formats money input with USD when switchLanguage is en', () => {
+    render(
+      <Input
+        type='money'
+        switchLanguage='en'
+        value='123456'
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('$1,234.56');
+  });
+
   it('shows clear button and triggers onClear', () => {
     const onClear = jest.fn();
 
@@ -145,5 +205,103 @@ describe('<Input />', () => {
     const wrapper = screen.getByRole('textbox').closest('div');
     expect(wrapper).toHaveClass('bg-slate-100');
   });
-});
 
+  it('supports mask function callback', () => {
+    const onValueChange = jest.fn();
+
+    render(
+      <Input
+        value=''
+        onChange={() => undefined}
+        onValueChange={onValueChange}
+        mask={(rawValue) => `masked:${rawValue}`}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'abc' },
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith('masked:abc', expect.any(Object));
+  });
+
+  it('handles short mask token sequence without crashing', () => {
+    const onValueChange = jest.fn();
+
+    render(
+      <Input
+        value=''
+        onChange={() => undefined}
+        onValueChange={onValueChange}
+        mask='###'
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: '12' },
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith('12', expect.any(Object));
+  });
+
+  it('stops mask when reaching trailing literal with no remaining digits', () => {
+    const onValueChange = jest.fn();
+
+    render(
+      <Input
+        value=''
+        onChange={() => undefined}
+        onValueChange={onValueChange}
+        mask='(##)'
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: '12' },
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith('(12', expect.any(Object));
+  });
+
+  it('keeps empty value for money input when there are no digits', () => {
+    render(
+      <Input
+        type='money'
+        value=''
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('');
+  });
+
+  it('accepts non-string controlled values without formatting', () => {
+    render(
+      <Input
+        value={123 as unknown as string}
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('123');
+  });
+
+  it('formats money value on typing in onValueChange callback', () => {
+    const onValueChange = jest.fn();
+
+    render(
+      <Input
+        type='money'
+        value=''
+        onChange={() => undefined}
+        onValueChange={onValueChange}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: '1234' },
+    });
+
+    expect(onValueChange).toHaveBeenCalledWith('R$ 12,34', expect.any(Object));
+  });
+});

@@ -1,0 +1,1 @@
+export { AllocationContributionBffService } from './bffService';

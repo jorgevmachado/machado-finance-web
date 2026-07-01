@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { TPaginatedListResponse } from '@/app/shared';
+import type {
+  TBffListPaginateParams ,
+  TBffResponse ,
+  TPaginatedListResponse,
+} from '@/app/shared';
 
 import { FiltersProps } from '@/app/ds';
 
@@ -32,12 +36,13 @@ export type PaginatedListProps<TItem, TFilters> = {
   clearInputFilters?: () => void;
 };
 
-export type UsePaginatedListProps<TFilters> = {
-  endpoint: string;
+type FetchPaginatedListFn<TItem, TFilters> = (params: TBffListPaginateParams<TFilters>) => Promise<TBffResponse<TPaginatedListResponse<TItem>>>;
+
+export type UsePaginatedListProps<TItem, TFilters> = {
   initialFilters: TFilters;
-  buildQueryString?: (page: number, limit: number, filters: TFilters) => string;
   normalizeFilters: (nextFilters: TFilters) => TFilters;
   fetchErrorMessage?: string;
+  fetchPaginatedList: FetchPaginatedListFn<TItem, TFilters>;
   initialInputFilters: FiltersProps['filters'];
 };
 

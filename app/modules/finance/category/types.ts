@@ -27,3 +27,9 @@ export type TCategoryUpdate = {
   type?: ECategoryType;
   description?: string;
 }
+
+export type TDraftCategory = {
+  name: string;
+  type: ECategoryType | '';
+  description: string;
+}

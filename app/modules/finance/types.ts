@@ -1,19 +1,15 @@
 import type { TEntity } from '@/app/modules';
-import type {
-  TAccount ,
-  TAllocation ,
-  TCategory ,
-  TIncome,
-  TTransaction,
-  TAllocationContribution
-} from '@/app/modules/finance';
+
+import type { TAccount } from './account';
+import type { TAllocation } from './allocation';
+import type { TPaginateBaseFilter } from '@/app/ui';
 
 export type TFinance = TEntity & {
   user_id: string;
-  incomes: Array<TIncome>;
   accounts: Array<TAccount>;
-  categories: Array<TCategory>;
   allocations: Array<TAllocation>;
-  transactions: Array<TTransaction>;
-  allocation_contributions: Array<TAllocationContribution>;
+}
+
+export type TFinanceFilter = Omit<TPaginateBaseFilter, 'page' | 'limit'> & {
+  year?: number;
 }

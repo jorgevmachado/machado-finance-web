@@ -9,7 +9,6 @@ import {
 } from 'react';
 
 import {
-  buildQueryString ,
   type TPaginatedListResponse ,
   useAppTranslation,
 } from '@/app/shared';
@@ -29,26 +28,23 @@ import {
 
 
 const usePaginatedList = <TItem, TFilters>({
-  endpoint,
   initialFilters,
   fetchErrorMessage = 'error.fetchingData',
-  buildQueryString: buildQueryStringOverride,
   normalizeFilters,
-  initialInputFilters
-}: UsePaginatedListProps<TFilters>): UsePaginatedListResult<TItem, TFilters> => {
+  fetchPaginatedList,
+  initialInputFilters,
+}: UsePaginatedListProps<TItem, TFilters>): UsePaginatedListResult<TItem, TFilters> => {
   const [state, setState] = useState<PaginatedListState<TItem>>(() => createInitialState<TItem>());
   const [filters, setFilters] = useState<TFilters>(initialFilters);
   const [inputFilterValues, setInputFilterValues] = useState<Record<string, string>>(() => buildInputFilterValueMap(initialInputFilters));
   const requestIdRef = useRef(0);
-  const endpointRef = useRef(endpoint);
-  const buildQueryStringRef = useRef(buildQueryStringOverride);
+  const fetchPaginatedListRef = useRef(fetchPaginatedList);
   const { startContentLoading, stopContentLoading } = useLoading();
   const { t } = useAppTranslation();
 
   useEffect(() => {
-    endpointRef.current = endpoint;
-    buildQueryStringRef.current = buildQueryStringOverride;
-  }, [buildQueryStringOverride, endpoint]);
+    fetchPaginatedListRef.current = fetchPaginatedList;
+  }, [fetchPaginatedList]);
 
   const inputFilters = useMemo<FiltersProps['filters']>(() => {
     return initialInputFilters.map((filter) => ({
@@ -61,41 +57,16 @@ const usePaginatedList = <TItem, TFilters>({
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
     try {
-      const currentEndpoint = endpointRef.current;
+      const fetchPaginatedList = fetchPaginatedListRef.current;
 
-      const queryString = buildQueryStringRef.current
-        ? buildQueryStringRef.current(page, perPage, activeFilters)
-        : buildQueryString(activeFilters, page, perPage);
-
-      const path = queryString === '' ? currentEndpoint : `${currentEndpoint}?${queryString}`;
-      const fetchResponse = await fetch(`/api/${path}`, {
-        method: 'GET',
-        cache: 'no-store',
-      });
-
-      const json = await fetchResponse.json() as TPaginatedListResponse<TItem> | { message?: string };
-
-      const response = !fetchResponse.ok || !('items' in json)
-        ? {
-          error: true,
-          status: fetchResponse.status,
-          message: 'message' in json && json.message ? json.message : fetchErrorMessage,
-          i18nMessage: fetchErrorMessage,
-        }
-        : {
-          error: false,
-          status: fetchResponse.status,
-          message: 'OK',
-          i18nMessage: fetchErrorMessage,
-          data: json,
-        };
+      const response = await fetchPaginatedList({ page, filters: activeFilters,  perPage });
 
       if (requestIdRef.current !== requestId) {
         return;
       }
 
       if (response.error && !response?.data) {
-        const message = response.message || t(response.i18nMessage);
+        const message = response.message || t(response.i18nMessageError);
         setState((previousState) => ({
           ...previousState,
           isLoading: false,

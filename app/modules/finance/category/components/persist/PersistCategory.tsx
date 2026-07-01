@@ -1,141 +1,283 @@
 'use client';
-import React ,{ useActionState ,useEffect } from 'react';
+import React ,{ useEffect } from 'react';
 
-import { translateI18nMessage ,useAppTranslation } from '@/app/shared';
+import {
+  createI18nMessage ,
+  translateI18nMessage ,
+  useAppTranslation ,
+} from '@/app/shared';
 
-import { ActionState ,INITIAL_ACTION_STATE } from '@/app/modules/actions/state';
+import { isObjectEmpty } from '@/app/utils';
 
-import { persistCategoryAction } from '@/app/actions/category';
+import { Button ,Card ,Input ,Select ,Text ,useLoading } from '@/app/ds';
 
-import { Button ,Card ,Input ,Text } from '@/app/ds';
+import {
+  ActionState ,
+  INITIAL_ACTION_STATE ,
+  mapError ,
+  toErrorState ,
+} from '@/app/modules/actions/state';
 
-import type { TCategory } from '../../types';
+import { financeBffService } from '@/app/modules/finance';
+
+import { categoryBusiness } from '../../business';
+import type {
+  TCategory ,
+  TCategoryCreate ,
+  TCategoryUpdate ,
+  TDraftCategory ,
+} from '../../types';
 
 import { ECategoryType } from '../../enum';
 import { CATEGORY_TYPES } from '../../constants';
+import {
+  CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE ,
+  CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE ,
+  validateCreatePayload ,
+  validateUpdatePayload ,
+} from '../../validation';
 
 type PersistCategoryProps = {
-  category?: TCategory;
   onClose: (actionState: ActionState) => void;
+  category?: TCategory;
+  disabled?: boolean;
 }
 
-type DraftCategory = {
-  name: string;
-  type: ECategoryType | '';
-  description: string;
-}
-
-const initDraftCategory = (category?: TCategory): DraftCategory => {
-  return {
-    name: category?.name || '',
-    type: category?.type || '',
-    description: category?.description || '',
-  };
-};
-
-
-export default function PersistCategory({ category, onClose }: PersistCategoryProps) {
-  const [state, formAction, isPending] = useActionState(persistCategoryAction, { ...INITIAL_ACTION_STATE, item: category });
-  const [draftCategory, setDraftCategory] = React.useState<DraftCategory>(initDraftCategory(category));
+export default function PersistCategory({
+  category ,
+  onClose ,
+  disabled = false,
+}: PersistCategoryProps) {
+  const { startContentLoading, stopContentLoading } = useLoading();
+  const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
+  const [isPending ,setIsPending] = React.useState(false);
+  const [draftCategory ,setDraftCategory] = React.useState<TDraftCategory>(
+    categoryBusiness.initDraftCategory(category));
   const { t } = useAppTranslation();
-  
-  const updateDraftValue = <K extends keyof DraftCategory>(key: K, value: DraftCategory[K]) => {
+
+  const updateDraftValue = <K extends keyof TDraftCategory>(
+    key: K ,value: TDraftCategory[K]) => {
     setDraftCategory((previousState) => ({
-      ...previousState,
-      [key]: value,
+      ...previousState ,
+      [key]: value ,
     }));
   };
-  
-  useEffect(() => {
-    if (state.status !== 'idle') {
-      onClose({ type: state.type,  status: state.status, message: state.message });
+
+  const handleCreate = async () => {
+    startContentLoading();
+    const payload: TCategoryCreate = {
+      name: draftCategory.name ,
+      type: draftCategory.type as ECategoryType ,
+      description: draftCategory.description ,
+    };
+    const validationError = validateCreatePayload(payload);
+
+    if (validationError) {
+      setState(validationError);
+      setIsPending(false);
       return;
     }
-  } ,[onClose, state]);
+
+    try {
+      const response = await financeBffService.category.create({ payload });
+
+      if (response.error) {
+        setState(toErrorState(response.i18nMessageError || response.message ||
+          CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
+        setIsPending(false);
+        return;
+      }
+    } catch (error) {
+      setState(mapError(error ,CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE));
+      setIsPending(false);
+      return;
+    } finally {
+      stopContentLoading();
+    }
+
+    setState({
+      type: 'create' ,
+      status: 'success' ,
+      message: createI18nMessage('category.messages.created') ,
+    });
+    setIsPending(false);
+    stopContentLoading();
+  };
+
+  const handleUpdate = async (category: TCategory) => {
+    startContentLoading();
+    const payload: TCategoryUpdate = {};
+    if (draftCategory.name !== category.name) {
+      payload.name = draftCategory.name;
+    }
+    if (draftCategory.type && draftCategory.type !== category.type) {
+      payload.type = draftCategory.type;
+    }
+    if (draftCategory.description !== category.description) {
+      payload.description = draftCategory.description;
+    }
+
+    const emptyPayload = isObjectEmpty(payload);
+    if (!emptyPayload) {
+      const validationError = validateUpdatePayload(payload);
+      if (validationError) {
+        setState(validationError);
+        setIsPending(false);
+        return;
+      }
+
+      try {
+        const response = await financeBffService.category.update({
+          identifier: category.id ,
+          payload ,
+        });
+
+        if (response.error) {
+          setState(toErrorState(response.i18nMessageError || response.message ||
+            CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
+          setIsPending(false);
+          return;
+        }
+      } catch (error) {
+        setState(mapError(error ,CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE));
+        setIsPending(false);
+        return;
+      } finally {
+        stopContentLoading();
+      }
+    }
+
+    setState({
+      type: 'update' ,
+      status: 'success' ,
+      message: createI18nMessage('category.messages.updated') ,
+    });
+    setIsPending(false);
+    stopContentLoading();
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (disabled) {
+      return;
+    }
+
+    setIsPending(true);
+
+    if (!category) {
+      await handleCreate();
+      return;
+    }
+
+    await handleUpdate(category);
+  };
+
+  useEffect(() => {
+    if (state.status !== 'idle') {
+      onClose(
+        { type: state.type ,status: state.status ,message: state.message });
+      return;
+    }
+  } ,[onClose ,state]);
 
   return (
     <div>
-      <form action={formAction} className="flex flex-col gap-4">
-        <Text as="p" size="sm" color="text-slate-600">
-          {t('category.form.subtitle')}
-        </Text>
+      <form onSubmit={ handleSubmit } className="flex flex-col gap-4">
+        { !disabled && (
+          <Text as="p" size="sm" color="text-slate-600">
+            { t('category.form.subtitle') }
+          </Text>
+        ) }
         <Input
           id="name"
-          label={t('form.nameLabel')}
+          label={ t('form.nameLabel') }
           name="name"
           type="text"
-          value={draftCategory.name}
+          value={ draftCategory.name }
           required
-          onValueChange={(nextValue) => updateDraftValue('name', nextValue)}
-          placeholder={t('form.namePlaceholder')}
+          disabled={ disabled }
+          onValueChange={ (nextValue) => updateDraftValue('name' ,nextValue) }
+          placeholder={ t('form.namePlaceholder') }
         />
 
-        <fieldset className="flex flex-col gap-2">
-          <Text as="legend" size="xs" color="text-slate-600" weight="semibold" tracking="wide" className="uppercase">
-            {t('form.typeLabel')}
-          </Text>
-          <Text as="p" size="xs" color="text-slate-500">
-            {t('category.form.typeHelper')}
-          </Text>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {CATEGORY_TYPES.map((type) => {
-              const isSelected = draftCategory.type === type;
-
-              return (
-                <label
-                  key={type}
-                  className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${isSelected
-                    ? 'border-blue-300 bg-blue-50 text-blue-700'
-                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}
-                >
-                  <input
-                    type="radio"
-                    name="type"
-                    value={type}
-                    checked={isSelected}
-                    required
-                    onChange={() => updateDraftValue('type', type)}
-                    className="h-4 w-4 accent-blue-600"
-                  />
-                  <span>{t(`category.types.${type}`)}</span>
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
+        <Select
+          label={ t('form.typeLabel') }
+          helperText={ !disabled ? t('category.form.typeHelper') : undefined }
+          name="type"
+          value={ draftCategory.type }
+          required
+          disabled={ disabled }
+          caseSensitive={ false }
+          options={ CATEGORY_TYPES.map((type) => ({
+            key: type ,
+            value: type ,
+            label: t(`category.types.${ type }`) ,
+          })) }
+          onValueChange={ (nextValue) => updateDraftValue('type' ,nextValue) }
+        />
 
         <Input
           id="description"
-          label={t('form.descriptionLabel')}
+          label={ t('form.descriptionLabel') }
           name="description"
           type="text"
-          value={draftCategory.description}
+          value={ draftCategory.description }
           required
-          onValueChange={(nextValue) => updateDraftValue('description', nextValue)}
-          placeholder={t('form.descriptionPlaceholder')}
+          disabled={ disabled }
+          onValueChange={ (nextValue) => updateDraftValue('description' ,
+            nextValue) }
+          placeholder={ t('form.descriptionPlaceholder') }
         />
 
-        {state.status === 'error' && (
+        { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">
             <Text size="sm" color="text-red-700">
-              {translateI18nMessage(t, state.message)}
+              { translateI18nMessage(t ,state.message) }
             </Text>
           </Card>
-        )}
+        ) }
 
         <div className="flex items-center justify-end gap-2 pt-2">
-          <Button
-            type="button"
-            appearance="outline"
-            tone="neutral"
-            onClick={() => onClose({ status: 'cancel', type: state.type, message: state.message })}
-            disabled={isPending}
-          >
-            {t('form.cancel')}
-          </Button>
-          <Button type="submit" disabled={isPending}>
-            {isPending ? t('form.submitting') : category ? t('form.save') : t('form.submit')}
-          </Button>
+          {
+            disabled ? (
+              <Button
+                type="button"
+                appearance="outline"
+                tone="neutral"
+                onClick={ () => onClose({
+                  status: 'cancel' ,
+                  type: state.type ,
+                  message: state.message,
+                }) }
+                disabled={ isPending }
+              >
+                { t('form.close') }
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  appearance="outline"
+                  tone="neutral"
+                  onClick={ () => onClose({
+                    status: 'cancel' ,
+                    type: state.type ,
+                    message: state.message,
+                  }) }
+                  disabled={ isPending }
+                >
+                  { t('form.cancel') }
+                </Button>
+                <Button type="submit" disabled={ isPending }>
+                  { isPending ?
+                    t('form.submitting') :
+                    category ? t('form.save') : t('form.submit') }
+                </Button>
+              </>
+            )
+          }
+
         </div>
       </form>
     </div>

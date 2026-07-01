@@ -19,13 +19,6 @@ export type RequestFailure = {
   response: ErrorResponse;
 };
 
-export type TBffResponse = {
-  error: boolean;
-  status: number;
-  message: string;
-  i18nMessage: string;
-};
-
 export type MessageResponse = {
   message: string;
 }

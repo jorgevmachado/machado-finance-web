@@ -7,6 +7,6 @@ import type {
 
 export class AllocationService extends BaseServiceAbstract<TAllocation, TAllocationCreate, TAllocationUpdate> {
   constructor(baseUrl: string ,token?: string) {
-    super(baseUrl ,'Allocation' ,token);
+    super(baseUrl ,'allocations' ,token);
   }
 }

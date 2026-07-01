@@ -122,6 +122,20 @@ describe('BodyAction.tsx', () => {
 
       expect(mockAction).toHaveBeenCalledWith(customItem);
     });
+
+    it('should not fail when action has no onClick handler', () => {
+      render(
+        <BodyAction
+          type="show"
+          item={testItem}
+          action={{ label: 'View Item' } as unknown as TableActionsItem}
+        />
+      );
+
+      expect(() => {
+        fireEvent.click(screen.getByRole('button', { name: 'View Item' }));
+      }).not.toThrow();
+    });
   });
 
   describe('Accessibility', () => {

@@ -1,25 +1,33 @@
 {
+  "home": {
+    "title": "Bem-vindo ao Sistema Financeiro",
+    "subtitle": "Gerencie suas finanças de forma eficiente e eficaz."
+  },
   "form": {
     "save": "Salvar",
+    "close": "Fechar",
     "edit": "Editar",
     "view": "Visualizar",
     "create": "Criar",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "delete": "Excluir",
+    "active": "Ativo",
+    "inactive": "Inativo",
     "nameLabel": "Nome",
     "typeLabel": "Tipo",
     "submitting": "Enviando",
     "namePlaceholder": "Digite o nome",
-    "typePlaceholder": "Selecione o tipo",
+    "typePlaceholder": "Selecione um tipo",
     "descriptionLabel": "Descrição",
-    "descriptionPlaceholder": "Digite a descrição"
+    "descriptionPlaceholder": "Digite a descrição",
+    "activePlaceholder": "Selecione o status"
   },
   "auth": {
     "login": {
       "title": "Entrar",
-      "subtitle": "Bem-vindo de volta! Digite suas credenciais abaixo.",
-      "credentialLabel": "E-mail ou nome de usuário",
+      "subtitle": "Bem-vindo de volta! Insira suas credenciais abaixo.",
+      "credentialLabel": "E-mail ou Nome de usuário",
       "credentialPlaceholder": "voce@exemplo.com ou seu_usuario",
       "passwordLabel": "Senha",
       "passwordPlaceholder": "••••••••",
@@ -29,12 +37,12 @@
       "signUp": "Cadastre-se"
     },
     "errors": {
-      "invalidCredential": "Digite seu e-mail ou nome de usuário.",
-      "invalidFullName": "Digite seu nome completo.",
-      "invalidBirthDate": "Informe sua data de nascimento.",
-      "invalidGender": "Selecione seu gênero.",
-      "invalidUsername": "Digite um nome de usuário.",
-      "invalidEmail": "Digite um e-mail válido.",
+      "invalidCredential": "Por favor, informe seu e-mail ou nome de usuário.",
+      "invalidFullName": "Por favor, informe seu nome completo.",
+      "invalidBirthDate": "Por favor, informe sua data de nascimento.",
+      "invalidGender": "Por favor, selecione seu gênero.",
+      "invalidUsername": "Por favor, informe um nome de usuário.",
+      "invalidEmail": "Por favor, informe um e-mail válido.",
       "passwordConfirmation": "A confirmação de senha não confere.",
       "passwordRule": "A senha deve conter pelo menos 7 caracteres, uma letra maiúscula e um caractere especial.",
       "defaultLogin": "Não foi possível entrar. Tente novamente.",
@@ -68,14 +76,21 @@
       "accountCreated": "Conta criada! Faça login."
     }
   },
+  "common": {
+    "total": "Total",
+    "actions": "Ações"
+  },
   "filters": {
+    "year": "Ano",
     "apply": "Aplicar filtros",
     "clear": "Limpar filtros",
     "noOptions": "Nenhuma opção encontrada.",
     "name": "Nome",
     "order": "Ordem",
     "type": "Tipo",
-    "status": "Status"
+    "status": "Status",
+    "isActive": "Está ativo",
+    "isInactive": "Está inativo"
   },
   "pagination": {
     "ariaLabel": "Paginação",
@@ -101,7 +116,11 @@
   "category": {
     "form": {
       "subtitle": "Preencha os dados para salvar a categoria.",
-      "typeHelper": "Escolha o tipo que melhor descreve essa categoria."
+      "typeHelper": "Escolha o tipo que melhor descreve esta categoria.",
+      "placeholder": {
+        "name": "Digite o nome da categoria",
+        "type": "Digite o tipo da categoria"
+      }
     },
     "create": {
       "title": "Criar Categoria",
@@ -129,5 +148,95 @@
       "ENTERTAINMENT": "Entretenimento",
       "GOVERNMENT_FEES": "Taxas governamentais"
     }
+  },
+  "income": {
+    "source": "Fonte",
+    "title": "Receitas",
+    "create": "Gerar Receita"
+  },
+  "transfer": {
+    "title": "Transferências",
+    "outgoing": {
+      "title": "Transferência de saída",
+      "description": "Saída"
+    },
+    "incoming": {
+      "title": "Transferência de entrada",
+      "description": "Entrada"
+    }
+  },
+  "account": {
+    "form": {
+      "label": {
+        "name": "Nome",
+        "type": "Tipo",
+        "initial_balance": "Saldo Inicial"
+      },
+      "subtitle": "Preencha os dados para salvar a conta.",
+      "placeholder": {
+        "name": "Digite o nome da conta",
+        "type": "Digite o tipo da conta",
+        "initial_balance": "Digite o saldo inicial"
+      }
+    },
+    "create": {
+      "title": "Criar Conta",
+      "success": "Conta criada com sucesso.",
+      "error": "Ocorreu um erro ao criar a conta."
+    },
+    "edit": {
+      "title": "Editar Conta {{name}}",
+      "success": "Conta editada com sucesso.",
+      "error": "Ocorreu um erro ao editar a conta."
+    },
+    "delete": {
+      "title": "Deseja excluir esta conta?",
+      "success": "Conta excluída com sucesso.",
+      "error": "Ocorreu um erro ao excluir a conta."
+    },
+    "types": {
+      "PIX": "Pix",
+      "CASH": "Dinheiro",
+      "BANK": "Banco",
+      "OTHER": "Outro",
+      "INVESTMENT": "Investimento",
+      "CREDIT_CARD": "Cartão de Crédito",
+      "ACCOUNT_DEBIT": "Débito em Conta"
+    }
+  },
+  "expense": {
+    "title": "Despesas",
+    "category": {
+      "name": "Categoria"
+    }
+  },
+  "allocation-contributions": {
+    "title": "Contribuições",
+    "contributor_name": "Contribuição"
+  },
+  "month": {
+    "january": "Janeiro",
+    "jan": "Jan",
+    "february": "Fevereiro",
+    "feb": "Fev",
+    "march": "Março",
+    "mar": "Mar",
+    "april": "Abril",
+    "apr": "Abr",
+    "may": "Maio",
+    "june": "Junho",
+    "jun": "Jun",
+    "july": "Julho",
+    "jul": "Jul",
+    "august": "Agosto",
+    "aug": "Ago",
+    "september": "Setembro",
+    "sep": "Set",
+    "october": "Outubro",
+    "oct": "Out",
+    "november": "Novembro",
+    "nov": "Nov",
+    "december": "Dezembro",
+    "dec": "Dez"
   }
 }

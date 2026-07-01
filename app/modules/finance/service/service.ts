@@ -8,9 +8,8 @@ import { AllocationService } from '../allocation';
 import {
   AllocationContributionService
 } from '../allocation-contribution';
-import { TransactionService } from '../transaction';
+import { TransferService } from '../transfer';
 import { TFinance } from '../types';
-
 
 export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unknown> {
   private readonly categoryModule: CategoryService;
@@ -18,7 +17,7 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
   private readonly accountModule: AccountService;
   private readonly allocationModule: AllocationService;
   private readonly allocationContributionModule: AllocationContributionService;
-  private readonly transactionModule: TransactionService;
+  private readonly transferModule: TransferService;
   constructor(baseUrl: string, token?: string) {
     super(baseUrl, 'finance', token);
     const childrenBaseUrl =  `${baseUrl}/${this.pathUrl}`;
@@ -27,7 +26,7 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
     this.accountModule = new AccountService(childrenBaseUrl, token);
     this.allocationModule = new AllocationService(childrenBaseUrl, token);
     this.allocationContributionModule = new AllocationContributionService(childrenBaseUrl, token);
-    this.transactionModule = new TransactionService(childrenBaseUrl, token);
+    this.transferModule = new TransferService(childrenBaseUrl, token);
   }
 
   get category(): CategoryService {
@@ -50,7 +49,7 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
     return this.allocationContributionModule;
   }
 
-  get transaction(): TransactionService {
-    return this.transactionModule;
+  get transfer(): TransferService {
+    return this.transferModule;
   }
 }
