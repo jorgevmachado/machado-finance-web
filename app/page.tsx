@@ -1,5 +1,6 @@
-import { getServerSession } from '@/app/modules/auth/server';
 import { redirect } from 'next/navigation';
+
+import { getServerSession } from '@/app/modules/auth/server';
 
 export default async function RootPage() {
   const session = await getServerSession();

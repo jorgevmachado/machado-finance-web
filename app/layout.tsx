@@ -2,12 +2,16 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import './globals.css';
-import { getAuthenticatedUserBootstrap, getServerSession } from '@/app/modules/auth/server';
 import { I18nProvider } from '@/app/shared';
-import { UserProvider } from '@/app/modules';
 import { AlertProvider ,BreadcrumbProvider ,LoadingProvider } from '@/app/ds';
 import { NavigationFrame } from '@/app/ui';
+
+import './globals.css';
+import { getAuthenticatedUserBootstrap, getServerSession } from '@/app/modules/auth/server';
+
+import { UserProvider } from '@/app/modules/auth';
+
+
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

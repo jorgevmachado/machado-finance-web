@@ -4,7 +4,7 @@ import { MessageResponse ,useAppTranslation } from '@/app/shared';
 
 import { Button ,useLoading } from '@/app/ds';
 
-import { type ActionState } from '@/app/actions/state';
+import { type ActionState } from '@/app/modules/actions/state';
 
 type DeleteEntityProps = {
   onClose: (actionState: ActionState) => void;

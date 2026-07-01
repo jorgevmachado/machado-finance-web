@@ -5,7 +5,7 @@ import {
   mapError ,
   toErrorState ,
   UNAUTHORIZED_ERROR_MESSAGE ,
-} from '@/app/actions/state';
+} from '@/app/modules/actions/state';
 import { createI18nMessage } from '@/app/shared';
 import {
   financeService ,TCategory ,
@@ -13,7 +13,7 @@ import {
   ECategoryType ,
   TCategoryUpdate ,
 } from '@/app/modules/finance';
-import { getServerSession } from '@/app/modules/auth/session';
+import { getServerSession } from '@/app/modules/auth/server';
 import { isObjectEmpty } from '@/app/utils';
 
 
@@ -150,4 +150,3 @@ async function updateCategory(token: string, category: TCategory, formData: Form
     message: createI18nMessage('category.messages.created'),
   };
 }
-

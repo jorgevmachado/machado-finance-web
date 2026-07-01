@@ -3,7 +3,7 @@ import React ,{ useActionState ,useEffect } from 'react';
 
 import { translateI18nMessage ,useAppTranslation } from '@/app/shared';
 
-import { ActionState ,INITIAL_ACTION_STATE } from '@/app/actions/state';
+import { ActionState ,INITIAL_ACTION_STATE } from '@/app/modules/actions/state';
 
 import { persistCategoryAction } from '@/app/actions/category';
 

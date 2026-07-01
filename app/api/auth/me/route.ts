@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { getServerSession } from '@/app/modules/auth/server';
-import { authService } from '@/app/modules';
+import { authService } from '@/app/modules/auth';
 
 export async function GET(): Promise<NextResponse> {
   const session = await getServerSession();

@@ -3,11 +3,11 @@
 import React ,{ useCallback ,useState } from 'react';
 
 import { useAppTranslation } from '@/app/shared';
-import { EUserRole, useUser } from '@/app/modules';
+import { EUserRole, useUser } from '@/app/modules/auth';
 import { usePathname ,useRouter } from 'next/navigation';
 
 import { getAuthenticatedMenuItems } from './business';
-import { logoutAction } from '@/app/actions/auth';
+import { logoutAction } from '@/app/modules/auth/actions';
 import { Navbar } from '@/app/ui/navigation/navbar';
 
 import './navigation.scss';

@@ -2,14 +2,14 @@
 import { useAppTranslation } from '@/app/shared';
 import { FiltersProps ,Table ,useAlert ,useModal } from '@/app/ds';
 import { useMemo } from 'react';
-import { TCategory ,TCategoryFilter } from '@/app/modules';
+import { TCategory ,TCategoryFilter } from '@/app/modules/finance';
 import { categoryBusiness ,PersistCategory } from '@/app/modules/finance';
 import { useRouter } from 'next/navigation';
 
 
 import { DeleteEntity ,usePaginatedList } from '@/app/ui';
 import PaginatedList from '../../ui/paginated-list/PaginatedList';
-import { ActionState } from '@/app/actions/state';
+import { ActionState } from '@/app/modules/actions/state';
 import { CATEGORY_TYPES } from '@/app/modules/finance/category';
 
 export default function CategoryPage() {

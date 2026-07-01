@@ -1,1 +1,0 @@
-export { getAuthenticatedUser, getAuthenticatedUserBootstrap } from './bffService';

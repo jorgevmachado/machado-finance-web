@@ -4,8 +4,8 @@ import { cookies } from 'next/headers';
 import {
   AUTH_COOKIE_NAME ,
   AUTH_TOKEN_MAX_AGE_IN_SECONDS,
-} from '../constants';
-import { isValidAuthToken } from '../token';
+} from '../../constants';
+import { isValidAuthToken } from '../../token';
 
 export const setAuthCookie = async (token: string): Promise<void> => {
   const cookieStore = await cookies();

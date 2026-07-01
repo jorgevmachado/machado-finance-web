@@ -1,0 +1,1 @@
+export { readRegisterPayload, validateRegisterPayload } from './register';

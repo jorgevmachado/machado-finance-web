@@ -8,6 +8,6 @@ import type {
 
 export class CategoryService extends BaseServiceAbstract<TCategory, TCategoryCreate, TCategoryUpdate> {
   constructor(baseUrl: string ,token?: string) {
-    super(baseUrl ,'category' ,token);
+    super(baseUrl ,'categories' ,token);
   }
 }

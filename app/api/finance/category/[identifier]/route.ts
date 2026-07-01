@@ -1,7 +1,7 @@
 import { NextRequest ,NextResponse } from 'next/server';
 
 import { getServerSession } from '@/app/modules/auth/server';
-import { financeService } from '@/app/modules';
+import { financeService } from '@/app/modules/finance';
 
 type CategoryDeleteRouteContext = {
   params: Promise<{

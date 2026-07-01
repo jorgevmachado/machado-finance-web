@@ -16,4 +16,3 @@ export default async function ProtectedLayout({ children }: ProtectedLayoutProps
 
   return children;
 }
-
