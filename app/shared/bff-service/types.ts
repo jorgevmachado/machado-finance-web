@@ -46,6 +46,7 @@ export type TBffUpdateParams<U> = Partial<TBffResponseI18n> & {
 
 export type TBffDetailParams = Partial<TBffResponseI18n> & {
   identifier: string;
+  queryString?: string;
 }
 
 export type TBffListParams<F> = Partial<TBffResponseI18n> & {

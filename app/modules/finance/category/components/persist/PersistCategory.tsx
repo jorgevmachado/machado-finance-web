@@ -52,7 +52,7 @@ export default function PersistCategory({
   const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = React.useState(false);
   const [draftCategory ,setDraftCategory] = React.useState<TDraftCategory>(
-    categoryBusiness.initDraftCategory(category));
+    categoryBusiness.initDraft(category));
   const { t } = useAppTranslation();
 
   const updateDraftValue = <K extends keyof TDraftCategory>(

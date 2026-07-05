@@ -1,11 +1,11 @@
 import type { IconType } from 'react-icons';
 
-import { EUserRole } from '@/app/modules';
+import { EUserRole } from '@/app/modules/auth';
 
-export type IMenuItem = {
+export type TMenuItem = {
   label: string;
   roles: Array<EUserRole>;
   href: string;
   icon: IconType;
-  children?: Array<IMenuItem>;
+  children?: Array<TMenuItem>;
 }

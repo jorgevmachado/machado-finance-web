@@ -4,7 +4,6 @@ export const EAccountType = {
   CASH: 'CASH',
   OTHER: 'OTHER',
   INVESTMENT: 'INVESTMENT',
-  CREDIT_CARD: 'CREDIT_CARD',
   ACCOUNT_DEBIT: 'ACCOUNT_DEBIT',
 } as const;
 

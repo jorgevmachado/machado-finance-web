@@ -1,4 +1,5 @@
 'use client';
+import { useMemo } from 'react';
 import { useAppTranslation } from '@/app/shared';
 import { useAlert ,useModal } from '@/app/ds';
 import { PaginatedList ,usePaginatedList } from '@/app/ui';
@@ -9,8 +10,7 @@ import { financeBffService } from '@/app/modules/finance';
 import type { TAccount , TAccountFilter } from '../../types';
 import { accountBusiness } from '../../business';
 
-import { PersistAccount } from '../../components';
-
+import { PersistAccount ,AccountCard } from '../../components';
 
 
 export default function AccountListPage() {
@@ -33,6 +33,13 @@ export default function AccountListPage() {
     fetchPaginatedList: financeBffService.account.list_paginate
   });
 
+  const accounts = useMemo(() => {
+    if (!items) {
+      return [];
+    }
+    return items.map((item) => accountBusiness.filterRelations(item));
+  }, [items]);
+
   const handleCloseModal = (actionState: ActionState) => {
     if (actionState.status !== 'cancel') {
       const message = accountBusiness.getResponseMessage(actionState);
@@ -53,7 +60,7 @@ export default function AccountListPage() {
       body: <PersistAccount account={account} onClose={handleCloseModal} disabled={disabled} />,
     });
   };
-  
+
   return (
     <PaginatedList
       meta={meta}
@@ -64,12 +71,20 @@ export default function AccountListPage() {
       }}
       goToPage={goToPage}
       isLoading={isLoading}
-      totalItems={items?.length}
+      totalItems={accounts?.length}
       inputFilters={inputFilters}
       clearInputFilters={clearInputFilters}
       applyInputFilters={applyInputFilters}>
       {modal}
-      <h1>Account</h1>
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+        { accounts?.length > 0 && accounts.map((account) => (
+          <AccountCard
+            key={account.id}
+            onEdit={handlePersistModal}
+            item={account}
+          />
+        ))}
+      </section>
     </PaginatedList>
   );
 }

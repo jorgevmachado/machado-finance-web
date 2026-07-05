@@ -3,7 +3,6 @@
 import {
   useCallback ,
   useEffect ,
-  useMemo ,
   useRef ,
   useState,
 } from 'react';
@@ -14,15 +13,13 @@ import {
 } from '@/app/shared';
 
 import {
-  type FiltersProps ,
-  useLoading,
-  clampPage
+  useLoading ,
+  clampPage ,useFilter,
 } from '@/app/ds';
 
 import { UsePaginatedListResult ,UsePaginatedListProps, PaginatedListState } from './types';
 
 import {
-  buildInputFilterValueMap ,
   createInitialState ,
 } from './business';
 
@@ -35,8 +32,7 @@ const usePaginatedList = <TItem, TFilters>({
   initialInputFilters,
 }: UsePaginatedListProps<TItem, TFilters>): UsePaginatedListResult<TItem, TFilters> => {
   const [state, setState] = useState<PaginatedListState<TItem>>(() => createInitialState<TItem>());
-  const [filters, setFilters] = useState<TFilters>(initialFilters);
-  const [inputFilterValues, setInputFilterValues] = useState<Record<string, string>>(() => buildInputFilterValueMap(initialInputFilters));
+
   const requestIdRef = useRef(0);
   const fetchPaginatedListRef = useRef(fetchPaginatedList);
   const { startContentLoading, stopContentLoading } = useLoading();
@@ -45,13 +41,6 @@ const usePaginatedList = <TItem, TFilters>({
   useEffect(() => {
     fetchPaginatedListRef.current = fetchPaginatedList;
   }, [fetchPaginatedList]);
-
-  const inputFilters = useMemo<FiltersProps['filters']>(() => {
-    return initialInputFilters.map((filter) => ({
-      ...filter,
-      value: inputFilterValues[filter.name] ?? '',
-    }));
-  }, [initialInputFilters, inputFilterValues]);
 
   const fetchPage = useCallback(async (page: number, activeFilters: TFilters, perPage: number = 12): Promise<void> => {
     const requestId = requestIdRef.current + 1;
@@ -113,6 +102,21 @@ const usePaginatedList = <TItem, TFilters>({
     startContentLoading();
     void fetchPage(page, activeFilters, perPage);
   }, [fetchPage, startContentLoading]);
+  
+  const {
+    filters,
+    applyFilters,
+    clearFilters,
+    inputFilters,
+    clearInputFilters,
+    applyInputFilters,
+    updateInputFilters
+  } = useFilter({
+    fetchRequest: (nextFilters: TFilters) => requestPage(1, nextFilters),
+    initialFilters,
+    normalizeFilters,
+    initialInputFilters
+  });
 
   useEffect(() => {
     const timeoutId = globalThis.setTimeout(() => {
@@ -134,47 +138,6 @@ const usePaginatedList = <TItem, TFilters>({
 
     requestPage(targetPage, filters);
   }, [filters, requestPage, state.isLoading, state.meta.current_page, state.meta.total_pages]);
-
-  const applyFilters = useCallback((nextFilters: TFilters) => {
-    const normalizedFilters = normalizeFilters(nextFilters);
-
-    setFilters(normalizedFilters);
-    requestPage(1, normalizedFilters);
-  }, [normalizeFilters, requestPage]);
-
-  const applyInputFilters = useCallback((nextFilters: TFilters) => {
-    const filterValues = nextFilters as Record<string, string | undefined>;
-    setInputFilterValues((previousState) => {
-      const nextState = { ...previousState };
-
-      for (const key of Object.keys(nextState)) {
-        nextState[key] = filterValues[key] || '';
-      }
-
-      return nextState;
-    });
-
-    applyFilters(nextFilters);
-  }, [applyFilters]);
-
-  const clearFilters = useCallback(() => {
-    setFilters(initialFilters);
-    requestPage(1, initialFilters);
-  }, [initialFilters, requestPage]);
-
-  const clearInputFilters = useCallback(() => {
-    setInputFilterValues((previousState) => {
-      return Object.fromEntries(
-        Object.keys(previousState).map((key) => [key, '']),
-      );
-    });
-
-    clearFilters();
-  }, [clearFilters]);
-
-  const updateInputFilters = useCallback((nextInputFilters: FiltersProps['filters']) => {
-    setInputFilterValues(buildInputFilterValueMap(nextInputFilters));
-  }, []);
 
   const reload = useCallback(() => {
     requestPage(state.meta.current_page, filters);

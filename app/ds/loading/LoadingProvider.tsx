@@ -122,7 +122,7 @@ const LoadingProvider = ({ children }: LoadingProviderProps) => {
     >
       <RouteChangeTracker />
       <Loading type='top-progress-bar' isVisible={isPageLoading} />
-      {isContentLoading && <Loading type='pokeball' />}
+      {isContentLoading && <Loading type='circle' />}
       {children}
     </LoadingContext.Provider>
   );

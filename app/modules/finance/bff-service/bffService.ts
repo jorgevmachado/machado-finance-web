@@ -1,6 +1,10 @@
-import { BffBaseServiceAbstract } from '@/app/shared';
+import {
+  BffBaseServiceAbstract ,
+  buildQueryString ,
+  TBffResponse,
+} from '@/app/shared';
 
-import { TFinance, TFinanceFilter } from '../types';
+import type { TFinance, TFinanceFilter } from '../types';
 import { CategoryBffService } from '@/app/modules/finance/category';
 import { IncomeBffService } from '@/app/modules/finance/income';
 import {
@@ -49,5 +53,17 @@ export class FinanceBffService extends BffBaseServiceAbstract<TFinance,unknown, 
 
   get allocationContribution(): AllocationContributionBffService {
     return this.allocationContributionModule;
+  }
+
+  get transfer(): TransferBffService {
+    return this.transferModule;
+  }
+
+  public async financeDetail(filters: TFinanceFilter): Promise<TBffResponse<TFinance>> {
+    return await this.bff_get<TFinance>({
+      queryString: buildQueryString<TFinanceFilter>(filters),
+      i18nMessageSuccess: `${this.domain}.detail.success`,
+      i18nMessageError: `${this.domain}.detail.error`
+    });
   }
 }

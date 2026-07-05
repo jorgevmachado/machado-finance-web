@@ -1,15 +1,20 @@
-export type TCountry = 'br';
+import { SupportedLocale } from '@/app/shared';
+
+export type TCountry = SupportedLocale;
 
 export function currencyFormatter(
   value: number | string,
-  country: TCountry = 'br',
+  country: TCountry = 'pt-BR',
 ): string {
   const MAP = {
-    br: { locale: 'pt-BR', currency: 'BRL' },
+    'pt-BR': { locale: 'pt-BR', currency: 'BRL' },
+    en: { locale: 'en-US', currency: 'USD' },
+    es: { locale: 'es-ES', currency: 'EUR' },
   };
   const mapped = MAP[country];
 
   if (typeof value === 'string') {
+    console.log('# => value => ', value);
     const digits = value.replace(/\D/g, '');
     if (!digits) {
       return '';

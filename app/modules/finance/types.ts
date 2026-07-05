@@ -13,3 +13,9 @@ export type TFinance = TEntity & {
 export type TFinanceFilter = Omit<TPaginateBaseFilter, 'page' | 'limit'> & {
   year?: number;
 }
+
+export type TFinanceMonth = TEntity &{
+  amount: number;
+  reference_year: number;
+  reference_month: number;
+}

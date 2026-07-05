@@ -78,7 +78,9 @@
   },
   "common": {
     "total": "Total",
-    "actions": "Ações"
+    "actions": "Ações",
+    "viewMore": "Ver mais",
+    "loading": "Carregando..."
   },
   "filters": {
     "year": "Ano",
@@ -166,10 +168,12 @@
     }
   },
   "account": {
+    "title": "Contas",
     "form": {
       "label": {
         "name": "Nome",
         "type": "Tipo",
+        "current_balance": "Saldo Atual",
         "initial_balance": "Saldo Inicial"
       },
       "subtitle": "Preencha os dados para salvar a conta.",
@@ -202,7 +206,13 @@
       "INVESTMENT": "Investimento",
       "CREDIT_CARD": "Cartão de Crédito",
       "ACCOUNT_DEBIT": "Débito em Conta"
-    }
+    },
+    "total_expenses": "Total Despesas",
+    "total_incomes": "Total Receitas",
+    "total_transfers": "Total Transferências",
+    "total_outgoing_transfers": "Total Transferências de Saída",
+    "total_incoming_transfers": "Total Transferências de Entrada",
+    "total_allocation_contributions": "Total Contribuições"
   },
   "expense": {
     "title": "Despesas",

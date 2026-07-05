@@ -1,7 +1,13 @@
 import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
+import type { TEntityMonth } from '../month';
+
+export type TIncomeMonth = TEntityMonth & {
+  income_id: string;
+}
 
 export type TIncome = TEntity & {
+  months: Array<TIncomeMonth>;
   source: string;
   amount: number;
   source_code: string;

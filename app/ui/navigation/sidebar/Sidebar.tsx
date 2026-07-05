@@ -6,12 +6,12 @@ import { MdKeyboardArrowDown, MdLogout } from 'react-icons/md';
 
 import { useAppTranslation } from '@/app/shared';
 
-import type { IMenuItem } from '../types';
+import type { TMenuItem } from '../types';
 
 import './Sidebar.scss';
 
 type SidebarProps = {
-  items: Array<IMenuItem>;
+  items: Array<TMenuItem>;
   isCollapsed: boolean;
   pathname: string;
   onLogout: () => void;

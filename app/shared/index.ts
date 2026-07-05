@@ -1,11 +1,10 @@
-export * from './bff-service';
 export {
   BffBaseServiceAbstract ,
   type TBffDataListResponse ,
   type TBffDeleteParams ,
+  type TBffDetailParams,
   type TBffListPaginateParams ,
-  type TBffResponse,
-} from './bff-service';
+  type TBffResponse } from './bff-service';
 export {
   type ColorContextType ,
   colorMap ,

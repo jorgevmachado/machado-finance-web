@@ -1,10 +1,16 @@
 import type { TEntity } from '@/app/modules';
+
 import type { TPaginateBaseFilter } from '@/app/ui';
 
 import type { TAllocation } from '../allocation';
+import type { TEntityMonth } from '../month';
+
+export type TAllocationContributionMonth = TEntityMonth & {
+  allocation_contribution_id: string;
+}
 
 export type TAllocationContribution =  TEntity & {
-  amount: number;
+  months: Array<TAllocationContributionMonth>;
   allocation: TAllocation;
   account_id: string;
   finance_id: string;

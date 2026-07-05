@@ -2,6 +2,9 @@ import type { ActionState } from '@/app/modules/actions';
 
 import { CategoryBusiness } from './business';
 
+import type { TCategory } from '../types';
+import { ECategoryType } from '../enum';
+
 describe('CategoryBusiness', () => {
   const business = new CategoryBusiness();
 
@@ -55,27 +58,47 @@ describe('CategoryBusiness', () => {
   });
 
   it('finds original category by row item id', () => {
-    const categories = [
-      { id: '1', name: 'Food', type: 'FOOD', description: 'x' },
-      { id: '2', name: 'Other', type: 'OTHER', description: 'y' },
-    ] as const;
 
-    expect(business.getOriginalCategory([...categories], { id: '2' })).toEqual(
+    const categories: Array<TCategory> = [
+      {
+        id: '1' ,
+        name: 'Food' ,
+        type: ECategoryType.FOOD,
+        name_code: 'food' ,
+        created_at: new Date() ,
+        finance_id: 'finance_id' ,
+        description: 'x' ,
+      },
+      {
+        id: '2' ,
+        name: 'Other' ,
+        type: ECategoryType.OTHER,
+        name_code: 'other' ,
+        created_at: new Date() ,
+        finance_id: 'finance_id' ,
+        description: 'y' ,
+      },
+    ];
+
+    expect(business.getOriginal([...categories], { id: '2' })).toEqual(
       categories[1],
     );
   });
 
   it('returns undefined when original category is not found', () => {
-    const categories = [{ id: '1', name: 'Food', type: 'FOOD' }] as const;
+    const categories: Array<TCategory> = [{
+      id: '1',
+      name: 'Food',
+      type: ECategoryType.FOOD,
+      name_code: 'food' ,
+      created_at: new Date() ,
+      finance_id: 'finance_id' ,
+      description: 'x' ,
+    }] as const;
 
     expect(
-      business.getOriginalCategory(
-        [...categories] as unknown as Array<{
-          id: string;
-          name: string;
-          type: string;
-          description: string;
-        }>,
+      business.getOriginal(
+        [...categories],
         { id: '999' },
       ),
     ).toBeUndefined();
@@ -83,7 +106,7 @@ describe('CategoryBusiness', () => {
 
   it('initializes draft category from existing category', () => {
     expect(
-      business.initDraftCategory({
+      business.initDraft({
         id: '1',
         name: 'Food',
         type: 'FOOD',
@@ -97,7 +120,7 @@ describe('CategoryBusiness', () => {
   });
 
   it('initializes empty draft category when category is missing', () => {
-    expect(business.initDraftCategory()).toEqual({
+    expect(business.initDraft()).toEqual({
       name: '',
       type: '',
       description: '',

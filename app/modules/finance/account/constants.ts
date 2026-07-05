@@ -6,6 +6,5 @@ export const ACCOUNT_TYPES: Array<EAccountType> = [
   'CASH' ,
   'OTHER' ,
   'INVESTMENT' ,
-  'CREDIT_CARD' ,
   'ACCOUNT_DEBIT',
 ];

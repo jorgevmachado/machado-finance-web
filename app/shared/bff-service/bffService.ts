@@ -85,11 +85,13 @@ export abstract class BffBaseServiceAbstract<T, C, U, F> extends Http {
 
   public detail = async ({
     identifier,
+    queryString,
     i18nMessageError = `${this.domain}.detail.error`,
     i18nMessageSuccess = `${this.domain}.detail.success`,
   }: TBffDetailParams): Promise<TBffResponse<T>> => {
     return await this.bff_get<T>({
       param: identifier,
+      queryString,
       i18nMessageError,
       i18nMessageSuccess,
     });

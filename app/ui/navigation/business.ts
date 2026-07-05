@@ -1,12 +1,11 @@
 import { MdAccountBalance ,MdCategory ,MdHome } from 'react-icons/md';
-
-import { IMenuItem } from '@/app/ui/navigation/types';
 import { HiOutlineCurrencyDollar } from 'react-icons/hi';
-import { FaMoneyBillTrendUp } from 'react-icons/fa6';
 import { IoMdPeople } from 'react-icons/io';
 import { AiOutlineTransaction } from 'react-icons/ai';
 
-export const getAuthenticatedMenuItems = (translate: (key: string) => string): Array<IMenuItem> => [
+import { TMenuItem } from '@/app/ui/navigation/types';
+
+export const getAuthenticatedMenuItems = (translate: (key: string) => string): Array<TMenuItem> => [
   {
     label: translate('navigation.home'),
     roles: ['USER', 'ADMIN'],
@@ -29,15 +28,7 @@ export const getAuthenticatedMenuItems = (translate: (key: string) => string): A
     label: translate('navigation.account'),
     roles: ['USER', 'ADMIN'],
     href: '/account',
-    icon: MdAccountBalance,
-    children: [
-      {
-        label: translate('navigation.income'),
-        roles: ['USER', 'ADMIN'],
-        href: '/account/income',
-        icon: FaMoneyBillTrendUp,
-      }
-    ]
+    icon: MdAccountBalance
   },
   {
     label: translate('navigation.allocation'),

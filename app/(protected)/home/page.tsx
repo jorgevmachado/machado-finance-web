@@ -1,5 +1,5 @@
-export default function IncomePage() {
-  return (
-    <div>Income</div>
-  );
+import { FinancePage } from '@/app/modules/finance';
+
+export default function FinanceRouterPage() {
+  return <FinancePage/>;
 }

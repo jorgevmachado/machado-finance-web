@@ -35,5 +35,7 @@ export {
   type TIncomeFilter ,
   type TIncomeUpdate,
 } from './income';
+export { type TEntityMonth } from './month';
+export { FinancePage } from './pages';
 export { financeService } from './service';
 export type { TFinance } from './types';

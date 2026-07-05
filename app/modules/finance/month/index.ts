@@ -1,0 +1,1 @@
+export type { TEntityMonth } from './types';

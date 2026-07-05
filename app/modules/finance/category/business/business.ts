@@ -43,12 +43,12 @@ export class CategoryBusiness {
     return `category.${actionState.status}.${actionState.type}`;
   }
   
-  public getOriginalCategory(items: Array<TCategory>, tableItem: unknown): TCategory | undefined {
+  public getOriginal(items: Array<TCategory>, tableItem: unknown): TCategory | undefined {
     const itemId = (tableItem as TCategory)?.id;
     return items?.find((item) => item.id === itemId);
   }
 
-  public initDraftCategory(category?: TCategory): TDraftCategory {
+  public initDraft(category?: TCategory): TDraftCategory {
     return {
       name: category?.name || '',
       type: category?.type || '',

@@ -24,6 +24,7 @@ const SIZE_CLASS_MAP: Record<InputSize, string> = {
 const CURRENCY_LANGUAGE_MAP = {
   'pt-BR': { locale: 'pt-BR', currency: 'BRL' },
   en: { locale: 'en-US', currency: 'USD' },
+  es: { locale: 'es-ES', currency: 'EUR' },
 } as const;
 
 const MASK_TOKEN = '#';

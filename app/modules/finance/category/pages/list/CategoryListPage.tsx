@@ -49,7 +49,7 @@ export default function CategoryListPage() {
   };
 
   const handlePersistModal = (item?: unknown, disabled?: boolean) => {
-    const category = categoryBusiness.getOriginalCategory(items ?? [], item);
+    const category = categoryBusiness.getOriginal(items ?? [], item);
     openModal({
       title: category ? t('category.edit.title', { name: category.name }) : t('category.create.title'),
       body: <PersistCategory category={category} onClose={handleCloseModal} disabled={disabled} />,

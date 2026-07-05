@@ -52,4 +52,9 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
   get transfer(): TransferService {
     return this.transferModule;
   }
+
+  public async finance(params?: Record<string, unknown>): Promise<TFinance> {
+    const config = !params ? {} : { params };
+    return this.get<TFinance>(this.pathUrl ,config);
+  }
 }

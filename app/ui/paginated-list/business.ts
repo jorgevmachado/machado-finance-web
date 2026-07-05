@@ -21,7 +21,7 @@ export const createInitialState = <TItem,>(): PaginatedListState<TItem> => ({
   errorMessage: undefined,
 });
 
-export const buildInputFilterValueMap = (filters: FiltersProps['filters']): Record<string, string> => {
+export const buildInputFilterValueMap = (filters: FiltersProps['filters']): Record<string, string | number> => {
   return Object.fromEntries(
     filters.map((filter) => [filter.name, filter.value]),
   );

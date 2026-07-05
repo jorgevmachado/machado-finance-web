@@ -39,7 +39,14 @@ export {
 export {
   default as Filters,
   type FiltersProps,
+  useFilter,
 } from './filters';
+export {
+  default as Image,
+  type ImageProps,
+  type TFit,
+  type TImageSize
+} from './image';
 export {
   default as Input,
   type InputMask,

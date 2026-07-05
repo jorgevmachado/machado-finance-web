@@ -15,9 +15,9 @@ jest.mock('@/app/shared', () => ({
 }));
 
 import Sidebar from './Sidebar';
-import type { IMenuItem } from '../types';
+import type { TMenuItem } from '../types';
 
-const items: Array<IMenuItem> = [
+const items: Array<TMenuItem> = [
   { label: 'Home', roles: ['USER', 'ADMIN'], href: '/home', icon: MdHome },
   {
     label: 'Pokemon',

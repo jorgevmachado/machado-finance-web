@@ -1,4 +1,5 @@
-import type { TEntity ,TFinance } from '@/app/modules';
+import type { TEntity } from '@/app/modules';
+import type { TFinance } from '@/app/modules/finance';
 
 import { EUserRole ,EUserStatus } from './enum';
 
