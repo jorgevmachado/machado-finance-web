@@ -8,7 +8,7 @@ type FetchRequestFn<TFilters> = (filters: TFilters) => void;
 type UseFilterProps<TFilters> = {
   fetchRequest: FetchRequestFn<TFilters>;
   initialFilters: TFilters;
-  normalizeFilters: (nextFilters: TFilters) => TFilters;
+  normalizeFilters?: (nextFilters?: TFilters) => TFilters;
   initialInputFilters: FiltersProps['filters'];
 };
 
@@ -40,7 +40,7 @@ const useFilter = <TFilters>({
   } ,[initialInputFilters ,inputFilterValues]);
 
   const applyFilters = useCallback((nextFilters: TFilters) => {
-    const normalizedFilters = normalizeFilters(nextFilters);
+    const normalizedFilters = normalizeFilters ? normalizeFilters(nextFilters) : nextFilters;
 
     setFilters(normalizedFilters);
     fetchRequest(normalizedFilters);

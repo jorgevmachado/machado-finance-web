@@ -10,22 +10,22 @@ export type DetailState<TItem> = {
   errorMessage?: string;
 }
 
-export type UseDetailProps<TItem> = {
+export type UseDetailProps<TItem, TFilters> = {
   identifier: string;
   fetchDetail: FetchDetailFn<TItem>;
-  initialFilters?: Record<string, string | number>;
-  normalizeFilters?: (nextFilters: Record<string, string | number>) => Record<string, string | number>;
+  initialFilters?: TFilters;
+  normalizeFilters?: (nextFilters?: TFilters) => TFilters;
   fetchErrorMessage?: string;
   initialInputFilters?: FiltersProps['filters'];
 }
 
-export type UseDetailResult<TItem> = DetailState<TItem> & {
+export type UseDetailResult<TItem, TFilters> = DetailState<TItem> & {
   reload: () => Promise<void>;
-  filters?: Record<string, string | number>;
+  filters?: TFilters;
   inputFilters?: FiltersProps['filters'];
-  applyFilters?: (nextFilters: Record<string, string | number>) => void;
+  applyFilters?: (nextFilters: TFilters) => void;
   clearFilters?: () => void;
-  applyInputFilters?: (nextFilters: Record<string, string | number>) => void;
+  applyInputFilters?: (nextFilters: TFilters) => void;
   clearInputFilters?: () => void;
   updateInputFilters: (inputFilters: FiltersProps['filters']) => void;
 }

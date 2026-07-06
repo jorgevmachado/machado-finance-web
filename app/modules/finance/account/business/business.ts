@@ -53,12 +53,12 @@ export class AccountBusiness {
     }
   ];
 
-  public normalizeFilters(filters: TAccountFilter): TAccountFilter {
+  public normalizeFilters(filters?: TAccountFilter): TAccountFilter {
     return {
-      year: filters.year || new Date().getFullYear(),
-      name: filters.name?.trim() || undefined,
-      type: filters.type || undefined,
-      is_active: filters.is_active || undefined,
+      year: filters?.year || new Date().getFullYear(),
+      name: filters?.name?.trim() || undefined,
+      type: filters?.type || undefined,
+      is_active: filters?.is_active || undefined,
     };
   }
 

@@ -1,153 +1,125 @@
 'use client';
-import { useCallback ,useEffect ,useMemo ,useState } from 'react';
-import { type FiltersProps ,useAlert ,useLoading } from '@/app/ds';
+import { useCallback ,useEffect ,useRef ,useState } from 'react';
+import { useAlert ,useFilter ,useLoading } from '@/app/ds';
 import { buildQueryString ,useAppTranslation } from '@/app/shared';
 
-import { UseDetailProps, UseDetailResult, DetailState } from './types';
-import { buildInputFilterValueMap } from '@/app/ui';
+import { DetailState ,UseDetailProps ,UseDetailResult } from './types';
 
-const useDetail = <TItem>({
-  identifier,
-  fetchDetail,
-  initialFilters,
-  initialInputFilters,
-  normalizeFilters,
-  fetchErrorMessage = 'common.unknow'
-}: UseDetailProps<TItem>): UseDetailResult<TItem> => {
+const useDetail = <TItem ,TFilters>({
+  identifier ,
+  fetchDetail ,
+  initialFilters = {} as TFilters ,
+  initialInputFilters = [] ,
+  normalizeFilters ,
+  fetchErrorMessage = 'common.unknow',
+}: UseDetailProps<TItem ,TFilters>): UseDetailResult<TItem ,TFilters> => {
+  const requestIdRef = useRef(0);
+  const fetchDetailRef = useRef(fetchDetail);
 
-  const { startContentLoading, stopContentLoading } = useLoading();
+  const { startContentLoading ,stopContentLoading } = useLoading();
   const { showAlert } = useAlert();
   const { t } = useAppTranslation();
 
-  const [state, setState] = useState<DetailState<TItem>>({
-    data: undefined,
-    isLoading: true,
-    errorMessage: undefined,
+  useEffect(() => {
+    fetchDetailRef.current = fetchDetail;
+  } ,[fetchDetail]);
+
+  const [state ,setState] = useState<DetailState<TItem>>({
+    data: undefined ,
+    isLoading: true ,
+    errorMessage: undefined ,
   });
 
-  const [filters, setFilters] = useState<Record<string, string | number> | undefined>(initialFilters);
-  const [inputFilterValues, setInputFilterValues] = useState<Record<string, string | number> | undefined>(() => !initialInputFilters ? undefined : buildInputFilterValueMap(initialInputFilters));
-
-  const inputFilters = useMemo<FiltersProps['filters']>(() => {
-    if (!initialInputFilters) {
-      return [];
-    }
-    return initialInputFilters.map((filter) => ({
-      ...filter,
-      value: inputFilterValues?.[filter.name] ?? '',
-    }));
-  }, [initialInputFilters, inputFilterValues]);
-
-  const fetchPage = useCallback(async (activeFilters?: Record<string, string | number>) => {
+  const fetchPage = useCallback(async (activeFilters?: TFilters) => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setState((previousState) => ({
-      ...previousState,
-      isLoading: true,
-      errorMessage: undefined,
+      ...previousState ,
+      isLoading: true ,
+      errorMessage: undefined ,
     }));
-    startContentLoading();
     const tFetchErrorMessage = t(fetchErrorMessage);
     try {
-      const queryString = buildQueryString(activeFilters);
-      const response = await fetchDetail({ identifier, queryString });
-      if (response.error && !response?.data) {
-        const message = t(response.i18nMessageError);
-        setState({ data: undefined, isLoading: false, errorMessage: message ?? tFetchErrorMessage });
-        showAlert({ type: 'error', message });
+      const fetchDetail = fetchDetailRef.current;
+      const queryString = activeFilters ? buildQueryString(activeFilters) : '';
+      const response = await fetchDetail({ identifier ,queryString });
+
+      if (requestIdRef.current !== requestId) {
         return;
       }
-      setState({ data: response.data, isLoading: false, errorMessage: undefined });
+
+      if (response.error && !response?.data) {
+        const message = t(response.i18nMessageError);
+        setState({
+          data: undefined ,
+          isLoading: false ,
+          errorMessage: message ?? tFetchErrorMessage,
+        });
+        showAlert({ type: 'error' ,message });
+        return;
+      }
+      setState(
+        { data: response.data ,isLoading: false ,errorMessage: undefined });
     } catch (error) {
-      const message = error instanceof Error && error.message ? error.message : tFetchErrorMessage;
-      setState({ data: undefined, isLoading: false, errorMessage: message });
-      showAlert({ type: 'error', message });
+      if (requestIdRef.current !== requestId) {
+        return;
+      }
+      const message = error instanceof Error && error.message ?
+        error.message :
+        tFetchErrorMessage;
+      setState({ data: undefined ,isLoading: false ,errorMessage: message });
+      showAlert({ type: 'error' ,message });
     } finally {
       stopContentLoading();
     }
-  }, [fetchDetail, fetchErrorMessage, identifier, showAlert, startContentLoading, stopContentLoading, t]);
+  } ,[fetchErrorMessage ,identifier ,showAlert ,stopContentLoading ,t]);
 
-  const requestPage = useCallback((activeFilters?: Record<string, string | number>): void => {
+  const requestPage = useCallback((activeFilters?: TFilters): void => {
     setState((previousState) => ({
-      ...previousState,
-      isLoading: true,
-      errorMessage: undefined,
+      ...previousState ,
+      isLoading: true ,
+      errorMessage: undefined ,
     }));
     startContentLoading();
     void fetchPage(activeFilters);
-  }, [fetchPage, startContentLoading]);
+  } ,[fetchPage ,startContentLoading]);
 
-  const normalizeDetailFilters = useCallback((nextFilters: Record<string, string | number>): Record<string, string | number> => {
-    const normalizedFilters: Record<string, string | number> = {};
-    for (const [key, value] of Object.entries(nextFilters)) {
-      if (value !== undefined && value !== null && value !== '') {
-        normalizedFilters[key] = value;
-      }
-    }
-    return normalizedFilters;
-  }, []);
-  
-  const applyFilters = useCallback((nextFilters: Record<string, string | number>) => {
-    const normalizedFilters = !normalizeFilters ? normalizeDetailFilters(nextFilters) : normalizeFilters(nextFilters);
-
-    setFilters(normalizedFilters);
-    requestPage(normalizedFilters);
-  }, [normalizeDetailFilters, normalizeFilters, requestPage]);
-
-  const applyInputFilters = useCallback((nextFilters: Record<string, string | number>) => {
-    const filterValues = nextFilters as Record<string, string | undefined>;
-    setInputFilterValues((previousState) => {
-      const nextState = { ...previousState };
-
-      for (const key of Object.keys(nextState)) {
-        nextState[key] = filterValues[key] || '';
-      }
-
-      return nextState;
-    });
-
-    applyFilters(nextFilters);
-  }, [applyFilters]);
-
-  const clearFilters = useCallback(() => {
-    setFilters(initialFilters);
-    requestPage( initialFilters);
-  }, [initialFilters, requestPage]);
-
-  const clearInputFilters = useCallback(() => {
-    setInputFilterValues((previousState) => {
-      if (!previousState) {
-        return ;
-      }
-      return Object.fromEntries(
-        Object.keys(previousState).map((key) => [key, '']),
-      );
-    });
-
-    clearFilters();
-  }, [clearFilters]);
-
-  const updateInputFilters = useCallback((nextInputFilters: FiltersProps['filters']) => {
-    setInputFilterValues(buildInputFilterValueMap(nextInputFilters));
-  }, []);
+  const {
+    filters ,
+    applyFilters ,
+    clearFilters ,
+    inputFilters ,
+    clearInputFilters ,
+    applyInputFilters ,
+    updateInputFilters,
+  } = useFilter<TFilters>({
+    fetchRequest: (nextFilters: TFilters) => requestPage(nextFilters) ,
+    initialFilters ,
+    normalizeFilters ,
+    initialInputFilters,
+  });
 
   useEffect(() => {
     const timeoutId = globalThis.setTimeout(() => {
+      startContentLoading();
       void fetchPage(initialFilters);
-    }, 0);
+    } ,0);
 
     return () => {
       globalThis.clearTimeout(timeoutId);
     };
-  }, [fetchPage, initialFilters]);
+  } ,[fetchPage ,startContentLoading]);
 
   return {
-    ...state,
-    reload: fetchPage,
-    filters,
-    clearFilters,
-    inputFilters,
-    applyInputFilters,
-    clearInputFilters,
-    updateInputFilters,
+    ...state ,
+    reload: fetchPage ,
+    filters ,
+    applyFilters ,
+    clearFilters ,
+    inputFilters ,
+    applyInputFilters ,
+    clearInputFilters ,
+    updateInputFilters ,
   };
 };
 export default useDetail;

@@ -1,4 +1,5 @@
 export {
+  AccountDetailPage,
   AccountListPage,
   EAccountType ,
   type TAccount ,

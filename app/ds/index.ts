@@ -89,6 +89,11 @@ export {
   type TableActions,
   type TableHeaderItem } from './table';
 export {
+  type TabItem,
+  default as Tabs,
+  type TabsProps,
+} from './tabs';
+export {
   default as Text,
   type TextProps,
   type TextTag,

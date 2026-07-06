@@ -7,11 +7,13 @@ import type{ TTransfer } from '../transfer';
 import type { TAllocationContribution } from '../allocation-contribution';
 
 import { EAccountType } from './enum';
+import { TAllocation } from '@/app/modules/finance';
 
 export type TAccount = TEntity & {
   name: string;
   type: EAccountType;
   incomes: Array<TIncome>;
+  allocations: Array<TAllocation>;
   expenses: Array<TExpense>;
   is_active: boolean;
   finance_id: string;

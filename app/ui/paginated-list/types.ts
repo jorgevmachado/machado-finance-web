@@ -40,7 +40,7 @@ type FetchPaginatedListFn<TItem, TFilters> = (params: TBffListPaginateParams<TFi
 
 export type UsePaginatedListProps<TItem, TFilters> = {
   initialFilters: TFilters;
-  normalizeFilters: (nextFilters: TFilters) => TFilters;
+  normalizeFilters: (nextFilters?: TFilters) => TFilters;
   fetchErrorMessage?: string;
   fetchPaginatedList: FetchPaginatedListFn<TItem, TFilters>;
   initialInputFilters: FiltersProps['filters'];
