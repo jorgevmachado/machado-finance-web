@@ -14,12 +14,15 @@ export type TMonthKey =
 
 export type TMonthSummary = {
   id?: string;
-  amount: number;
   month: string;
-  reference_month: number;
-  reference_year: number;
+  amount: number;
+  paid_at?: Date;
   received_at?: string;
+  reference_year: number;
+  reference_month: number;
 }
+
+export type TMonthMap = Record<TMonthKey, TMonthSummary>;
 
 // export type TFinanceYearSummaryBase = {
 //   id?: string;

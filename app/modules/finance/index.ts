@@ -8,7 +8,7 @@ export {
   type TAccountUpdate,
 } from './account';
 export {
-  EAllocationType ,
+  AllocationDetail,
   type TAllocation ,
   type TAllocationCreate ,
   type TAllocationFilter ,
@@ -29,14 +29,15 @@ export {
   type TCategoryFilter ,
   type TCategoryUpdate,
 } from './category';
-export { EExpenseStatus ,type  TExpense ,type TExpenseFilter } from './expense';
+export { type  TExpense ,type TExpenseFilter } from './expense';
 export {
   type TIncome ,
   type TIncomeCreate ,
   type TIncomeFilter ,
   type TIncomeUpdate,
 } from './income';
-export { type TEntityMonth } from './month';
+export { EMonthStatus, monthBusiness,type TEntityMonth } from './month';
+export { movementBusiness } from './movement';
 export { FinancePage } from './pages';
 export { financeService } from './service';
 export type { TFinance } from './types';

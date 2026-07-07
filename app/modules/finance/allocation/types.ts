@@ -1,32 +1,31 @@
 import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
 
-import { EAllocationType } from './enum';
+import type { TExpense } from '../expense';
 
 export type TAllocation = TEntity & {
   name: string;
-  type: EAllocationType;
+  expenses: Array<TExpense>;
   name_code: string;
   is_active: boolean;
-  finance_id: string;
+  account_id: string;
   description: string;
 }
 
 export type TAllocationFilter = TPaginateBaseFilter & {
   name?: string;
-  type?: EAllocationType;
   is_active?: boolean;
 }
 
 export type TAllocationCreate = {
   name: string;
-  type: EAllocationType;
+  account_id: string;
   description: string;
 }
 
 export type TAllocationUpdate = {
   name?: string;
-  type?: EAllocationType;
   is_active?: boolean;
+  account_id?: string;
   description?: string;
 }

@@ -7,11 +7,8 @@ import type { TCategory } from '../category';
 import type { TEntityMonth } from '../month';
 
 
-import { EExpenseStatus } from './enum';
-
 
 export type TExpenseMonth = TEntityMonth  & {
-  status: EExpenseStatus;
   paid_at?: string;
   expense_id: string;
 }
@@ -28,16 +25,12 @@ export type TExpense = TEntity & {
 }
 
 export type TExpenseFilter = TPaginateBaseFilter & {
-  status?: EExpenseStatus;
   account_id?: string;
   category_id?: string;
   allocation_id?: string;
 }
 
 export type TExpenseCreate = {
-  status: EExpenseStatus;
-  amount: number;
-  paid_at?: string;
   account_id: string;
   category_id: string;
   description: string;
@@ -45,8 +38,6 @@ export type TExpenseCreate = {
 }
 
 export type TExpenseUpdate = {
-  status: EExpenseStatus;
-  amount?: number;
   paid_at?: string;
   account_id?: string;
   category_id?: string;

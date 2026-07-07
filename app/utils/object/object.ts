@@ -4,3 +4,7 @@ export function isObjectEmpty(obj: unknown): boolean {
   }
   return false;
 }
+
+export function isObject(value: unknown): boolean {
+  return value instanceof Object && !Array.isArray(value);
+}

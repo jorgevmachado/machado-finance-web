@@ -1,0 +1,1 @@
+export { default as AllocationDetail } from './allocation-detail';

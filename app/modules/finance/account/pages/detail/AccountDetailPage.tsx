@@ -1,9 +1,10 @@
 'use client';
 import { useDetail } from '@/app/ui';
 import {
+  AllocationDetail ,
   financeBffService ,
   TAccount ,
-  TAccountFilter,
+  TAccountFilter ,
 } from '@/app/modules/finance';
 import { accountBusiness } from '../../business';
 import { Filters ,Tabs } from '@/app/ds';
@@ -16,12 +17,19 @@ type AccountDetailPageProps = {
 
 export default function AccountDetailPage({ identifier }: AccountDetailPageProps) {
   const { t } = useAppTranslation();
-  const { data , inputFilters, clearInputFilters, applyInputFilters } = useDetail<TAccount, TAccountFilter>({
+  const { data , filters, inputFilters, clearInputFilters, applyInputFilters } = useDetail<TAccount, TAccountFilter>({
     identifier,
     fetchDetail: financeBffService.account.detail,
-    initialFilters: { year: new Date().getFullYear() },
+    initialFilters: accountBusiness.INITIAL_FILTERS,
     initialInputFilters: accountBusiness.INITIAL_INPUT_FILTERS.filter((item) => item.name === 'year'),
   });
+
+  const referenceYear = useMemo(() => {
+    if (filters?.year) {
+      return filters.year;
+    }
+    return accountBusiness.INITIAL_FILTERS.year ?? new Date().getFullYear();
+  }, [filters]);
 
   const tabAllocations = useMemo(() => {
     if (!data) {
@@ -31,7 +39,7 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
     return allocations.map((allocation) => ({
       id: allocation.id,
       title: allocation.name,
-      children: <p>{allocation.id}</p>,
+      children: <AllocationDetail allocation={allocation} referenceYear={referenceYear}/>,
     }));
   }, [data]);
 
@@ -39,7 +47,7 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-950 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 mb-4">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
         { inputFilters && inputFilters.length > 0 && (
           <Filters
             filters={ inputFilters }
@@ -51,11 +59,13 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
       </div>
 
       {data && (
-        <Tabs
-          items={tabAllocations}
-          defaultTabId="overview"
-          onChange={(tabId) => console.log('Tab ativa:', tabId)}
-        />
+        <div className=" mt-4 flex gap-6">
+          <Tabs
+            items={tabAllocations}
+            defaultTabId="overview"
+            onChange={(tabId) => console.log('Tab ativa:', tabId)}
+          />
+        </div>
       )}
 
     </main>
