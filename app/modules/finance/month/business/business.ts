@@ -1,8 +1,11 @@
 import { TMonthKey ,TMonthMap ,TMonthSummary } from './types';
-import { TEntityMonth } from '@/app/modules/finance';
-import { TableHeaderItem } from '@/app/ds';
-import { ETypeTableHeader } from '@/app/ds/table/header';
-import { validateCreatedAt, validateValue } from '@/app/utils';
+import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
+import {
+  validateBasicEntity ,
+  validateDateAt ,
+  validateValue ,
+} from '@/app/utils';
+import { TEntity } from '@/app/modules';
 
 export class MonthBusiness {
   public MONTH_KEYS: Array<TMonthKey> = [
@@ -24,11 +27,11 @@ export class MonthBusiness {
 
   private createMonthSummary(year: number, month: number, monthFormatter: Intl.DateTimeFormat, item?: Record<string, unknown>): TMonthSummary {
     const monthDate = new Date(Date.UTC(year, month - 1, 1));
-
+    const entity = item ?  validateBasicEntity<TEntity>(item) : { id: '', created_at: new Date(), updated_at: undefined, deleted_at: undefined };
     return {
-      id: item?.['id'] as string | undefined,
-      amount: validateValue((item?.['amount'] as number | undefined), 'number') as number,
+      ...entity,
       month: monthFormatter.format(monthDate),
+      amount: validateValue((item?.['amount'] as number | undefined), 'number') as number,
       received_at: item?.['received_at'] as string | undefined,
       reference_month: month,
       reference_year: year,
@@ -42,19 +45,28 @@ export class MonthBusiness {
     }, {} as TMonthMap);
   }
 
-  private buildEntityMonths(months: Array<Record<string, unknown>>, referenceYear: number): Array<TEntityMonth> {
+  private buildMonthSummary(months: Array<Record<string, unknown>>, referenceYear: number, monthFormatter: Intl.DateTimeFormat): Array<TMonthSummary> {
     const entityMonths = months.map((month) => {
-      const id = validateValue(month?.['id'] as string, 'string') as string;
+      const entity =  validateBasicEntity<TEntity>(month);
       const amount = validateValue((month?.['amount'] as number | undefined), 'number') as number;
+      const paid_at = validateDateAt(month?.['paid_at'] as string | undefined) as Date | undefined;
+      const income_id = validateValue((month?.['income_id'] as string | undefined), 'string') as string;
+      const expense_id = validateValue((month?.['expense_id'] as string | undefined), 'string') as string;
       const reference_year = validateValue((month?.['reference_year'] as number | undefined), 'number') as number;
       const reference_month = validateValue((month?.['reference_month'] as number | undefined), 'number') as number;
-      const created_at = validateCreatedAt(month?.['created_at'] as string | undefined) as Date;
+      const allocation_contribution_id = validateValue((month?.['allocation_contribution_id'] as string | undefined), 'string') as string;
+      const monthDate = new Date(Date.UTC(referenceYear, reference_month - 1, 1));
+
       return {
-        id,
+        ...entity,
         amount,
+        month: monthFormatter.format(monthDate),
+        paid_at,
+        income_id: income_id === 'unknown' ? undefined : income_id,
+        expense_id: expense_id === 'unknown' ? undefined : expense_id,
         reference_year,
         reference_month,
-        created_at,
+        allocation_contribution_id: allocation_contribution_id === 'unknown' ? undefined : allocation_contribution_id,
       };
     });
     const sortedEntityMonths = entityMonths.sort((a, b) => a.reference_month - b.reference_month);
@@ -66,7 +78,7 @@ export class MonthBusiness {
     referenceYear: number,
     monthFormatter: Intl.DateTimeFormat = this.monthFormatter
   ): TMonthMap {
-    const entityMonths = this.buildEntityMonths(months, referenceYear);
+    const entityMonths = this.buildMonthSummary(months, referenceYear, monthFormatter);
     const monthMap = this.createEmptyMonthMap(referenceYear, monthFormatter);
     
     for (const month of entityMonths) {
@@ -74,12 +86,25 @@ export class MonthBusiness {
         continue;
       }
       const monthKey = this.MONTH_KEYS[month.reference_month - 1];
-      monthMap[monthKey].amount = month.amount;
+      month.month = monthMap[monthKey].month;
+      monthMap[monthKey] = month;
     }
     return monthMap;
   }
 
+  private calculateTotalAmountByMonth(body: Array<Record<string, unknown>>, month: TMonthKey) {
+    return  body.reduce((accumulator, item) => {
+      const monthData = item?.[month] as Record<string, unknown> | undefined;
+      if (monthData) {
+        const amount = monthData?.['amount'] as number | undefined;
+        return accumulator + (amount || 0);
+      }
+      return accumulator;
+    }, 0);
+  }
+
   public generateTableHeaderMonths(
+    body: Array<Record<string, unknown>>,
     align: TableHeaderItem['align'] = 'right',
     sortable: boolean = true
   ): Array<TableHeaderItem> {
@@ -87,6 +112,7 @@ export class MonthBusiness {
       value: `${monthKey}.amount`,
       type: ETypeTableHeader.MONEY,
       label: `month.${monthKey.trim().slice(0,3)}`,
+      footer: this.calculateTotalAmountByMonth(body, monthKey),
       align,
       sortable,
     }));

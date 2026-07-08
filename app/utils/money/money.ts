@@ -14,7 +14,6 @@ export function currencyFormatter(
   const mapped = MAP[country];
 
   if (typeof value === 'string') {
-    console.log('# => value => ', value);
     const digits = value.replace(/\D/g, '');
     if (!digits) {
       return '';
@@ -34,7 +33,6 @@ export function currencyFormatter(
     currency: mapped.currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-    maximumSignificantDigits: 7,
   })
     .format(value)
     .replace(/\s/, ' ');

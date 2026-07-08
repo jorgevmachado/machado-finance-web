@@ -1,14 +1,16 @@
 import React from 'react';
-import { currencyFormatter ,joinClass } from '@/app/utils';
 
-import { ETypeTableHeader ,TableHeaderItem } from '../header';
-import { BodyAction, type TableActions } from './action';
+import { joinClass } from '@/app/utils';
+import { TableHeaderItem } from '../header';
+import { tableBusiness } from '../business';
+import { BodyAction ,type TableActions } from './action';
 
 type BodyProps = {
   items: Array<unknown>;
   headers: Array<TableHeaderItem>;
   actions?: TableActions
   onRowClick?: (item: unknown) => void;
+  onCellClick?: (item: unknown) => void;
   formattedDate?: boolean;
   getClassNameRow?(item: unknown): string;
 }
@@ -18,42 +20,9 @@ export default function Body({
   headers,
   actions,
   onRowClick,
+  onCellClick,
   formattedDate
 }: BodyProps) {
-
-  const renderValue = (item: unknown, value: string) => {
-    return value
-      .split('.')
-      .reduce((acc, key) => acc && (acc as Record<string, unknown>)[key], item);
-  };
-
-  const renderData = (
-    item: unknown,
-    header: TableHeaderItem,
-  ) : React.ReactNode => {
-    const value = renderValue(item, header.value);
-
-    if (React.isValidElement(value)) {
-      return value;
-    }
-
-    if (typeof value === 'string' || typeof value === 'number') {
-      if (header.type === ETypeTableHeader.DATE && formattedDate) {
-        return new Date(value).toLocaleDateString();
-      }
-
-      if (header.type === ETypeTableHeader.MONEY) {
-        const valueNumber =
-          typeof value === 'string' ? parseFloat(value) : value;
-        return currencyFormatter(valueNumber);
-      }
-
-      return value;
-    }
-
-    return null;
-  };
-
   const classNameConditionColor = (header: TableHeaderItem, item: unknown) => {
     const className = [
       'whitespace-nowrap',
@@ -62,6 +31,9 @@ export default function Body({
       'text-sm',
       'text-slate-700',
     ];
+    if (onCellClick) {
+      className.push('cursor-pointer transition-colors hover:bg-slate-50');
+    }
     if (header.conditionColor) {
       const condition = header.value;
       const conditionValue = (item as Record<string ,unknown>)[condition];
@@ -77,7 +49,19 @@ export default function Body({
     }
     return joinClass(className);
   };
-  
+
+  const handleOnCellClick = ( 
+    event: React.MouseEvent<HTMLTableDataCellElement> ,
+    header: TableHeaderItem ,
+    item: unknown
+  ) => {
+    event.preventDefault();
+    const header_value = header.value;
+    const [value] = header_value.split('.');
+    const data = (item as Record<string ,unknown>)[value];
+    onCellClick?.(data);
+  };
+
   return (
     <tbody className="divide-y divide-slate-100 bg-white">
       {items.map((item: unknown, index: number) => (
@@ -105,8 +89,9 @@ export default function Body({
             <td
               key={`${header.value}-${index}`}
               align={header.align ?? 'left'}
+              onClick={onCellClick  ? (event) => handleOnCellClick(event, header, item) : undefined}
               className={classNameConditionColor(header, item)}>
-              {renderData(item, header)}
+              {tableBusiness.renderData(item, header, formattedDate)}
             </td>
           ))}
           { actions && (

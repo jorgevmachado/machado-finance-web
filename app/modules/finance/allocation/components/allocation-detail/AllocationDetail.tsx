@@ -17,19 +17,43 @@ type AllocationDetailProps = {
 export default function AllocationDetail({ allocation, referenceYear }: AllocationDetailProps) {
   const { t } = useAppTranslation();
 
+  const textTree = useMemo(() => {
+    return [
+      { value: 'payee', label: 'expense.title' },
+      { value: 'category.name', label: 'expense.category.name' },
+      { value: 'total', label: 'common.total' },
+    ];
+  }, []);
+  
   const expenseTable = useMemo(() => {
     return movementBusiness.generateMovementTable({
       entities: allocation.expenses,
+      sortable: true,
       referenceYear,
-      chooseValues: ['payee', 'category.name', 'total'],
+      chooseValues: textTree.map((item) => item.value),
     });
-  }, [allocation.expenses, referenceYear]);
+  }, [allocation.expenses, referenceYear, textTree]);
+  
+  const translatedHeaders = useMemo(() => {
+    return expenseTable.headers.map((header) => {
+      const translatedLabel = textTree.find((item) => item.value === header.value)?.label || header.label;
+      const currentFooter  = textTree.find((item) => item.value === header.footer)?.label;
+      const translatedFooter = currentFooter ? t(currentFooter.toString()) : header.footer;
+
+      return  {
+        ...header,
+        label: t(translatedLabel),
+        footer: translatedFooter,
+      };
+    });
+  }, [expenseTable.headers, t, textTree]);
 
   return (
     <div>
       <Table
         items={expenseTable.body}
-        headers={expenseTable.headers.map((header) => ({ ...header, label: t(header.label) }))}
+        headers={translatedHeaders}
+        withFooter={true}
         showNotFoundError={true}
       />
     </div>

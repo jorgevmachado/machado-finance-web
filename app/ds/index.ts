@@ -84,6 +84,7 @@ export {
   type SwitchVariant,
 } from './switch';
 export {
+  ETypeTableHeader,
   type SortedColumn,
   default as Table,
   type TableActions,

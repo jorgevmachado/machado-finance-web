@@ -1,3 +1,5 @@
+import { TEntity } from '@/app/modules';
+
 export type TMonthKey =
   | 'january'
   | 'february'
@@ -12,32 +14,16 @@ export type TMonthKey =
   | 'november'
   | 'december';
 
-export type TMonthSummary = {
-  id?: string;
+export type TMonthSummary = TEntity & {
   month: string;
   amount: number;
   paid_at?: Date;
+  income_id?: string;
+  expense_id?: string;
   received_at?: string;
   reference_year: number;
   reference_month: number;
+  allocation_contribution_id?: string;
 }
 
 export type TMonthMap = Record<TMonthKey, TMonthSummary>;
-
-// export type TFinanceYearSummaryBase = {
-//   id?: string;
-//   source: string;
-//   source_code: string;
-//   finance_id: string;
-//   account_id: string;
-//   description: string;
-//   reference_year: number;
-//   total: number;
-//   months: Array<TFinanceMonthSummary>;
-// }
-//
-// export type TFinanceMonthMap = Record<TFinanceMonthKey, TFinanceMonthSummary>;
-//
-// export type TFinanceYearSummary = TFinanceYearSummaryBase & TFinanceMonthMap;
-//
-// export type TFinanceAccumulator = TFinanceYearSummaryBase;

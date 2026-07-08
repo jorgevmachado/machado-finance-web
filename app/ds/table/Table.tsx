@@ -3,16 +3,19 @@ import React ,{ useMemo ,useState } from 'react';
 
 import { Text } from '@/app/ds';
 
-import Header ,{ type TableHeaderItem } from './header';
+import { Header , type TableHeaderItem } from './header';
 import type { SortedColumn } from './types';
 import { Body, type TableActions } from './body';
-import { getNewSort ,sortItems } from './sort';
+import { Footer } from './footer';
+import { tableBusiness } from './business';
 
 type TableProps = {
   items: Array<unknown>;
   headers: Array<TableHeaderItem>;
   actions?: TableActions
+  withFooter?: boolean;
   onRowClick?(item: unknown): void;
+  onCellClick?(item: unknown): void;
   sortedColumn?: SortedColumn;
   formattedDate?: boolean;
   onChangeOrder?(sortedColumn: SortedColumn): void;
@@ -25,7 +28,9 @@ export default function Table({
   items,
   headers,
   actions,
+  withFooter = false,
   onRowClick,
+  onCellClick,
   sortedColumn = { sort: '', order: '' },
   formattedDate,
   onChangeOrder,
@@ -41,13 +46,13 @@ export default function Table({
     const list = [...(items ?? [])];
 
     if (currentSortedColumn.sort && currentSortedColumn.sort !== '') {
-      return sortItems(currentSortedColumn, list);
+      return tableBusiness.sortItems(currentSortedColumn, list);
     }
     return list;
   } ,[items ,currentSortedColumn]);
 
   const handleSort = (header: TableHeaderItem) => {
-    const newSort = getNewSort(header, currentSortedColumn);
+    const newSort = tableBusiness.getNewSort(header, currentSortedColumn);
     setCurrentSortedColumn(newSort);
     if (onChangeOrder) {
       onChangeOrder(newSort);
@@ -81,9 +86,13 @@ export default function Table({
             headers={headers}
             actions={actions}
             onRowClick={onRowClick}
+            onCellClick={onCellClick}
             formattedDate={formattedDate}
             getClassNameRow={getClassNameRow}
           />
+          { withFooter && (
+            <Footer headers={headers} />
+          )}
         </table>
       )}
     </div>

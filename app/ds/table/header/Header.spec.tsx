@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import Header from './Header';
 import type { TableHeaderItem } from './types';
 
@@ -29,7 +29,7 @@ describe('Header.tsx', () => {
     mockHandleSort.mockClear();
   });
 
-  it('should render all headers', () => {
+  it('renders all headers', () => {
     const sortedColumn = { sort: '', order: '' };
     render(
       <table>
@@ -46,7 +46,7 @@ describe('Header.tsx', () => {
     expect(screen.getByText('Email')).toBeInTheDocument();
   });
 
-  it('should render actions header when provided', () => {
+  it('renders actions header when provided', () => {
     const sortedColumn = { sort: '', order: '' };
     const actions = {
       text: 'Operations',
@@ -68,7 +68,7 @@ describe('Header.tsx', () => {
     expect(screen.getByText('Operations')).toBeInTheDocument();
   });
 
-  it('should call handleSort when clicking on sortable header', () => {
+  it('calls handleSort for sortable header click', () => {
     const sortedColumn = { sort: '', order: '' };
     render(
       <table>
@@ -86,7 +86,7 @@ describe('Header.tsx', () => {
     expect(mockHandleSort).toHaveBeenCalledWith(headers[0]);
   });
 
-  it('should not call handleSort when clicking on non-sortable header', () => {
+  it('does not call handleSort for non-sortable header click', () => {
     const sortedColumn = { sort: '', order: '' };
     render(
       <table>
@@ -104,7 +104,7 @@ describe('Header.tsx', () => {
     expect(mockHandleSort).not.toHaveBeenCalled();
   });
 
-  it('should display ascending arrow when column is sorted asc', () => {
+  it('renders asc icon style for sorted asc column', () => {
     const sortedColumn = { sort: 'name', order: 'asc' };
     const { container } = render(
       <table>
@@ -116,13 +116,15 @@ describe('Header.tsx', () => {
       </table>
     );
 
-    const svgs = container.querySelectorAll('svg');
-    expect(svgs.length).toBeGreaterThan(0);
+    const button = screen.getByRole('button', { name: /^Name/ });
+    const svg = button.querySelector('svg');
+    expect(svg).toHaveClass('text-slate-600');
+    expect(container.querySelectorAll('svg')).toHaveLength(2);
   });
 
-  it('should display descending arrow when column is sorted desc', () => {
+  it('renders desc icon style for sorted desc column', () => {
     const sortedColumn = { sort: 'id', order: 'desc' };
-    const { container } = render(
+    render(
       <table>
         <Header
           headers={headers}
@@ -132,13 +134,14 @@ describe('Header.tsx', () => {
       </table>
     );
 
-    const svgs = container.querySelectorAll('svg');
-    expect(svgs.length).toBeGreaterThan(0);
+    const button = screen.getByRole('button', { name: /^ID/ });
+    const svg = button.querySelector('svg');
+    expect(svg).toHaveClass('text-slate-600');
   });
 
-  it('should display unfold icon for non-sorted columns', () => {
+  it('renders unfold icon style for unsorted column', () => {
     const sortedColumn = { sort: '', order: '' };
-    const { container } = render(
+    render(
       <table>
         <Header
           headers={headers}
@@ -148,13 +151,14 @@ describe('Header.tsx', () => {
       </table>
     );
 
-    const svgs = container.querySelectorAll('svg');
-    expect(svgs.length).toBeGreaterThan(0);
+    const button = screen.getByRole('button', { name: /^ID/ });
+    const svg = button.querySelector('svg');
+    expect(svg).toHaveClass('text-slate-400');
   });
 
-  it('should apply uppercase class when uppercase is true', () => {
+  it('applies uppercase class for uppercase header labels', () => {
     const sortedColumn = { sort: '', order: '' };
-    const { container } = render(
+    render(
       <table>
         <Header
           headers={headers}
@@ -164,11 +168,11 @@ describe('Header.tsx', () => {
       </table>
     );
 
-    const thead = container.querySelector('thead');
-    expect(thead).toBeInTheDocument();
+    const button = screen.getByRole('button', { name: /^ID/ });
+    expect(button).toHaveClass('uppercase');
   });
 
-  it('should render header with proper accessibility attributes', () => {
+  it('renders accessible columnheader attributes', () => {
     const sortedColumn = { sort: '', order: '' };
     const { container } = render(
       <table>
@@ -188,13 +192,14 @@ describe('Header.tsx', () => {
     });
   });
 
-  it('should handle custom style on header item', () => {
+  it('applies style and align from header item', () => {
     const headersWithStyle: TableHeaderItem[] = [
       {
         label: 'ID',
         value: 'id',
         sortable: true,
         style: { width: '100px' },
+        align: 'right',
       },
     ];
 
@@ -211,30 +216,6 @@ describe('Header.tsx', () => {
 
     const th = container.querySelector('th');
     expect(th).toHaveStyle({ width: '100px' });
-  });
-
-  it('should handle align attribute properly', () => {
-    const headersWithAlign: TableHeaderItem[] = [
-      {
-        label: 'Amount',
-        value: 'amount',
-        sortable: true,
-        align: 'right',
-      },
-    ];
-
-    const sortedColumn = { sort: '', order: '' };
-    const { container } = render(
-      <table>
-        <Header
-          headers={headersWithAlign}
-          handleSort={mockHandleSort}
-          sortedColumn={sortedColumn}
-        />
-      </table>
-    );
-
-    const th = container.querySelector('th');
     expect(th).toHaveAttribute('align', 'right');
   });
 });

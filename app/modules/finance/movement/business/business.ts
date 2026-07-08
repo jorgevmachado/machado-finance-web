@@ -47,7 +47,7 @@ export class MovementBusiness {
     return value;
   }
 
-  public generateMovementMap(
+  public generateTableBody(
     entity: Record<string, unknown>,
     referenceYear: number,
     chooseValues?: Array<string>
@@ -193,9 +193,15 @@ export class MovementBusiness {
     const hasMonths = body.some((item) => item?.['withMonths'] === true);
     if (hasMonths) {
 
-      headers.push(...monthBusiness.generateTableHeaderMonths(align, sortable));
+      headers.push(...monthBusiness.generateTableHeaderMonths(body, align, sortable));
       const totalHeader = headers.find((header) => header.value === 'total');
       if (totalHeader) {
+        totalHeader.footer =  body.reduce((accumulator, item) => {
+          const total = item?.['total'] as number | undefined;
+          return accumulator + (total || 0);
+        }, 0);
+        totalHeader.label = 'common.total';
+        headers[0].footer = 'total';
         headers.splice(headers.indexOf(totalHeader), 1);
         headers.push(totalHeader);
       }
@@ -219,11 +225,12 @@ export class MovementBusiness {
         headers: []
       };
     }
-    const body = entities.map((entity) => this.generateMovementMap(entity, referenceYear, chooseValues));
+    const body = entities.map((entity) => this.generateTableBody(entity, referenceYear, chooseValues));
     const headers = this.generateTableHeader({ body, chooseValues, ignoreValues, align, sortable });
+
     return {
       body,
-      headers
+      headers,
     };
   }
 }

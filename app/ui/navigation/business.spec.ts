@@ -1,7 +1,7 @@
 import { getAuthenticatedMenuItems } from './business';
 
 describe('navigation business', () => {
-  it('builds authenticated menu with translated labels and children', () => {
+  it('builds authenticated menu with translated labels', () => {
     const translate = (key: string) => `translated:${key}`;
 
     const items = getAuthenticatedMenuItems(translate);
@@ -13,16 +13,14 @@ describe('navigation business', () => {
       roles: ['USER', 'ADMIN'],
     });
     expect(items[3]).toMatchObject({
+      label: 'translated:navigation.transaction',
+      href: '/transaction',
+      roles: ['USER', 'ADMIN'],
+    });
+    expect(items[4]).toMatchObject({
       label: 'translated:navigation.account',
       href: '/account',
-    });
-    expect(items[3].children?.[0]).toMatchObject({
-      label: 'translated:navigation.income',
-      href: '/account/income',
-    });
-    expect(items[4].children?.[0]).toMatchObject({
-      label: 'translated:navigation.contribution',
-      href: '/allocation/contribution',
+      roles: ['USER', 'ADMIN'],
     });
   });
 });

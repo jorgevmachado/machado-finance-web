@@ -48,11 +48,15 @@ describe('AccountBusiness', () => {
         id: 'account-1',
         name: 'Main',
         type: 'BANK',
+        incomes: [],
         is_active: true,
-        finance_id: 'finance-1',
+        allocations: [] ,
+        finance_id: 'finance-1' ,
+        created_at: new Date('2026-01-01T00:00:00.000Z'),
         initial_balance: 1000,
         current_balance: 1200,
-        created_at: new Date('2026-01-01T00:00:00.000Z'),
+        incoming_transfers: [],
+        outgoing_transfers: [],
       },
     ];
 
@@ -67,11 +71,15 @@ describe('AccountBusiness', () => {
         id: 'account-1',
         name: 'Main',
         type: 'BANK',
+        incomes: [],
         is_active: true,
-        finance_id: 'finance-1',
+        allocations: [] ,
+        finance_id: 'finance-1' ,
+        created_at: new Date('2026-01-01T00:00:00.000Z'),
         initial_balance: 1000,
         current_balance: 1200,
-        created_at: new Date('2026-01-01T00:00:00.000Z'),
+        incoming_transfers: [],
+        outgoing_transfers: [],
       },
     ];
 
@@ -85,11 +93,15 @@ describe('AccountBusiness', () => {
       id: 'account-1',
       name: 'Main',
       type: 'BANK',
+      incomes: [],
       is_active: true,
-      finance_id: 'finance-1',
+      allocations: [] ,
+      finance_id: 'finance-1' ,
+      created_at: new Date('2026-01-01T00:00:00.000Z'),
       initial_balance: 1000,
       current_balance: 1200,
-      created_at: new Date('2026-01-01T00:00:00.000Z'),
+      incoming_transfers: [],
+      outgoing_transfers: [],
     });
 
     expect(draft).toEqual({

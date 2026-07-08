@@ -1,6 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import Table from './Table';
+import { ETypeTableHeader } from './header';
 import type { TableHeaderItem } from './header';
 import type { TableActions } from './body';
 
@@ -8,6 +9,7 @@ describe('Table.tsx', () => {
   const mockOnRowClick = jest.fn();
   const mockOnChangeOrder = jest.fn();
   const mockOnSortedColumn = jest.fn();
+  const mockOnCellClick = jest.fn();
 
   const headers: TableHeaderItem[] = [
     {
@@ -38,20 +40,20 @@ describe('Table.tsx', () => {
     mockOnRowClick.mockClear();
     mockOnChangeOrder.mockClear();
     mockOnSortedColumn.mockClear();
+    mockOnCellClick.mockClear();
   });
 
-  it('should render table with headers and items', () => {
-    render(
-      <Table items={items} headers={headers} />
-    );
+  it('renders headers and rows', () => {
+    const { container } = render(<Table items={items} headers={headers} />);
 
     expect(screen.getByText('ID')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
     expect(screen.getByText('Charlie')).toBeInTheDocument();
     expect(screen.getByText('Alice')).toBeInTheDocument();
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(3);
   });
 
-  it('should return null when items are empty and showNotFoundError is false', () => {
+  it('returns null when empty and not-found is disabled', () => {
     const { container } = render(
       <Table items={[]} headers={headers} showNotFoundError={false} />
     );
@@ -59,7 +61,7 @@ describe('Table.tsx', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('should show not found message when items are empty and showNotFoundError is true', () => {
+  it('shows custom not-found message when empty', () => {
     render(
       <Table
         items={[]}
@@ -72,7 +74,7 @@ describe('Table.tsx', () => {
     expect(screen.getByText('No items found')).toBeInTheDocument();
   });
 
-  it('should show default not found message when items are empty', () => {
+  it('shows default not-found message when empty', () => {
     render(
       <Table
         items={[]}
@@ -84,101 +86,49 @@ describe('Table.tsx', () => {
     expect(screen.getByText('No data found!!')).toBeInTheDocument();
   });
 
-  it('should call onRowClick when clicking on a row', () => {
+  it('calls onRowClick on row click and keyboard enter', () => {
     const { container } = render(
       <Table items={items} headers={headers} onRowClick={mockOnRowClick} />
     );
 
     const rows = container.querySelectorAll('tbody tr');
     fireEvent.click(rows[0]);
+    fireEvent.keyDown(rows[1], { key: 'Enter' });
 
     expect(mockOnRowClick).toHaveBeenCalledWith(items[0]);
+    expect(mockOnRowClick).toHaveBeenCalledWith(items[1]);
   });
 
-  it('should sort items by column when header is clicked', () => {
+  it('sorts and emits change callbacks for sortable columns', () => {
     const { container } = render(
-      <Table items={items} headers={headers} />
-    );
-
-    const buttons = screen.getAllByRole('button');
-    const idButton = buttons[0];
-
-    fireEvent.click(idButton);
-
-    expect(screen.getByText('Alice')).toBeInTheDocument();
-    const rows = container.querySelectorAll('tbody tr');
-    expect(rows[0].textContent).toContain('1');
-  });
-
-  it('should toggle sort direction when clicking same column twice', () => {
-    render(
-      <Table items={items} headers={headers} />
-    );
-
-    const buttons = screen.getAllByRole('button');
-    const idButton = buttons[0];
-
-    fireEvent.click(idButton);
-    expect(screen.getByText('Alice')).toBeInTheDocument();
-
-    fireEvent.click(idButton);
-    expect(screen.getByText('Charlie')).toBeInTheDocument();
-  });
-
-  it('should reset sort when clicking same column third time', () => {
-    const { container } = render(
-      <Table items={items} headers={headers} />
-    );
-
-    const buttons = screen.getAllByRole('button');
-    const idButton = buttons[0];
-
-    fireEvent.click(idButton);
-    fireEvent.click(idButton);
-    fireEvent.click(idButton);
-
-    expect(container.querySelector('tbody')).toBeInTheDocument();
-  });
-
-  it('should call onChangeOrder when sorting', () => {
-    render(
       <Table
         items={items}
         headers={headers}
         onChangeOrder={mockOnChangeOrder}
-      />
-    );
-
-    const buttons = screen.getAllByRole('button');
-    fireEvent.click(buttons[0]);
-
-    expect(mockOnChangeOrder).toHaveBeenCalledWith({
-      sort: 'id',
-      order: 'asc',
-    });
-  });
-
-  it('should call onSortedColumn when sorting', () => {
-    render(
-      <Table
-        items={items}
-        headers={headers}
         onSortedColumn={mockOnSortedColumn}
       />
     );
 
     const buttons = screen.getAllByRole('button');
-    fireEvent.click(buttons[0]);
+    const idButton = buttons[0];
 
-    expect(mockOnSortedColumn).toHaveBeenCalledWith({
-      sort: 'id',
-      order: 'asc',
-    });
+    fireEvent.click(idButton);
+    let rows = container.querySelectorAll('tbody tr');
+    expect(rows[0].textContent).toContain('1');
+
+    fireEvent.click(idButton);
+    rows = container.querySelectorAll('tbody tr');
+    expect(rows[0].textContent).toContain('3');
+
+    expect(mockOnChangeOrder).toHaveBeenNthCalledWith(1, { sort: 'id', order: 'asc' });
+    expect(mockOnChangeOrder).toHaveBeenNthCalledWith(2, { sort: 'id', order: 'desc' });
+    expect(mockOnSortedColumn).toHaveBeenNthCalledWith(1, { sort: 'id', order: 'asc' });
+    expect(mockOnSortedColumn).toHaveBeenNthCalledWith(2, { sort: 'id', order: 'desc' });
   });
 
-  it('should not sort when clicking non-sortable header', () => {
+  it('ignores click on non-sortable columns', () => {
     render(
-      <Table items={items} headers={headers} />
+      <Table items={items} headers={headers} onChangeOrder={mockOnChangeOrder} />
     );
 
     const buttons = screen.getAllByRole('button');
@@ -189,7 +139,7 @@ describe('Table.tsx', () => {
     expect(mockOnChangeOrder).not.toHaveBeenCalled();
   });
 
-  it('should render actions when provided', () => {
+  it('renders row actions and triggers click handlers', () => {
     const mockShowAction = jest.fn();
     const mockEditAction = jest.fn();
     const mockDeleteAction = jest.fn();
@@ -209,110 +159,18 @@ describe('Table.tsx', () => {
       },
     };
 
-    const { container } = render(
-      <Table items={items} headers={headers} actions={actions} />
-    );
+    render(<Table items={items} headers={headers} actions={actions} />);
 
-    const buttons = container.querySelectorAll('button');
-    expect(buttons.length).toBeGreaterThan(headers.length);
+    fireEvent.click(screen.getAllByRole('button', { name: 'View' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
+
+    expect(mockShowAction).toHaveBeenCalledWith(items[0]);
+    expect(mockEditAction).toHaveBeenCalledWith(items[0]);
+    expect(mockDeleteAction).toHaveBeenCalledWith(items[0]);
   });
 
-  it('should use initial sortedColumn prop', () => {
-    const { container } = render(
-      <Table
-        items={items}
-        headers={headers}
-        sortedColumn={{ sort: 'name', order: 'asc' }}
-      />
-    );
-
-    expect(screen.getByText('Alice')).toBeInTheDocument();
-    const rows = container.querySelectorAll('tbody tr');
-    expect(rows[0].textContent).toContain('Alice');
-  });
-
-  it('should format dates when formattedDate is true', () => {
-    const itemsWithDate = [
-      { id: '1', name: 'John', email: 'john@example.com', createdAt: '2024-01-15' },
-    ];
-
-    const headersWithDate: TableHeaderItem[] = [
-      { label: 'ID', value: 'id', sortable: true },
-      { label: 'Name', value: 'name', sortable: true },
-      { label: 'Email', value: 'email', sortable: false },
-      { label: 'Created', value: 'createdAt', sortable: true },
-    ];
-
-    render(
-      <Table
-        items={itemsWithDate}
-        headers={headersWithDate}
-        formattedDate={true}
-      />
-    );
-
-    expect(screen.getByText('John')).toBeInTheDocument();
-  });
-
-  it('should render table structure correctly', () => {
-    const { container } = render(
-      <Table items={items} headers={headers} />
-    );
-
-    const table = container.querySelector('table');
-    const thead = container.querySelector('thead');
-    const tbody = container.querySelector('tbody');
-
-    expect(table).toBeInTheDocument();
-    expect(thead).toBeInTheDocument();
-    expect(tbody).toBeInTheDocument();
-  });
-
-  it('should have proper border and styling classes', () => {
-    const { container } = render(
-      <Table items={items} headers={headers} />
-    );
-
-    const tableContainer = container.querySelector('div');
-    expect(tableContainer?.className).toContain('rounded-xl');
-    expect(tableContainer?.className).toContain('border');
-  });
-
-  it('should handle keyboard navigation on rows', () => {
-    const { container } = render(
-      <Table items={items} headers={headers} onRowClick={mockOnRowClick} />
-    );
-
-    const rows = container.querySelectorAll('tbody tr');
-    const firstRow = rows[0] as HTMLElement;
-
-    fireEvent.keyDown(firstRow, { key: 'Enter' });
-
-    expect(mockOnRowClick).toHaveBeenCalled();
-  });
-
-  it('should handle multiple sorts correctly', () => {
-    render(
-      <Table items={items} headers={headers} />
-    );
-
-    const buttons = screen.getAllByRole('button');
-
-    fireEvent.click(buttons[0]);
-    fireEvent.click(buttons[1]);
-
-    expect(mockOnChangeOrder).not.toHaveBeenCalled();
-  });
-
-  it('should render with empty items array', () => {
-    const { container } = render(
-      <Table items={[]} headers={headers} showNotFoundError={false} />
-    );
-
-    expect(container.firstChild).toBeNull();
-  });
-
-  it('should handle undefined items safely using fallback empty list', () => {
+  it('handles undefined items with fallback empty list', () => {
     const { container } = render(
       <Table
         items={undefined as unknown as Array<unknown>}
@@ -324,19 +182,8 @@ describe('Table.tsx', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('should handle sortedColumn updates', () => {
-    const { rerender, container } = render(
-      <Table
-        items={items}
-        headers={headers}
-        sortedColumn={{ sort: '', order: '' }}
-      />
-    );
-
-    let rows = container.querySelectorAll('tbody tr');
-    const firstText = rows[0].textContent;
-
-    rerender(
+  it('applies initial sortedColumn from props on first render', () => {
+    const { container } = render(
       <Table
         items={items}
         headers={headers}
@@ -344,27 +191,49 @@ describe('Table.tsx', () => {
       />
     );
 
-    rows = container.querySelectorAll('tbody tr');
-    const newFirstText = rows[0].textContent;
-
-    expect(firstText).toBeDefined();
-    expect(newFirstText).toBeDefined();
+    const rows = container.querySelectorAll('tbody tr');
+    expect(rows[0].textContent).toContain('1');
   });
 
-  it('should call both onChangeOrder and onSortedColumn', () => {
+  it('calls onCellClick with nested root object', () => {
+    const nestedItems = [{ id: '1', user: { name: 'Alice' } }];
+    const nestedHeaders: TableHeaderItem[] = [
+      { label: 'ID', value: 'id', sortable: true },
+      { label: 'User', value: 'user.name', sortable: true },
+    ];
+
     render(
       <Table
-        items={items}
-        headers={headers}
-        onChangeOrder={mockOnChangeOrder}
-        onSortedColumn={mockOnSortedColumn}
+        items={nestedItems}
+        headers={nestedHeaders}
+        onCellClick={mockOnCellClick}
       />
     );
 
-    const buttons = screen.getAllByRole('button');
-    fireEvent.click(buttons[0]);
+    fireEvent.click(screen.getByText('Alice'));
+    expect(mockOnCellClick).toHaveBeenCalledWith({ name: 'Alice' });
+  });
 
-    expect(mockOnChangeOrder).toHaveBeenCalled();
-    expect(mockOnSortedColumn).toHaveBeenCalled();
+  it('renders footer values when enabled', () => {
+    const headersWithFooter: TableHeaderItem[] = [
+      { label: 'Name', value: 'name', sortable: true, footer: 'Total' },
+      { label: 'Amount', value: 'amount', sortable: true, type: ETypeTableHeader.MONEY, footer: 1234.56 },
+      { label: 'Date', value: 'createdAt', sortable: true, type: ETypeTableHeader.DATE, footer: '2024-01-15' },
+    ];
+
+    const footerItems = [{ name: 'A', amount: 100, createdAt: '2024-01-10' }];
+
+    render(
+      <Table
+        items={footerItems}
+        headers={headersWithFooter}
+        withFooter={true}
+        formattedDate={true}
+      />
+    );
+
+    expect(screen.getByText('Total')).toBeInTheDocument();
+    expect(screen.getByText('R$ 1.234,56')).toBeInTheDocument();
+    expect(screen.getByText((content) => /\d{1,2}\/\d{1,2}\/\d{4}/.test(content))).toBeInTheDocument();
   });
 });

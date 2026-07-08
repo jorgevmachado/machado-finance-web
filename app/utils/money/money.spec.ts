@@ -7,6 +7,10 @@ describe('currencyFormatter', () => {
     expect(currencyFormatter(9.99)).toEqual('R$ 9,99');
   });
 
+  it('should keep two decimal places for integer values', () => {
+    expect(currencyFormatter(5000)).toEqual('R$ 5.000,00');
+  });
+
   it('should return formatted string when currency is received', () => {
     expect(currencyFormatter('9.99')).toEqual('R$ 9,99');
   });

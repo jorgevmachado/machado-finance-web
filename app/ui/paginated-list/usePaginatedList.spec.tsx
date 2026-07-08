@@ -29,6 +29,83 @@ jest.mock('@/app/ds', () => ({
     if (totalPages < 1) return 1;
     return Math.min(Math.max(page, 1), totalPages);
   },
+  useFilter: ({
+    fetchRequest,
+    initialFilters,
+    normalizeFilters,
+    initialInputFilters,
+  }: {
+    fetchRequest: (filters: Filters) => void;
+    initialFilters: Filters;
+    normalizeFilters?: (nextFilters: Filters) => Filters;
+    initialInputFilters: Array<{
+      name: string;
+      label: string;
+      type: 'text' | 'autocomplete' | 'select' | 'date' | 'number';
+      value: string | number;
+      placeholder: string;
+    }>;
+  }) => {
+    const React = require('react') as typeof import('react');
+
+    const [filters, setFilters] = React.useState<Filters>(initialFilters);
+    const [inputFilterValues, setInputFilterValues] = React.useState<Record<string, string | number>>(() => (
+      Object.fromEntries(initialInputFilters.map((filter) => [filter.name, filter.value ?? '']))
+    ));
+
+    const inputFilters = React.useMemo(() => {
+      return initialInputFilters.map((filter) => ({
+        ...filter,
+        value: inputFilterValues[filter.name] ?? '',
+      }));
+    }, [initialInputFilters, inputFilterValues]);
+
+    const applyFilters = (nextFilters: Filters) => {
+      const normalizedFilters = normalizeFilters ? normalizeFilters(nextFilters) : nextFilters;
+      setFilters(normalizedFilters);
+      fetchRequest(normalizedFilters);
+    };
+
+    const applyInputFilters = (nextFilters: Filters) => {
+      const filterValues = nextFilters as Record<string, string | undefined>;
+      setInputFilterValues((previousState) => {
+        const nextState = { ...previousState };
+        for (const key of Object.keys(nextState)) {
+          nextState[key] = filterValues[key] || '';
+        }
+        return nextState;
+      });
+      applyFilters(nextFilters);
+    };
+
+    const clearFilters = () => {
+      setFilters(initialFilters);
+      fetchRequest(initialFilters);
+    };
+
+    const clearInputFilters = () => {
+      setInputFilterValues((previousState) => (
+        Object.fromEntries(Object.keys(previousState).map((key) => [key, '']))
+      ));
+      clearFilters();
+    };
+
+    const updateInputFilters = (nextInputFilters: typeof initialInputFilters) => {
+      setInputFilterValues(
+        Object.fromEntries(nextInputFilters.map((filter) => [filter.name, filter.value ?? '']))
+      );
+    };
+
+    return {
+      filters,
+      applyFilters,
+      clearFilters,
+      inputFilters,
+      clearInputFilters,
+      applyInputFilters,
+      updateInputFilters,
+    };
+  },
 }));
 
 import usePaginatedList from './usePaginatedList';

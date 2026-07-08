@@ -3,6 +3,7 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 jest.mock('@/app/shared', () => ({
+  ...jest.requireActual('@/app/shared'),
   ColorProvider: ({ children }: Readonly<{ children: React.ReactNode }>) => <>{children}</>,
   useColor: () => ({ main: '#2563eb' }),
 }));

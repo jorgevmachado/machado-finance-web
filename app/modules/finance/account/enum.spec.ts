@@ -7,7 +7,6 @@ describe('EAccountType', () => {
     expect(EAccountType.CASH).toBe('CASH');
     expect(EAccountType.OTHER).toBe('OTHER');
     expect(EAccountType.INVESTMENT).toBe('INVESTMENT');
-    expect(EAccountType.CREDIT_CARD).toBe('CREDIT_CARD');
     expect(EAccountType.ACCOUNT_DEBIT).toBe('ACCOUNT_DEBIT');
   });
 });

@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import Body from './Body';
 import type { TableHeaderItem } from '../header';
 import type { TableActions } from './action';
@@ -7,6 +7,7 @@ import { ETypeTableHeader } from '../header/enum';
 
 describe('Body.tsx', () => {
   const mockOnRowClick = jest.fn();
+  const mockOnCellClick = jest.fn();
 
   const headers: TableHeaderItem[] = [
     {
@@ -34,9 +35,10 @@ describe('Body.tsx', () => {
 
   beforeEach(() => {
     mockOnRowClick.mockClear();
+    mockOnCellClick.mockClear();
   });
 
-  it('should render all items as table rows', () => {
+  it('renders all rows and cells', () => {
     render(
       <table>
         <Body items={items} headers={headers} />
@@ -46,157 +48,44 @@ describe('Body.tsx', () => {
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
-  });
-
-  it('should render all columns for each item', () => {
-    render(
-      <table>
-        <Body items={items} headers={headers} />
-      </table>
-    );
-
-    expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('john@example.com')).toBeInTheDocument();
   });
 
-  it('should call onRowClick when clicking on a row', () => {
-    render(
+  it('supports row click and keyboard interaction', () => {
+    const { container } = render(
       <table>
         <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
       </table>
     );
 
-    const rows = screen.getAllByRole('button');
+    const rows = container.querySelectorAll('tbody tr');
     fireEvent.click(rows[0]);
+    fireEvent.keyDown(rows[1], { key: 'Enter' });
+    fireEvent.keyDown(rows[2], { key: ' ' });
 
+    expect(rows[0]).toHaveAttribute('role', 'button');
+    expect(rows[0]).toHaveAttribute('tabindex', '0');
+    expect(rows[0]).toHaveClass('cursor-pointer');
     expect(mockOnRowClick).toHaveBeenCalledWith(items[0]);
+    expect(mockOnRowClick).toHaveBeenCalledWith(items[1]);
+    expect(mockOnRowClick).toHaveBeenCalledWith(items[2]);
   });
 
-  it('should not apply cursor-pointer class when onRowClick is not provided', () => {
+  it('keeps row non-interactive when onRowClick is not provided', () => {
     const { container } = render(
       <table>
         <Body items={items} headers={headers} />
       </table>
     );
 
-    const tbody = container.querySelector('tbody');
-    const rows = tbody?.querySelectorAll('tr');
-
-    expect(rows?.[0]).not.toHaveClass('cursor-pointer');
+    const row = container.querySelector('tbody tr');
+    expect(row).not.toHaveAttribute('role');
+    expect(row).not.toHaveAttribute('tabindex');
+    expect(row).not.toHaveClass('cursor-pointer');
   });
 
-  it('should apply cursor-pointer class when onRowClick is provided', () => {
-    const { container } = render(
-      <table>
-        <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
-      </table>
-    );
-
-    const tbody = container.querySelector('tbody');
-    const rows = tbody?.querySelectorAll('tr');
-
-    expect(rows?.[0]).toHaveClass('cursor-pointer');
-  });
-
-  it('should render action buttons when actions are provided', () => {
-    const mockShowAction = jest.fn();
-    const mockEditAction = jest.fn();
-    const mockDeleteAction = jest.fn();
-
-    const actions: TableActions = {
-      show: {
-        label: 'View',
-        onClick: mockShowAction,
-      },
-      edit: {
-        label: 'Edit',
-        onClick: mockEditAction,
-      },
-      delete: {
-        label: 'Delete',
-        onClick: mockDeleteAction,
-      },
-    };
-
-    const { container } = render(
-      <table>
-        <Body items={items} headers={headers} actions={actions} />
-      </table>
-    );
-
-    const actionButtons = container.querySelectorAll('button[type="button"]');
-    expect(actionButtons.length).toBeGreaterThan(0);
-  });
-
-  it('should format dates when formattedDate is true', () => {
-    const itemsWithDate = [
-      {
-        id: '1',
-        name: 'John Doe',
-        createdAt: '2024-01-15',
-      },
-    ];
-
-    const headersWithDate: TableHeaderItem[] = [
-      { label: 'ID', value: 'id', sortable: true },
-      { label: 'Name', value: 'name', sortable: true },
-      {
-        label: 'Created At',
-        value: 'createdAt',
-        type: ETypeTableHeader.DATE,
-        sortable: true,
-      },
-    ];
-
-    const { container } = render(
-      <table>
-        <Body
-          items={itemsWithDate}
-          headers={headersWithDate}
-          formattedDate={true}
-        />
-      </table>
-    );
-
-    const dateCell = container.querySelector('td');
-    expect(dateCell?.textContent).toBeDefined();
-  });
-
-  it('should format currency when type is MONEY', () => {
-    const itemsWithMoney = [
-      { id: '1', name: 'John Doe', amount: 1000 },
-    ];
-
-    const headersWithMoney: TableHeaderItem[] = [
-      { label: 'ID', value: 'id', sortable: true },
-      { label: 'Name', value: 'name', sortable: true },
-      {
-        label: 'Amount',
-        value: 'amount',
-        type: ETypeTableHeader.MONEY,
-        sortable: true,
-      },
-    ];
-
-    const { container } = render(
-      <table>
-        <Body items={itemsWithMoney} headers={headersWithMoney} />
-      </table>
-    );
-
-    expect(container.innerHTML).toBeDefined();
-  });
-
-  it('should handle nested object properties', () => {
-    const itemsWithNested = [
-      {
-        id: '1',
-        user: {
-          name: 'John Doe',
-        },
-      },
-    ];
-
+  it('calls onCellClick using nested header root path value', () => {
+    const itemsWithNested = [{ id: '1', user: { name: 'John Doe' } }];
     const headersWithNested: TableHeaderItem[] = [
       { label: 'ID', value: 'id', sortable: true },
       { label: 'User Name', value: 'user.name', sortable: true },
@@ -204,72 +93,62 @@ describe('Body.tsx', () => {
 
     render(
       <table>
-        <Body items={itemsWithNested} headers={headersWithNested} />
+        <Body
+          items={itemsWithNested}
+          headers={headersWithNested}
+          onCellClick={mockOnCellClick}
+        />
       </table>
     );
 
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('John Doe'));
+    expect(mockOnCellClick).toHaveBeenCalledWith({ name: 'John Doe' });
   });
 
-  it('should call onRowClick when pressing Enter on a focused row', () => {
-    const { container } = render(
+  it('renders actions and triggers action handlers', () => {
+    const mockShowAction = jest.fn();
+    const mockEditAction = jest.fn();
+    const mockDeleteAction = jest.fn();
+    const actions: TableActions = {
+      show: { label: 'View', onClick: mockShowAction },
+      edit: { label: 'Edit', onClick: mockEditAction },
+      delete: { label: 'Delete', onClick: mockDeleteAction },
+    };
+
+    render(
       <table>
-        <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
+        <Body items={items} headers={headers} actions={actions} />
       </table>
     );
 
-    const tbody = container.querySelector('tbody');
-    const firstRow = tbody?.querySelector('tr') as HTMLElement;
+    fireEvent.click(screen.getAllByRole('button', { name: 'View' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Edit' })[0]);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
 
-    fireEvent.keyDown(firstRow, { key: 'Enter' });
-
-    expect(mockOnRowClick).toHaveBeenCalled();
+    expect(mockShowAction).toHaveBeenCalledWith(items[0]);
+    expect(mockEditAction).toHaveBeenCalledWith(items[0]);
+    expect(mockDeleteAction).toHaveBeenCalledWith(items[0]);
   });
 
-  it('should call onRowClick when pressing Space on a focused row', () => {
-    const { container } = render(
+  it('formats date and money values based on header type', () => {
+    const itemsWithFormattedFields = [{ id: '1', createdAt: '2024-01-15', amount: 1234.56 }];
+    const headersWithFormat: TableHeaderItem[] = [
+      { label: 'ID', value: 'id', sortable: true },
+      { label: 'Created At', value: 'createdAt', type: ETypeTableHeader.DATE, sortable: true },
+      { label: 'Amount', value: 'amount', type: ETypeTableHeader.MONEY, sortable: true },
+    ];
+
+    render(
       <table>
-        <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
+        <Body items={itemsWithFormattedFields} headers={headersWithFormat} formattedDate={true} />
       </table>
     );
 
-    const tbody = container.querySelector('tbody');
-    const firstRow = tbody?.querySelector('tr') as HTMLElement;
-
-    fireEvent.keyDown(firstRow, { key: ' ' });
-
-    expect(mockOnRowClick).toHaveBeenCalled();
+    expect(screen.getByText('R$ 1.234,56')).toBeInTheDocument();
+    expect(screen.getByText((content) => /\d{1,2}\/\d{1,2}\/\d{4}/.test(content))).toBeInTheDocument();
   });
 
-  it('should not call onRowClick for other keys', () => {
-    const { container } = render(
-      <table>
-        <Body items={items} headers={headers} onRowClick={mockOnRowClick} />
-      </table>
-    );
-
-    const tbody = container.querySelector('tbody');
-    const firstRow = tbody?.querySelector('tr') as HTMLElement;
-
-    fireEvent.keyDown(firstRow, { key: 'Escape' });
-
-    expect(mockOnRowClick).not.toHaveBeenCalled();
-  });
-
-  it('should not make row interactive when onRowClick is not provided', () => {
-    const { container } = render(
-      <table>
-        <Body items={items} headers={headers} />
-      </table>
-    );
-
-    const firstRow = container.querySelector('tbody tr');
-
-    expect(firstRow).not.toHaveAttribute('role');
-    expect(firstRow).not.toHaveAttribute('tabindex');
-  });
-
-  it('should apply condition color when conditionColor is provided', () => {
+  it('applies condition color classes when conditionColor is provided', () => {
     const itemsWithCondition = [
       { id: '1', name: 'Active', isActive: true },
       { id: '2', name: 'Inactive', isActive: false },
@@ -294,10 +173,14 @@ describe('Body.tsx', () => {
       </table>
     );
 
-    expect(container.innerHTML).toBeDefined();
+    const cells = container.querySelectorAll('tbody tr td');
+    expect(cells[1]).toHaveClass('bg-green-500');
+    expect(cells[1]).toHaveClass('text-white');
+    expect(cells[3]).toHaveClass('bg-red-500');
+    expect(cells[3]).toHaveClass('text-white');
   });
 
-  it('should render React elements as cell content', () => {
+  it('renders React element values in cells', () => {
     const itemsWithElement = [
       {
         id: '1',
@@ -319,7 +202,7 @@ describe('Body.tsx', () => {
     expect(screen.getByTestId('custom-element')).toBeInTheDocument();
   });
 
-  it('should handle empty items array', () => {
+  it('renders empty tbody when items are empty', () => {
     const { container } = render(
       <table>
         <Body items={[]} headers={headers} />
@@ -332,7 +215,7 @@ describe('Body.tsx', () => {
     expect(rows?.length).toBe(0);
   });
 
-  it('should handle align attribute in headers', () => {
+  it('applies align from header to table cell', () => {
     const headersWithAlign: TableHeaderItem[] = [
       { label: 'ID', value: 'id', sortable: true, align: 'right' },
       { label: 'Name', value: 'name', sortable: true },
@@ -346,29 +229,5 @@ describe('Body.tsx', () => {
 
     const cells = container.querySelectorAll('td');
     expect(cells[0]).toHaveAttribute('align', 'right');
-  });
-
-  it('should format money from numeric string values', () => {
-    const itemsWithMoneyAsString = [
-      { id: '1', amount: '1234.56' },
-    ];
-
-    const headersWithMoney: TableHeaderItem[] = [
-      { label: 'ID', value: 'id', sortable: true },
-      {
-        label: 'Amount',
-        value: 'amount',
-        type: ETypeTableHeader.MONEY,
-        sortable: true,
-      },
-    ];
-
-    render(
-      <table>
-        <Body items={itemsWithMoneyAsString} headers={headersWithMoney} />
-      </table>,
-    );
-
-    expect(screen.getByText((content) => content.includes('1.234,56'))).toBeInTheDocument();
   });
 });

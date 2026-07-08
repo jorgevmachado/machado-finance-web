@@ -10,6 +10,7 @@ export type TableHeaderItem = {
   value: string;
   align?: TTableAlign;
   style?: React.CSSProperties;
+  footer?: string | number;
   sortable?: boolean;
   uppercase?: boolean;
   conditionColor?: ConditionColor;
