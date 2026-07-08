@@ -25,10 +25,10 @@ export type TAccount = TEntity & {
 }
 
 export type TAccountFilter = TPaginateBaseFilter & {
-  year?: number;
   type?: EAccountType;
   name?: string;
   is_active?: boolean;
+  reference_year?: number;
 }
 
 export type TAccountCreate = {

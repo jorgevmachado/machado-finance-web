@@ -20,8 +20,9 @@ export abstract class BaseServiceAbstract<T, C, U> extends Http {
     return this.get<TPaginatedListResponse<T> | Array<T>>(this.pathUrl ,config);
   }
 
-  public async detail(identifier: string): Promise<T> {
-    return await this.get<T>(`${this.pathUrl}/${identifier}`);
+  public async detail(identifier: string, params?: Record<string, unknown>): Promise<T> {
+    const config = !params ? {} : { params };
+    return await this.get<T>(`${this.pathUrl}/${identifier}`, config);
   }
 
   public async create(payload: C): Promise<T> {

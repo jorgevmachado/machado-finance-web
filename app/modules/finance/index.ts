@@ -31,6 +31,7 @@ export {
 } from './category';
 export { type  TExpense ,type TExpenseFilter } from './expense';
 export {
+  IncomeList,
   type TIncome ,
   type TIncomeCreate ,
   type TIncomeFilter ,

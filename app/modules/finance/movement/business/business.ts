@@ -213,6 +213,12 @@ export class MovementBusiness {
     ignoreValues,
     referenceYear
   }: GenerateMovementTableProps): GenerateMovementTableResult {
+    if (!entities || entities.length === 0) {
+      return {
+        body: [],
+        headers: []
+      };
+    }
     const body = entities.map((entity) => this.generateMovementMap(entity, referenceYear, chooseValues));
     const headers = this.generateTableHeader({ body, chooseValues, ignoreValues, align, sortable });
     return {

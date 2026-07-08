@@ -7,15 +7,16 @@ import { ACCOUNT_TYPES } from '@/app/modules/finance/account/constants';
 
 export class AccountBusiness {
   public INITIAL_FILTERS: TAccountFilter = {
-    year: new Date().getFullYear(),
     name: undefined,
     type: undefined,
     is_active: undefined,
+    clean_cache: true,
+    reference_year: new Date().getFullYear(),
   };
 
   public INITIAL_INPUT_FILTERS: FiltersProps['filters'] = [
     {
-      name: 'year' ,
+      name: 'reference_year' ,
       label: 'filters.year' ,
       type: 'number' ,
       value: new Date().getFullYear() ,
@@ -55,10 +56,10 @@ export class AccountBusiness {
 
   public normalizeFilters(filters?: TAccountFilter): TAccountFilter {
     return {
-      year: filters?.year || new Date().getFullYear(),
       name: filters?.name?.trim() || undefined,
       type: filters?.type || undefined,
       is_active: filters?.is_active || undefined,
+      reference_year: filters?.reference_year || new Date().getFullYear(),
     };
   }
 

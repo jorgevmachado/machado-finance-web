@@ -10,7 +10,7 @@ type AccountParamsRouteContext = {
 };
 
 export async function GET(
-  _: NextRequest,
+  request: NextRequest,
   context: AccountParamsRouteContext
 ): Promise<NextResponse> {
   const session = await getServerSession();
@@ -21,7 +21,8 @@ export async function GET(
 
   try {
     const { identifier } = await context.params;
-    const response = await financeService(session.token).account.detail(identifier);
+    const params = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const response = await financeService(session.token).account.detail(identifier, params);
     return NextResponse.json(response);
   } catch (error) {
     const message = error instanceof Error && error.message ? error.message : 'Could not load Account.';

@@ -9,14 +9,9 @@ export type TIncomeMonth = TEntityMonth & {
 export type TIncome = TEntity & {
   months: Array<TIncomeMonth>;
   source: string;
-  amount: number;
   source_code: string;
-  finance_id: string;
   account_id: string;
-  received_at: string;
   description: string;
-  reference_year: number;
-  reference_month: number;
 }
 
 export type TIncomeFilter = TPaginateBaseFilter & {
@@ -27,21 +22,18 @@ export type TIncomeFilter = TPaginateBaseFilter & {
 }
 
 export type TIncomeCreate = {
+  months: Array<TIncomeMonth>;
   source: string;
-  amount: number;
   account_id: string;
-  received_at: string;
   description: string;
+  reference_day?: number;
   reference_year: number;
-  reference_month: number;
+  reference_month?: number;
 }
 
 export type TIncomeUpdate = {
+  months?: Array<TIncomeMonth>;
   source?: string;
-  amount?: number;
-  account_id: string;
-  received_at?: string;
+  account_id?: string;
   description?: string;
-  reference_year?: number;
-  reference_month?: number;
 }
