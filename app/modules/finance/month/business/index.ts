@@ -4,4 +4,4 @@ import {
 
 export const monthBusiness: MonthBusiness = new MonthBusiness();
 
-export type { TMonthMap } from './types';
+export type { TDraftMonth,TMonthKey,TMonthMap } from './types';

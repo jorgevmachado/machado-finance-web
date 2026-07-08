@@ -154,7 +154,21 @@
   "income": {
     "source": "Source",
     "title": "Incomes",
-    "create": "Generate Income"
+    "create": {
+      "title": "Create Income",
+      "success": "Income created successfully.",
+      "error": "An error occurred while creating the income."
+    },
+    "edit": {
+      "title": "Edit Income {{name}}",
+      "success": "Income edited successfully.",
+      "error": "An error occurred while editing the income."
+    },
+    "delete": {
+        "title": "Do you want to delete this income ?",
+        "success": "Income deleted successfully.",
+        "error": "An error occurred while deleting the income."
+    }
   },
   "transfer": {
     "title": "Transfers",
@@ -168,6 +182,11 @@
     }
   },
   "account": {
+    "list": {
+      "title": "Accounts List",
+      "empty": "No accounts found.",
+      "subtitle": "Manage your accounts and keep track of your finances."
+    },
     "title": "Accounts",
     "form": {
       "label": {
@@ -226,6 +245,7 @@
     "contributor_name": "Contribution"
   },
   "month": {
+    "title": "Month",
     "january": "January",
     "jan": "Jan",
     "february": "February",

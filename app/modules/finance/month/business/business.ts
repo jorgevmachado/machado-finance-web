@@ -1,4 +1,4 @@
-import { TMonthKey ,TMonthMap ,TMonthSummary } from './types';
+import { type TDraftMonth ,TMonthKey ,TMonthMap ,TMonthSummary } from './types';
 import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
 import {
   validateBasicEntity ,
@@ -6,6 +6,7 @@ import {
   validateValue ,
 } from '@/app/utils';
 import { TEntity } from '@/app/modules';
+import { EMonthStatus } from '@/app/modules/finance';
 
 export class MonthBusiness {
   public MONTH_KEYS: Array<TMonthKey> = [
@@ -116,6 +117,28 @@ export class MonthBusiness {
       align,
       sortable,
     }));
+  }
+
+  private validateStatus(status: unknown): EMonthStatus | undefined {
+    if (typeof status === 'string' && Object.values(EMonthStatus).includes(status as EMonthStatus)) {
+      return status as EMonthStatus;
+    }
+    return undefined;
+
+  }
+
+  public initDraft(months?: Array<Record<string, unknown>>): TDraftMonth {
+    return this.MONTH_KEYS.reduce((prevState, monthKey, index) => {
+      const month = months?.find((item) => item.reference_month === index + 1);
+      prevState[monthKey] = {
+        amount: validateValue((month?.['amount'] as number | undefined), 'number') as number,
+        status: this.validateStatus(month?.['status'] as string | undefined),
+        received_at: month?.received_at as string | undefined,
+        reference_year: validateValue(month?.['reference_year'] as string | undefined) as number ?? new Date().getFullYear(),
+        reference_month:  index + 1,
+      };
+      return prevState;
+    }, {} as TDraftMonth);
   }
 
 }

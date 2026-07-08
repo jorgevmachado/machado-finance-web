@@ -57,4 +57,8 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
     const config = !params ? {} : { params };
     return this.get<TFinance>(this.pathUrl ,config);
   }
+
+  public async onboarding(): Promise<TFinance> {
+    return this.post<unknown, TFinance>(`${this.pathUrl}/onboarding`);
+  }
 }

@@ -1,13 +1,37 @@
 import React ,{ useEffect } from 'react';
 
-import { translateI18nMessage ,useAppTranslation } from '@/app/shared';
-import { Button ,Card ,Input ,Select ,Text } from '@/app/ds';
+import {
+  createI18nMessage ,
+  translateI18nMessage ,
+  useAppTranslation,
+} from '@/app/shared';
+import { Button ,Card ,Input ,Select ,Text ,useLoading } from '@/app/ds';
 
-import { ActionState ,INITIAL_ACTION_STATE } from '@/app/modules/actions';
+import {
+  ActionState ,
+  INITIAL_ACTION_STATE ,mapError ,
+  toErrorState ,
+} from '@/app/modules/actions';
 
-import type { TAccount, TDraftAccount } from '../../types';
+import { financeBffService } from '@/app/modules/finance';
+
+import type {
+  TAccount ,
+  TAccountCreate ,
+  TAccountUpdate ,
+  TDraftAccount,
+} from '../../types';
 import { accountBusiness  } from '../../business';
 import { ACCOUNT_TYPES } from '../../constants';
+import {
+  validateCreatePayload,
+  validateUpdatePayload,
+  ACCOUNT_DEFAULT_CREATE_ERROR_MESSAGE,
+  ACCOUNT_DEFAULT_UPDATE_ERROR_MESSAGE
+} from '../../validation';
+
+
+import { isObjectEmpty } from '@/app/utils';
 
 type PersistAccountProps = {
   onClose: (actionState: ActionState) => void;
@@ -20,6 +44,7 @@ export default function PersistAccount({
   account,
   disabled = false,
 }: PersistAccountProps) {
+  const { startContentLoading, stopContentLoading } = useLoading();
   const { t, locale } = useAppTranslation();
   const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = React.useState(false);
@@ -30,6 +55,120 @@ export default function PersistAccount({
       ...previousState ,
       [key]: value ,
     }));
+  };
+  
+  
+  const handleCreate = async () => {
+    startContentLoading();
+
+    const currentInitialBalance = Number(draftAccount.initial_balance);
+
+    const payload: TAccountCreate = {
+      name: draftAccount.name ,
+      type: draftAccount.type as TAccountCreate['type'] ,
+      initial_balance: isNaN(currentInitialBalance) ? 0 : currentInitialBalance ,
+    };
+
+    const validationError = validateCreatePayload(payload);
+
+    if (validationError) {
+      setState(validationError);
+      setIsPending(false);
+      return;
+    }
+
+    try {
+      const response = await financeBffService.account.create({ payload });
+
+      if (response.error) {
+        setState(toErrorState(response.i18nMessageError || response.message || ACCOUNT_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
+        setIsPending(false);
+        return;
+      }
+    } catch (error) {
+      setState(mapError(error ,ACCOUNT_DEFAULT_CREATE_ERROR_MESSAGE));
+      setIsPending(false);
+      return;
+    } finally {
+      stopContentLoading();
+    }
+    setState({
+      type: 'create' ,
+      status: 'success' ,
+      message: createI18nMessage('account.messages.created') ,
+    });
+    setIsPending(false);
+    stopContentLoading();
+  };
+
+  const handleUpdate = async (account: TAccount) => {
+    startContentLoading();
+    const payload: TAccountUpdate = {};
+    if (draftAccount.name !== account.name) {
+      payload.name = draftAccount.name;
+    }
+    if (draftAccount.type && draftAccount.type !== account.type) {
+      payload.type = draftAccount.type;
+    }
+    if (draftAccount.initial_balance !== account.initial_balance) {
+      const currentInitialBalance = Number(draftAccount.initial_balance);
+      if (!isNaN(currentInitialBalance)) {
+        payload.initial_balance = currentInitialBalance;
+      }
+    }
+    const emptyPayload = isObjectEmpty(payload);
+    if (!emptyPayload) {
+      const validationError = validateUpdatePayload(payload);
+      if (validationError) {
+        setState(validationError);
+        setIsPending(false);
+        return;
+      }
+
+      try {
+        const response = await financeBffService.account.update({
+          identifier: account.id ,
+          payload ,
+        });
+
+        if (response.error) {
+          setState(toErrorState(response.i18nMessageError || response.message || ACCOUNT_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
+          setIsPending(false);
+          return;
+        }
+      } catch (error) {
+        setState(mapError(error ,ACCOUNT_DEFAULT_UPDATE_ERROR_MESSAGE));
+        setIsPending(false);
+        return;
+      } finally {
+        stopContentLoading();
+      }
+    }
+
+    setState({
+      type: 'update' ,
+      status: 'success' ,
+      message: createI18nMessage('account.messages.updated') ,
+    });
+    setIsPending(false);
+    stopContentLoading();
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (disabled) {
+      return;
+    }
+
+    setIsPending(true);
+
+    if (!account) {
+      await handleCreate();
+      return;
+    }
+
+    await handleUpdate(account);
   };
 
   useEffect(() => {
@@ -42,7 +181,7 @@ export default function PersistAccount({
 
   return (
     <div>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={ handleSubmit } className="flex flex-col gap-4">
         { !disabled && (
           <Text as="p" size="sm" color="text-slate-600">
             { t('account.form.subtitle') }

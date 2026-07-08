@@ -4,6 +4,7 @@ import type { TEntityMonth } from '../month';
 
 export type TIncomeMonth = TEntityMonth & {
   income_id: string;
+  received_at?: string;
 }
 
 export type TIncome = TEntity & {
@@ -36,4 +37,11 @@ export type TIncomeUpdate = {
   source?: string;
   account_id?: string;
   description?: string;
+}
+
+export type TDraftIncome = {
+  source: string;
+  description: string;
+  account_id: string;
+  reference_year: number;
 }

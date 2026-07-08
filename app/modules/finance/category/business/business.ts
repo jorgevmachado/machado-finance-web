@@ -32,10 +32,10 @@ export class CategoryBusiness {
     } ,
   ];
   
-  public normalizeFilters(filters: TCategoryFilter): TCategoryFilter {
+  public normalizeFilters(filters?: TCategoryFilter): TCategoryFilter {
     return {
-      name: filters.name?.trim() || undefined,
-      type: filters.type || undefined,
+      name: filters?.name?.trim() || undefined,
+      type: filters?.type || undefined,
     };
   }
 

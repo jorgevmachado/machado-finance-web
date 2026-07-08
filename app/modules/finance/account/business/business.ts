@@ -76,12 +76,7 @@ export class AccountBusiness {
     return {
       name: account?.name || '',
       type: account?.type || '',
-      initial_balance: account?.initial_balance || '',
+      initial_balance: account?.initial_balance || '0',
     };
-  }
-
-  public filterRelations(account: TAccount): TAccount {
-    account.expenses = account?.expenses?.filter((expense) => !expense.parent_id);
-    return account;
   }
 } 

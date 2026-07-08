@@ -37,7 +37,7 @@ export default function AccountListPage() {
     if (!items) {
       return [];
     }
-    return items.map((item) => accountBusiness.filterRelations(item));
+    return items;
   }, [items]);
 
   const handleCloseModal = (actionState: ActionState) => {

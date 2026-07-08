@@ -169,6 +169,11 @@
   },
   "account": {
     "title": "Cuentas",
+    "list": {
+      "title": "Lista de cuentas",
+      "empty": "No se encontraron cuentas.",
+      "subtitle": "Aquí puedes ver todas tus cuentas y sus detalles. Puedes crear, editar o eliminar cuentas según sea necesario."
+    },
     "form": {
       "label": {
         "name": "Nombre",

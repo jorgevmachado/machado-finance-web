@@ -1,4 +1,5 @@
 import { TEntity } from '@/app/modules';
+import { EMonthStatus } from '../enum';
 
 export type TMonthKey =
   | 'january'
@@ -27,3 +28,13 @@ export type TMonthSummary = TEntity & {
 }
 
 export type TMonthMap = Record<TMonthKey, TMonthSummary>;
+
+export type TMonthPersist = {
+  amount: number;
+  status?: EMonthStatus;
+  received_at?: string;
+  reference_year: number;
+  reference_month: number;
+}
+
+export type TDraftMonth = Record<TMonthKey, TMonthPersist>;

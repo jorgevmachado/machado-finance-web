@@ -66,4 +66,12 @@ export class FinanceBffService extends BffBaseServiceAbstract<TFinance,unknown, 
       i18nMessageError: `${this.domain}.detail.error`
     });
   }
+
+  public async onboarding(): Promise<TBffResponse<TFinance>> {
+    return await this.bff_post<unknown, TFinance>({
+      param: 'onboarding',
+      i18nMessageSuccess: `${this.domain}.onboarding.success`,
+      i18nMessageError: `${this.domain}.onboarding.error`
+    });
+  }
 }

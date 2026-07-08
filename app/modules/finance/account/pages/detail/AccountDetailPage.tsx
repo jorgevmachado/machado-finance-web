@@ -61,7 +61,7 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
 
       {data && (
         <section className="mt-4 flex flex-col gap-10  rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-sm sm:p-5">
-          <IncomeList incomes={data.incomes} referenceYear={referenceYear} />
+          <IncomeList incomes={data.incomes} account={data} referenceYear={referenceYear} />
           { tabAllocations && tabAllocations.length > 0 && (
             <Tabs
               items={tabAllocations}

@@ -169,6 +169,11 @@
   },
   "account": {
     "title": "Contas",
+    "list": {
+      "title": "Minhas Contas",
+      "empty": "Nenhuma conta encontrada.",
+      "subtitle": "Gerencie suas contas e acompanhe seu saldo atual."
+    },
     "form": {
       "label": {
         "name": "Nome",
