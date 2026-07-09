@@ -1,71 +1,88 @@
 'use client';
-import React ,{ useEffect } from 'react';
+import React ,{ useEffect ,useState } from 'react';
+
+import { isObjectEmpty } from '@/app/utils';
 
 import {
   createI18nMessage ,
   translateI18nMessage ,
-  useAppTranslation ,
+  useAppTranslation,
 } from '@/app/shared';
 
-import { isObjectEmpty } from '@/app/utils';
-
-import { Button ,Card ,Input ,Select ,Text ,useLoading } from '@/app/ds';
+import { Button ,Card ,Input ,Text ,useLoading } from '@/app/ds';
 
 import {
   ActionState ,
   INITIAL_ACTION_STATE ,
   mapError ,
-  toErrorState ,
-} from '@/app/modules/actions/state';
+  toErrorState,
+} from '@/app/modules/actions';
 
 import { financeBffService } from '@/app/modules/finance';
 
-import { categoryBusiness } from '../../business';
-import type {
-  TCategory ,
-  TCategoryCreate ,
-  TCategoryUpdate ,
-  TDraftCategory ,
-} from '../../types';
+import type { TAllocation } from '../../../allocation';
+import type { TCategory } from '../../../category';
+import { InputMonths ,TMonthPersist } from '../../../month';
+
+import { expenseBusiness } from '../../business';
+
+import type { TExpense, TExpenseCreate, TExpenseUpdate, TDraftExpense } from '../../types';
+
 
 import {
-  CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE ,
-  CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE ,
+  EXPENSE_DEFAULT_CREATE_ERROR_MESSAGE ,
+  EXPENSE_DEFAULT_UPDATE_ERROR_MESSAGE ,
   validateCreatePayload ,
   validateUpdatePayload ,
 } from '../../validation';
 
-type PersistCategoryProps = {
+type PersistIncomeProps = {
   onClose: (actionState: ActionState) => void;
-  category?: TCategory;
+  expense?: TExpense;
   disabled?: boolean;
-}
+  categories: Array<TCategory>;
+  allocation: TAllocation;
+  referenceYear?: number;
+};
 
-export default function PersistCategory({
-  category ,
-  onClose ,
+
+export default function PersistExpense({
+  expense,
+  onClose,
   disabled = false,
-}: PersistCategoryProps) {
-  const { startContentLoading, stopContentLoading } = useLoading();
-  const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
-  const [isPending ,setIsPending] = React.useState(false);
-  const [draftCategory ,setDraftCategory] = React.useState<TDraftCategory>(
-    categoryBusiness.initDraft(category));
+  categories,
+  allocation,
+  referenceYear = new Date().getFullYear(),
+}: PersistIncomeProps) {
   const { t } = useAppTranslation();
+  const { startContentLoading, stopContentLoading } = useLoading();
+  const [state ,setState] = useState<ActionState>(INITIAL_ACTION_STATE);
+  const [isPending ,setIsPending] = useState(false);
+  const [draftExpense, setDraftIncome] = useState<TDraftExpense>(expenseBusiness.initDraft(referenceYear, expense));
+  const [draftCategory, setDraftCategory] = useState<TCategory | undefined>(undefined);
+  const [monthsDraft, setMonthsDraft] = useState<Array<TMonthPersist>>([]);
 
-  const updateDraftValue = <K extends keyof TDraftCategory>(
-    key: K ,value: TDraftCategory[K]) => {
-    setDraftCategory((previousState) => ({
-      ...previousState ,
-      [key]: value ,
+
+  const updateDraftValue = <K extends keyof TDraftExpense>(key: K, value: TDraftExpense[K]) => {
+    setDraftIncome((previousState) => ({
+      ...previousState,
+      [key]: value,
     }));
   };
 
+
   const handleCreate = async () => {
+    if (!draftCategory) {
+      return;
+    }
     startContentLoading();
-    const payload: TCategoryCreate = {
-      name: draftCategory.name ,
-      description: draftCategory.description ,
+    const payload: TExpenseCreate = {
+      months: monthsDraft.map((month) => ({ ...month, id: undefined })),
+      payee: draftExpense.payee ,
+      category_id: draftCategory.id,
+      allocation_id: allocation.id,
+      description: draftExpense.description ,
+      reference_year: draftExpense.reference_year,
     };
     const validationError = validateCreatePayload(payload);
 
@@ -76,16 +93,15 @@ export default function PersistCategory({
     }
 
     try {
-      const response = await financeBffService.category.create({ payload });
+      const response = await financeBffService.expense.create({ payload });
 
       if (response.error) {
-        setState(toErrorState(response.i18nMessageError || response.message ||
-          CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
+        setState(toErrorState(response.i18nMessageError || response.message || EXPENSE_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
         setIsPending(false);
         return;
       }
     } catch (error) {
-      setState(mapError(error ,CATEGORY_DEFAULT_CREATE_ERROR_MESSAGE));
+      setState(mapError(error ,EXPENSE_DEFAULT_CREATE_ERROR_MESSAGE));
       setIsPending(false);
       return;
     } finally {
@@ -95,22 +111,29 @@ export default function PersistCategory({
     setState({
       type: 'create' ,
       status: 'success' ,
-      message: createI18nMessage('category.messages.created') ,
+      message: createI18nMessage('expense.messages.created') ,
     });
     setIsPending(false);
     stopContentLoading();
   };
 
-  const handleUpdate = async (category: TCategory) => {
+  const handleUpdate = async (expense: TExpense) => {
     startContentLoading();
-    const payload: TCategoryUpdate = {};
-    if (draftCategory.name !== category.name) {
-      payload.name = draftCategory.name;
+    const payload: TExpenseUpdate = {};
+    if (draftExpense.payee !== expense.payee) {
+      payload.payee = draftExpense.payee;
+    }
+    if (draftExpense.category_id && draftExpense.category_id !== expense.category.id) {
+      payload.category_id = draftExpense.category_id;
+    }
+    if (draftExpense.allocation_id && draftExpense.allocation_id !== expense.allocation.id) {
+      payload.allocation_id = draftExpense.allocation_id;
+    }
+    if (draftExpense.description !== expense.description) {
+      payload.description = draftExpense.description;
     }
 
-    if (draftCategory.description !== category.description) {
-      payload.description = draftCategory.description;
-    }
+    payload.months = monthsDraft;
 
     const emptyPayload = isObjectEmpty(payload);
     if (!emptyPayload) {
@@ -122,19 +145,18 @@ export default function PersistCategory({
       }
 
       try {
-        const response = await financeBffService.category.update({
-          identifier: category.id ,
+        const response = await financeBffService.income.update({
+          identifier: expense.id ,
           payload ,
         });
 
         if (response.error) {
-          setState(toErrorState(response.i18nMessageError || response.message ||
-            CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
+          setState(toErrorState(response.i18nMessageError || response.message || EXPENSE_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
           setIsPending(false);
           return;
         }
       } catch (error) {
-        setState(mapError(error ,CATEGORY_DEFAULT_UPDATE_ERROR_MESSAGE));
+        setState(mapError(error ,EXPENSE_DEFAULT_UPDATE_ERROR_MESSAGE));
         setIsPending(false);
         return;
       } finally {
@@ -145,7 +167,7 @@ export default function PersistCategory({
     setState({
       type: 'update' ,
       status: 'success' ,
-      message: createI18nMessage('category.messages.updated') ,
+      message: createI18nMessage('income.messages.updated') ,
     });
     setIsPending(false);
     stopContentLoading();
@@ -160,12 +182,13 @@ export default function PersistCategory({
 
     setIsPending(true);
 
-    if (!category) {
+    if (!expense) {
       await handleCreate();
       return;
     }
 
-    await handleUpdate(category);
+    await handleUpdate(expense);
+
   };
 
   useEffect(() => {
@@ -178,22 +201,17 @@ export default function PersistCategory({
 
   return (
     <div>
-      <form onSubmit={ handleSubmit } className="flex flex-col gap-4">
-        { !disabled && (
-          <Text as="p" size="sm" color="text-slate-600">
-            { t('category.form.subtitle') }
-          </Text>
-        ) }
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
-          id="name"
-          label={ t('form.nameLabel') }
-          name="name"
+          id="payee"
+          label={t('expense.payee')}
+          name="payee"
           type="text"
-          value={ draftCategory.name }
+          value={draftExpense.payee}
           required
-          disabled={ disabled }
-          onValueChange={ (nextValue) => updateDraftValue('name' ,nextValue) }
-          placeholder={ t('form.namePlaceholder') }
+          disabled={disabled}
+          onValueChange={(nextValue) => updateDraftValue('payee', nextValue)}
+          placeholder={t('expense.form.placeholder.payee')}
         />
 
         <label className="flex flex-col gap-1.5">
@@ -209,7 +227,7 @@ export default function PersistCategory({
           <textarea
             id="description"
             name="description"
-            value={draftCategory.description}
+            value={draftExpense.description}
             required
             disabled={disabled}
             rows={4}
@@ -218,6 +236,8 @@ export default function PersistCategory({
             placeholder={t('form.descriptionPlaceholder')}
           />
         </label>
+
+        <InputMonths months={expense?.months} disabled={disabled} onChange={(draft) => setMonthsDraft(draft)}/>
 
         { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">
@@ -261,7 +281,7 @@ export default function PersistCategory({
                 <Button type="submit" disabled={ isPending }>
                   { isPending ?
                     t('form.submitting') :
-                    category ? t('form.save') : t('form.submit') }
+                    expense ? t('form.save') : t('form.submit') }
                 </Button>
               </>
             )

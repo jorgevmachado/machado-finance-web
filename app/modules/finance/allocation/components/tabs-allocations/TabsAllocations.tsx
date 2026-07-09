@@ -3,18 +3,21 @@ import React ,{ useMemo } from 'react';
 
 import { useAppTranslation } from '@/app/shared';
 
-import { Dropdown ,Tabs ,Text } from '@/app/ds';
+import { Tabs ,Text } from '@/app/ds';
+
+import type { TCategory } from '../../../category';
 
 import { AllocationDetail } from '../allocation-detail';
-import { MdPieChart ,MdTrendingUp } from 'react-icons/md';
 
 type TabsAllocationsProps = {
+  categories: Array<TCategory>;
   allocations: Array<TAllocation>;
   referenceYear: number;
 }
 
-export default function TabsAllocations({ allocations, referenceYear }: TabsAllocationsProps) {
+export default function TabsAllocations({ categories,  allocations, referenceYear }: TabsAllocationsProps) {
   const { t } = useAppTranslation();
+
 
   const tabAllocations = useMemo(() => {
     if (!allocations || allocations?.length === 0) {
@@ -24,13 +27,14 @@ export default function TabsAllocations({ allocations, referenceYear }: TabsAllo
     return allocations.map((allocation) => ({
       id: allocation.id,
       title: allocation.name,
-      children: <AllocationDetail allocation={allocation} referenceYear={referenceYear}/>,
+      children: <AllocationDetail categories={categories} allocation={allocation} referenceYear={referenceYear}/>,
     }));
-  }, [allocations, referenceYear]);
+  }, [allocations, categories, referenceYear]);
   
   if (!tabAllocations || tabAllocations.length === 0) {
     return null;
   }
+
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -39,25 +43,6 @@ export default function TabsAllocations({ allocations, referenceYear }: TabsAllo
           <Text as="h2" className="text-3xl font-bold text-slate-950 sm:text-4xl">
             { t('allocation.title') } ({ referenceYear })
           </Text>
-        </div>
-        <div className="flex justify-end">
-          <Dropdown
-            align="right"
-            items={[
-              {
-                label: t('expense.create.title'),
-                icon: <MdTrendingUp size={16} />,
-                iconPosition: 'left',
-                onClick: () => console.log('# => Open Create Expenses'),
-              },
-              {
-                label: t('allocation-contribution.create.title'),
-                icon: <MdPieChart size={16} />,
-                iconPosition: 'left',
-                onClick: () => console.log('# => Open Create Contributions'),
-              },
-            ]}
-          />
         </div>
       </div>
       <div className="w-full overflow-x-auto">

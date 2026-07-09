@@ -1,11 +1,11 @@
 'use client';
-import React ,{ useMemo } from 'react';
+import React ,{ useEffect ,useMemo } from 'react';
 import { MdPieChart, MdTrendingUp } from 'react-icons/md';
 
 import { useAppTranslation } from '@/app/shared';
 import { Dropdown, Filters } from '@/app/ds';
 import { useDetail } from '@/app/ui';
-import { financeBffService } from '@/app/modules/finance';
+import { financeBffService ,useCategory } from '@/app/modules/finance';
 
 import { accountBusiness } from '../../business';
 
@@ -37,6 +37,8 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
     initialInputFilters: accountBusiness.INITIAL_INPUT_FILTERS.filter((item) => item.name === 'reference_year'),
   });
 
+  const { items: categories, fetchList: fetchCategory } = useCategory();
+
   const referenceYear = useMemo(() => {
     if (filters?.reference_year) {
       return filters.reference_year;
@@ -53,6 +55,10 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
     allocations: data?.allocations ?? [],
     account: data,
   });
+
+  useEffect(() => {
+    void fetchCategory();
+  } ,[]);
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-950 sm:px-6 lg:px-8">
@@ -94,7 +100,7 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
               onPersist={openCreateIncome}
             />
 
-            <TabsAllocations allocations={data?.allocations ?? []} referenceYear={referenceYear}/>
+            <TabsAllocations allocations={data?.allocations ?? []} referenceYear={referenceYear} categories={categories}/>
           </section>
         )}
       </div>

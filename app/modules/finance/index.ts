@@ -28,6 +28,7 @@ export {
   type TCategoryCreate ,
   type TCategoryFilter ,
   type TCategoryUpdate,
+  useCategory,
 } from './category';
 export { type  TExpense ,type TExpenseFilter } from './expense';
 export {
