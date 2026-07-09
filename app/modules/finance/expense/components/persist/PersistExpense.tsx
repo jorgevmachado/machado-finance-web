@@ -1,6 +1,10 @@
 'use client';
 import React ,{ useEffect ,useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { MdCategory } from 'react-icons/md';
+
 import { isObjectEmpty } from '@/app/utils';
 
 import {
@@ -9,7 +13,7 @@ import {
   useAppTranslation,
 } from '@/app/shared';
 
-import { Button ,Card ,Input ,Text ,useLoading } from '@/app/ds';
+import { Button ,Card ,Input ,Select ,Text ,useLoading } from '@/app/ds';
 
 import {
   ActionState ,
@@ -54,13 +58,19 @@ export default function PersistExpense({
   allocation,
   referenceYear = new Date().getFullYear(),
 }: PersistIncomeProps) {
+  const router = useRouter();
   const { t } = useAppTranslation();
   const { startContentLoading, stopContentLoading } = useLoading();
   const [state ,setState] = useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = useState(false);
   const [draftExpense, setDraftIncome] = useState<TDraftExpense>(expenseBusiness.initDraft(referenceYear, expense));
-  const [draftCategory, setDraftCategory] = useState<TCategory | undefined>(undefined);
+  const [draftCategory, setDraftCategory] = useState<TCategory | undefined>(
+    expense ? categories.find((c) => c.id === expense.category.id) : undefined
+  );
   const [monthsDraft, setMonthsDraft] = useState<Array<TMonthPersist>>([]);
+
+  const categoryOptions = categories.map((c) => ({ key: c.id, value: c.id, label: c.name }));
+  const hasCategories = categories.length > 0;
 
 
   const updateDraftValue = <K extends keyof TDraftExpense>(key: K, value: TDraftExpense[K]) => {
@@ -213,6 +223,32 @@ export default function PersistExpense({
           onValueChange={(nextValue) => updateDraftValue('payee', nextValue)}
           placeholder={t('expense.form.placeholder.payee')}
         />
+
+        <div className="flex items-end gap-2">
+          <div className="flex-1">
+            <Select
+              label={t('expense.category')}
+              name="category"
+              value={draftCategory?.id ?? ''}
+              options={categoryOptions}
+              required
+              disabled={disabled || !hasCategories}
+              onValueChange={(value) => {
+                const found = categories.find((c) => c.id === value);
+                setDraftCategory(found);
+                updateDraftValue('category_id', value);
+              }}
+            />
+          </div>
+          <button
+            type="button"
+            title={t('expense.form.manageCategories')}
+            onClick={() => router.push('/category')}
+            className="mb-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-blue-400 hover:text-blue-600"
+          >
+            <MdCategory size={20} />
+          </button>
+        </div>
 
         <label className="flex flex-col gap-1.5">
           <Text
