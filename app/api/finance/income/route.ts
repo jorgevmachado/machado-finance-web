@@ -3,16 +3,7 @@ import { NextRequest ,NextResponse } from 'next/server';
 import { getServerSession } from '@/app/modules/auth/server';
 import { financeService } from '@/app/modules/finance';
 
-type CategoryRouteContext = {
-  params: Promise<{
-    identifier: string;
-  }>;
-};
-
-export async function DELETE(
-  _: NextRequest,
-  context: CategoryRouteContext
-): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession();
 
   if (!session.isAuthenticated || !session.token) {
@@ -20,19 +11,16 @@ export async function DELETE(
   }
 
   try {
-    const { identifier } = await context.params;
-    const response = await financeService(session.token).category.delete(identifier);
+    const params = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const response = await financeService(session.token).income.list(params);
     return NextResponse.json(response);
   } catch (error) {
-    const message = error instanceof Error && error.message ? error.message : 'Could not delete Category.';
+    const message = error instanceof Error && error.message ? error.message : 'Could not load Income.';
     return NextResponse.json({ message }, { status: 500 });
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: CategoryRouteContext
-): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const session = await getServerSession();
 
   if (!session.isAuthenticated || !session.token) {
@@ -40,12 +28,11 @@ export async function PUT(
   }
 
   try {
-    const { identifier } = await context.params;
     const payload = await request.json();
-    const response = await financeService(session.token).category.update(identifier, payload);
+    const response = await financeService(session.token).income.create(payload);
     return NextResponse.json(response);
   } catch (error) {
-    const message = error instanceof Error && error.message ? error.message : 'Could not update Category.';
+    const message = error instanceof Error && error.message ? error.message : 'Could not create Income.';
     return NextResponse.json({ message }, { status: 500 });
   }
 }

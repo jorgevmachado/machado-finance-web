@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+
+import { MdArrowDropDown } from 'react-icons/md';
 
 import { Text } from '@/app/ds';
 import { joinClass } from '@/app/utils';
@@ -8,8 +10,12 @@ import { joinClass } from '@/app/utils';
 import { type SelectProps, type SelectSize } from './types';
 
 const SIZE_CLASS_MAP: Record<SelectSize, string> = {
-  sm: 'px-3 py-2 text-sm',
-  md: 'px-4 py-2.5 text-sm',
+  sm: 'h-9 text-sm',
+  md: 'h-10 text-sm',
+};
+
+const VARIANT_CLASS_MAP = {
+  outline: 'border border-slate-200 bg-white text-slate-700 focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100',
 };
 
 const Select = <T extends string>({
@@ -21,7 +27,6 @@ const Select = <T extends string>({
   required = false,
   disabled = false,
   size = 'sm',
-  caseSensitive = true,
   onValueChange,
   containerClassName,
   legendClassName,
@@ -29,18 +34,38 @@ const Select = <T extends string>({
   optionsContainerClassName,
   optionClassName,
 }: SelectProps<T>): React.JSX.Element => {
-  const normalize = (nextValue: string) => (caseSensitive ? nextValue : nextValue.toUpperCase());
+  const [isOpen, setIsOpen] = useState(false);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+  const displayLabel = selectedOption?.label || 'Selecione uma opção';
+
+  const handleSelectOption = useCallback((optionValue: T) => {
+    onValueChange?.(optionValue, {} as never);
+    setIsOpen(false);
+  }, [onValueChange]);
+
+  const handleBlur = useCallback(() => {
+    globalThis.setTimeout(() => {
+      setIsOpen(false);
+    }, 120);
+  }, []);
+
+  const wrapperClassName = joinClass([
+    'flex items-center gap-2 rounded-xl px-3 transition relative cursor-pointer',
+    SIZE_CLASS_MAP[size],
+    VARIANT_CLASS_MAP.outline,
+    disabled && 'cursor-not-allowed bg-slate-100 text-slate-400 opacity-70',
+  ]);
 
   return (
-    <fieldset className={joinClass(['flex flex-col gap-2', containerClassName])} disabled={disabled}>
+    <label className="flex flex-col gap-1.5">
       {label ? (
         <Text
-          as="legend"
           size="xs"
           color="text-slate-600"
           weight="semibold"
           tracking="wide"
-          className={joinClass(['uppercase', !helperText && 'mb-2', legendClassName])}
+          className={joinClass(['uppercase', legendClassName])}
         >
           {label}
         </Text>
@@ -52,40 +77,66 @@ const Select = <T extends string>({
         </Text>
       ) : null}
 
-      <div className={joinClass(['grid grid-cols-1 gap-2 sm:grid-cols-2', optionsContainerClassName])}>
-        {options.map((option) => {
-          const isSelected = normalize(value) === normalize(option.value);
-          const isOptionDisabled = disabled || option.disabled;
-          return (
-            <label
-              key={option.key ?? option.value}
-              className={joinClass([
-                'flex items-center gap-2 rounded-xl border transition-colors',
-                SIZE_CLASS_MAP[size],
-                !isOptionDisabled && 'cursor-pointer',
-                isSelected
-                  ? 'border-blue-300 bg-blue-50 text-blue-700'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50',
-                isOptionDisabled && 'cursor-not-allowed opacity-70 hover:bg-white',
-                optionClassName,
-              ])}
-            >
-              <input
-                type="radio"
-                name={name}
-                value={option.value}
-                checked={isSelected}
-                required={required}
-                disabled={isOptionDisabled}
-                onChange={(event) => onValueChange?.(option.value, event)}
-                className="h-4 w-4 accent-blue-600"
-              />
-              <span>{option.label}</span>
-            </label>
-          );
-        })}
+      <div className={joinClass(['relative w-full', containerClassName])}>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onBlur={handleBlur}
+          className={wrapperClassName}
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+        >
+          <span className="flex-1 text-left truncate text-slate-700">
+            {displayLabel}
+          </span>
+          <MdArrowDropDown
+            className={joinClass([
+              'pointer-events-none shrink-0 text-slate-600 transition-transform',
+              isOpen && 'rotate-180',
+            ])}
+            size={20}
+          />
+        </button>
+
+        {isOpen && !disabled ? (
+          <ul
+            role="listbox"
+            className={joinClass([
+              'absolute left-0 right-0 top-[calc(100%+4px)] z-20 max-h-52 overflow-y-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg',
+              optionClassName,
+            ])}
+          >
+            {options.length > 0 ? (
+              options.map((option) => {
+                const isSelected = option.value === value;
+                return (
+                  <li
+                    key={option.key ?? option.value}
+                    role="option"
+                    aria-selected={isSelected}
+                    onMouseDown={() => handleSelectOption(option.value)}
+                    className={joinClass([
+                      'cursor-pointer rounded-lg px-3 py-2 text-sm transition',
+                      isSelected
+                        ? 'bg-blue-50 text-blue-700'
+                        : 'text-slate-700 hover:bg-slate-50',
+                      option.disabled && 'cursor-not-allowed opacity-50',
+                    ])}
+                  >
+                    {option.label}
+                  </li>
+                );
+              })
+            ) : (
+              <li className="px-3 py-2 text-sm text-slate-400">
+                Nenhuma opção disponível
+              </li>
+            )}
+          </ul>
+        ) : null}
       </div>
-    </fieldset>
+    </label>
   );
 };
 

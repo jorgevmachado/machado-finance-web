@@ -1,4 +1,4 @@
-import { type TDraftMonth ,TMonthKey ,TMonthMap ,TMonthSummary } from './types';
+import { TMonthKey ,TMonthMap ,TMonthSummary } from './types';
 import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
 import {
   validateBasicEntity ,
@@ -6,7 +6,8 @@ import {
   validateValue ,
 } from '@/app/utils';
 import { TEntity } from '@/app/modules';
-import { EMonthStatus } from '@/app/modules/finance';
+import { EMonthStatus  } from '@/app/modules/finance';
+import { TMonthPersist } from '@/app/modules/finance/month';
 
 export class MonthBusiness {
   public MONTH_KEYS: Array<TMonthKey> = [
@@ -26,12 +27,17 @@ export class MonthBusiness {
 
   public monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', timeZone: 'UTC' });
 
-  private createMonthSummary(year: number, month: number, monthFormatter: Intl.DateTimeFormat, item?: Record<string, unknown>): TMonthSummary {
-    const monthDate = new Date(Date.UTC(year, month - 1, 1));
+  public getMonthName(referenceMonth: number, monthFormatter: Intl.DateTimeFormat = this.monthFormatter): TMonthKey {
+    const currentDate = new Date();
+    const monthDate = new Date(Date.UTC(currentDate.getUTCFullYear(), referenceMonth - 1, 1));
+    return monthFormatter.format(monthDate).toLowerCase() as TMonthKey;
+  }
+
+  public createMonthSummary(year: number, month: number, item?: Record<string, unknown>, monthFormatter: Intl.DateTimeFormat = this.monthFormatter): TMonthSummary {
     const entity = item ?  validateBasicEntity<TEntity>(item) : { id: '', created_at: new Date(), updated_at: undefined, deleted_at: undefined };
     return {
       ...entity,
-      month: monthFormatter.format(monthDate),
+      month: this.getMonthName(month, monthFormatter),
       amount: validateValue((item?.['amount'] as number | undefined), 'number') as number,
       received_at: item?.['received_at'] as string | undefined,
       reference_month: month,
@@ -41,7 +47,7 @@ export class MonthBusiness {
 
   private createEmptyMonthMap(referenceYear: number, monthFormatter: Intl.DateTimeFormat): TMonthMap {
     return this.MONTH_KEYS.reduce((accumulator, monthKey, index) => {
-      accumulator[monthKey] = this.createMonthSummary(referenceYear, index + 1, monthFormatter);
+      accumulator[monthKey] = this.createMonthSummary(referenceYear, index + 1, undefined, monthFormatter);
       return accumulator;
     }, {} as TMonthMap);
   }
@@ -127,18 +133,32 @@ export class MonthBusiness {
 
   }
 
-  public initDraft(months?: Array<Record<string, unknown>>): TDraftMonth {
-    return this.MONTH_KEYS.reduce((prevState, monthKey, index) => {
-      const month = months?.find((item) => item.reference_month === index + 1);
-      prevState[monthKey] = {
-        amount: validateValue((month?.['amount'] as number | undefined), 'number') as number,
-        status: this.validateStatus(month?.['status'] as string | undefined),
-        received_at: month?.received_at as string | undefined,
-        reference_year: validateValue(month?.['reference_year'] as string | undefined) as number ?? new Date().getFullYear(),
-        reference_month:  index + 1,
+  public convertToMonthSummary(monthData: Record<string, unknown>, referenceYear: number): TMonthSummary {
+    const monthKey = this.MONTH_KEYS.indexOf(monthData.month as TMonthKey);
+    const reference_month = monthData.reference_month as number | undefined;
+    return this.createMonthSummary(referenceYear, reference_month ?? monthKey - 1 , monthData);
+  }
+
+  public convertListToMonthSummary(months: Array<Record<string, unknown>>, referenceYear: number): Array<TMonthSummary> {
+    return months.map((month) => this.convertToMonthSummary(month, referenceYear));
+  }
+
+  public convertToMonthPersist(monthsSummary: Array<TMonthSummary>): Array<TMonthPersist> {
+    return monthsSummary.map((summary) => {
+      const received_at = summary.received_at ? new Date(summary.received_at) : undefined;
+      const result: TMonthPersist = {
+        amount: summary.amount,
+        status: summary?.status ,
+        reference_day: 10 ,
+        reference_month: summary.reference_month ,
+        transaction_date: received_at
       };
-      return prevState;
-    }, {} as TDraftMonth);
+      return result;
+    });
+  }
+
+  public orderMonthsByReferenceMonth(months: Array<TMonthSummary>): Array<TMonthSummary> {
+    return months.sort((a, b) => a.reference_month - b.reference_month);
   }
 
 }

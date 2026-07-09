@@ -21,7 +21,7 @@ import {
 import { financeBffService } from '@/app/modules/finance';
 
 import type { TAccount } from '../../../account';
-import { InputMonths, type TDraftMonth } from '../../../month';
+import { InputMonths ,TMonthPersist } from '../../../month';
 
 import { incomeBusiness } from '../../business';
 
@@ -40,6 +40,7 @@ type PersistIncomeProps = {
   income?: TIncome;
   onClose: (actionState: ActionState) => void;
   disabled?: boolean;
+  referenceYear?: number;
 };
 
 
@@ -48,12 +49,13 @@ export default function PersistIncome({
   account,
   onClose,
   disabled = false,
+  referenceYear = new Date().getFullYear(),
 }: PersistIncomeProps) {
   const { startContentLoading, stopContentLoading } = useLoading();
   const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = React.useState(false);
-  const [draftIncome, setDraftIncome] = React.useState<TDraftIncome>(incomeBusiness.initDraft(income));
-  const [monthDraft, setMonthDraft] = React.useState<TDraftMonth | undefined>(undefined);
+  const [draftIncome, setDraftIncome] = React.useState<TDraftIncome>(incomeBusiness.initDraft(referenceYear, income));
+  const [monthsDraft, setMonthsDraft] = React.useState<Array<TMonthPersist>>([]);
   const { t } = useAppTranslation();
 
   const updateDraftValue = <K extends keyof TDraftIncome>(key: K, value: TDraftIncome[K]) => {
@@ -63,10 +65,11 @@ export default function PersistIncome({
     }));
   };
 
+
   const handleCreate = async () => {
     startContentLoading();
     const payload: TIncomeCreate = {
-      months: [],
+      months: monthsDraft.map((month) => ({ ...month, id: undefined })),
       source: draftIncome.source ,
       account_id: account.id,
       description: draftIncome.description ,
@@ -118,6 +121,8 @@ export default function PersistIncome({
       payload.description = draftIncome.description;
     }
 
+    payload.months = monthsDraft;
+
     const emptyPayload = isObjectEmpty(payload);
     if (!emptyPayload) {
       const validationError = validateUpdatePayload(payload);
@@ -160,10 +165,6 @@ export default function PersistIncome({
     event.preventDefault();
 
     if (disabled) {
-      return;
-    }
-    
-    if (!monthDraft) {
       return;
     }
 
@@ -224,7 +225,7 @@ export default function PersistIncome({
           />
         </label>
 
-        <InputMonths months={income?.months} disabled={disabled} onChange={(draft) => setMonthDraft(draft)}/>
+        <InputMonths months={income?.months} disabled={disabled} onChange={(draft) => setMonthsDraft(draft)}/>
 
         { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">

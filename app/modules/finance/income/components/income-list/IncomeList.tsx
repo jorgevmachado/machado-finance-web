@@ -73,7 +73,7 @@ export default function IncomeList({ incomes, account, referenceYear }: IncomeLi
   const handlePersistModal = (item?: unknown, disabled?: boolean) => {
     const income = incomeBusiness.getOriginal(incomes ?? [], item);
     openModal({
-      title: income ? t('income.edit.title', { source: income.source }) : t('income.create.title'),
+      title: income ? t('income.edit.title', { name: income.source }) : t('income.create.title'),
       body: <PersistIncome income={income} account={account} onClose={handleCloseModal} disabled={disabled} />,
     });
   };
@@ -98,7 +98,7 @@ export default function IncomeList({ incomes, account, referenceYear }: IncomeLi
         items={incomeTable.body}
         headers={translatedHeaders}
         withFooter={true}
-        onCellClick={(item) => console.log('# => income cell clicked => ', item)}
+        onRowClick={(item) => handlePersistModal(item)}
         showNotFoundError={true}
       />
       {modal}

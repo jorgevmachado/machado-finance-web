@@ -7,6 +7,6 @@ import type {
 
 export class IncomeService extends BaseServiceAbstract<TIncome, TIncomeCreate, TIncomeUpdate> {
   constructor(baseUrl: string ,token?: string) {
-    super(baseUrl ,'income' ,token);
+    super(baseUrl ,'incomes' ,token);
   }
 }

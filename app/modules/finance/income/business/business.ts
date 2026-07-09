@@ -1,7 +1,11 @@
 import { ActionState } from '@/app/modules/actions/state';
 import { FiltersProps } from '@/app/ds';
 
-import type { TIncome ,TDraftIncome, TIncomeFilter } from '../types';
+import type {
+  TIncome ,
+  TDraftIncome ,
+  TIncomeFilter ,
+} from '../types';
 import { monthBusiness } from '@/app/modules/finance';
 
 export class IncomeBusiness {
@@ -59,11 +63,13 @@ export class IncomeBusiness {
     return items?.find((item) => item.id === itemId);
   }
 
-  public initDraft(income?: TIncome): TDraftIncome {
+  public initDraft(referenceYear: number, income?: TIncome): TDraftIncome {
     return {
       source: income?.source || '',
       description: income?.description || '',
       account_id: income?.account_id || '',
+      reference_year: referenceYear,
+
     };
   }
 } 

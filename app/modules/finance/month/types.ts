@@ -7,3 +7,11 @@ export type TEntityMonth = TEntity &{
   reference_year: number;
   reference_month: number;
 }
+
+export type TMonthPersist = {
+  amount: number;
+  status?: EMonthStatus;
+  reference_day?: number;
+  reference_month: number;
+  transaction_date?: Date;
+}

@@ -77,7 +77,10 @@
     }
   },
   "common": {
+    "add": "Add",
+    "added": "Added",
     "total": "Total",
+    "amount": "Amount",
     "actions": "Actions",
     "viewMore": "View more",
     "loading": "Loading..."
@@ -246,6 +249,8 @@
   },
   "month": {
     "title": "Month",
+    "received_at": "Received At",
+    "select": "Select a month",
     "january": "January",
     "jan": "Jan",
     "february": "February",

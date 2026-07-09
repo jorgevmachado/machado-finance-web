@@ -4,6 +4,6 @@ import type { TIncome, TIncomeCreate, TIncomeUpdate, TIncomeFilter } from '../ty
 
 export class IncomeBffService extends BffBaseServiceAbstract<TIncome, TIncomeCreate, TIncomeUpdate, TIncomeFilter> {
   constructor(baseUrl: string) {
-    super('income', 'incomes', baseUrl);
+    super('income', 'income', baseUrl);
   }
 }

@@ -18,6 +18,7 @@ export type TMonthKey =
 export type TMonthSummary = TEntity & {
   month: string;
   amount: number;
+  status?: EMonthStatus;
   paid_at?: Date;
   income_id?: string;
   expense_id?: string;

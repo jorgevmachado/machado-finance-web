@@ -1,6 +1,6 @@
 import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
-import type { TEntityMonth } from '../month';
+import type { TEntityMonth ,TMonthPersist } from '../month';
 
 export type TIncomeMonth = TEntityMonth & {
   income_id: string;
@@ -23,7 +23,7 @@ export type TIncomeFilter = TPaginateBaseFilter & {
 }
 
 export type TIncomeCreate = {
-  months: Array<TIncomeMonth>;
+  months: Array<TMonthPersist>;
   source: string;
   account_id: string;
   description: string;
@@ -33,7 +33,7 @@ export type TIncomeCreate = {
 }
 
 export type TIncomeUpdate = {
-  months?: Array<TIncomeMonth>;
+  months?: Array<TMonthPersist>;
   source?: string;
   account_id?: string;
   description?: string;

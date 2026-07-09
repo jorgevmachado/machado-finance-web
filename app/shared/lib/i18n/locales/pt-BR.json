@@ -77,7 +77,10 @@
     }
   },
   "common": {
+    "add": "Adicionar",
+    "added": "Adicionado",
     "total": "Total",
+    "amount": "Valor",
     "actions": "Ações",
     "viewMore": "Ver mais",
     "loading": "Carregando..."
@@ -154,7 +157,21 @@
   "income": {
     "source": "Fonte",
     "title": "Receitas",
-    "create": "Gerar Receita"
+    "create": {
+        "title": "Criar Receita",
+        "success": "Receita criada com sucesso.",
+        "error": "Ocorreu um erro ao criar a receita."
+    },
+    "edit": {
+      "title": "Editar Receita {{name}}",
+      "success": "Receita editada com sucesso.",
+      "error": "Ocorreu um erro ao editar a receita."
+    },
+    "delete": {
+      "title": "Deseja excluir esta receita?",
+      "success": "Receita excluída com sucesso.",
+      "error": "Ocorreu um erro ao excluir a receita."
+    }
   },
   "transfer": {
     "title": "Transferências",
@@ -230,6 +247,9 @@
     "contributor_name": "Contribuição"
   },
   "month": {
+    "title": "Mês",
+    "received_at": "Recebido em",
+    "select": "Selecione um mês",
     "january": "Janeiro",
     "jan": "Jan",
     "february": "Fevereiro",

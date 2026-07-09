@@ -77,7 +77,10 @@
     }
   },
   "common": {
+    "add": "Agregar",
+    "added": "Agregado",
     "total": "Total",
+    "amount": "Monto",
     "actions": "Acciones",
     "viewMore": "Ver más",
     "loading": "Cargando..."
@@ -154,7 +157,21 @@
   "income": {
     "source": "Origen",
     "title": "Ingresos",
-    "create": "Generar Ingreso"
+    "create": {
+        "title": "Crear Ingreso",
+        "success": "Ingreso creado con éxito.",
+        "error": "Ocurrió un error al crear el ingreso."
+    },
+    "edit": {
+        "title": "Editar Ingreso {{source}}",
+        "success": "Ingreso editado con éxito.",
+        "error": "Ocurrió un error al editar el ingreso."
+    },
+    "delete": {
+        "title": "¿Deseas eliminar este ingreso?",
+        "success": "Ingreso eliminado con éxito.",
+        "error": "Ocurrió un error al eliminar el ingreso."
+    }
   },
   "transfer": {
     "title": "Transferencias",
@@ -230,6 +247,9 @@
     "contributor_name": "Contribución"
   },
   "month": {
+    "title": "Mes",
+    "received_at": "Recibido el",
+    "select": "Selecciona un mes",
     "january": "Enero",
     "jan": "Ene",
     "february": "Febrero",
