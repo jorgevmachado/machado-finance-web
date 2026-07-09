@@ -173,6 +173,24 @@
         "error": "Ocurrió un error al eliminar el ingreso."
     }
   },
+  "allocation": {
+    "title": "Asignaciones",
+    "create": {
+      "title": "Crear Asignación",
+      "success": "Asignación creada con éxito.",
+      "error": "Ocurrió un error al crear la asignación."
+    },
+    "edit": {
+      "title": "Editar Asignación {{name}}",
+      "success": "Asignación editada con éxito.",
+      "error": "Ocurrió un error al editar la asignación."
+    },
+    "delete": {
+      "title": "¿Deseas eliminar esta asignación?",
+      "success": "Asignación eliminada con éxito.",
+      "error": "Ocurrió un error al eliminar la asignación."
+    }
+  },
   "transfer": {
     "title": "Transferencias",
     "outgoing": {
@@ -238,12 +256,42 @@
   },
   "expense": {
     "title": "Gastos",
+    "create": {
+      "title": "Crear Gasto",
+      "success": "Gasto creado con éxito.",
+      "error": "Ocurrió un error al crear el gasto."
+    },
+    "edit": {
+      "title": "Editar Gasto {{name}}",
+      "success": "Gasto editado con éxito.",
+      "error": "Ocurrió un error al editar el gasto."
+    },
+    "delete": {
+      "title": "¿Deseas eliminar este gasto?",
+      "success": "Gasto eliminado con éxito.",
+      "error": "Ocurrió un error al eliminar el gasto."
+    },
     "category": {
       "name": "Categoría"
     }
   },
   "allocation-contributions": {
     "title": "Contribuciones",
+    "create": {
+      "title": "Crear Contribución",
+      "success": "Contribución creada con éxito.",
+      "error": "Ocurrió un error al crear la contribución."
+    },
+    "edit": {
+      "title": "Editar Contribución {{name}}",
+      "success": "Contribución editada con éxito.",
+      "error": "Ocurrió un error al editar la contribución."
+    },
+    "delete": {
+      "title": "¿Deseas eliminar esta contribución?",
+      "success": "Contribución eliminada con éxito.",
+      "error": "Ocurrió un error al eliminar la contribución."
+    },
     "contributor_name": "Contribución"
   },
   "month": {

@@ -67,7 +67,7 @@ export default function Table({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <div className="min-w-max overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       { sortedItems.length === 0 && showNotFoundError && (
         <div className="flex h-full w-full items-center justify-center p-4">
           <Text className="text-slate-600">{notFoundMessage ? notFoundMessage : 'No data found!!'}</Text>

@@ -3,6 +3,7 @@ import {
   CategoryService
 } from '../category';
 import { IncomeService } from '../income';
+import { ExpenseService } from '../expense';
 import { AccountService } from '../account';
 import { AllocationService } from '../allocation';
 import {
@@ -14,6 +15,7 @@ import { TFinance } from '../types';
 export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unknown> {
   private readonly categoryModule: CategoryService;
   private readonly incomeModule: IncomeService;
+  private readonly expenseModule: ExpenseService;
   private readonly accountModule: AccountService;
   private readonly allocationModule: AllocationService;
   private readonly allocationContributionModule: AllocationContributionService;
@@ -23,6 +25,7 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
     const childrenBaseUrl =  `${baseUrl}/${this.pathUrl}`;
     this.categoryModule = new CategoryService(childrenBaseUrl, token);
     this.incomeModule = new IncomeService(childrenBaseUrl, token);
+    this.expenseModule = new ExpenseService(childrenBaseUrl, token);
     this.accountModule = new AccountService(childrenBaseUrl, token);
     this.allocationModule = new AllocationService(childrenBaseUrl, token);
     this.allocationContributionModule = new AllocationContributionService(childrenBaseUrl, token);
@@ -35,6 +38,10 @@ export class FinanceService extends BaseServiceAbstract<TFinance, unknown, unkno
 
   get income(): IncomeService {
     return this.incomeModule;
+  }
+
+  get expense(): ExpenseService {
+    return this.expenseModule;
   }
 
   get account(): AccountService {

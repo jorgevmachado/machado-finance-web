@@ -173,6 +173,24 @@
         "error": "An error occurred while deleting the income."
     }
   },
+  "allocation": {
+    "title": "Allocations",
+    "create": {
+      "title": "Create Allocation",
+      "success": "Allocation created successfully.",
+      "error": "An error occurred while creating the allocation."
+    },
+    "edit": {
+      "title": "Edit Allocation {{name}}",
+      "success": "Allocation edited successfully.",
+      "error": "An error occurred while editing the allocation."
+    },
+    "delete": {
+        "title": "Do you want to delete this allocation ?",
+        "success": "Allocation deleted successfully.",
+        "error": "An error occurred while deleting the allocation."
+    }
+  },
   "transfer": {
     "title": "Transfers",
     "outgoing": {
@@ -239,12 +257,42 @@
   },
   "expense": {
     "title": "Expenses",
+    "create": {
+      "title": "Create Expense",
+      "success": "Expense created successfully.",
+      "error": "An error occurred while creating the expense."
+    },
+    "edit": {
+      "title": "Edit Expense {{name}}",
+      "success": "Expense edited successfully.",
+      "error": "An error occurred while editing the expense."
+    },
+    "delete": {
+      "title": "Do you want to delete this expense ?",
+      "success": "Expense deleted successfully.",
+      "error": "An error occurred while deleting the expense."
+    },
     "category": {
       "name": "Category"
     }
   },
-  "allocation-contributions": {
+  "allocation-contribution": {
     "title": "Contributions",
+    "create": {
+      "title": "Create Contribution",
+      "success": "Contribution created successfully.",
+      "error": "An error occurred while creating the contribution."
+    },
+    "edit": {
+      "title": "Edit Contribution {{name}}",
+      "success": "Contribution edited successfully.",
+      "error": "An error occurred while editing the contribution."
+    },
+    "delete": {
+        "title": "Do you want to delete this contribution ?",
+        "success": "Contribution deleted successfully.",
+        "error": "An error occurred while deleting the contribution."
+    },
     "contributor_name": "Contribution"
   },
   "month": {

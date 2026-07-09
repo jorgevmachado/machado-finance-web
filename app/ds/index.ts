@@ -37,6 +37,12 @@ export {
   type CardVariant,
 } from './card';
 export {
+  default as Dropdown,
+  type DropdownIconPosition,
+  type DropdownItem,
+  type DropdownProps,
+} from './dropdown';
+export {
   default as Filters,
   type FiltersProps,
   useFilter,

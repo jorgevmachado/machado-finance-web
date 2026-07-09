@@ -14,7 +14,9 @@ export type TAllocation = TEntity & {
 
 export type TAllocationFilter = TPaginateBaseFilter & {
   name?: string;
+  account_id?: string;
   is_active?: boolean;
+  reference_year?: number;
 }
 
 export type TAllocationCreate = {
@@ -28,4 +30,10 @@ export type TAllocationUpdate = {
   is_active?: boolean;
   account_id?: string;
   description?: string;
+}
+
+export type TDraftAllocation = {
+  name: string;
+  account_id: string;
+  description: string;
 }

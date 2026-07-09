@@ -1,15 +1,28 @@
 'use client';
+import React ,{ useMemo } from 'react';
+import { MdPieChart, MdTrendingUp } from 'react-icons/md';
+
+import { useAppTranslation } from '@/app/shared';
+import { Dropdown, Filters } from '@/app/ds';
 import { useDetail } from '@/app/ui';
-import {
-  AllocationDetail ,
-  financeBffService ,IncomeList ,
+import { financeBffService } from '@/app/modules/finance';
+
+import { accountBusiness } from '../../business';
+
+import type {
   TAccount ,
   TAccountFilter ,
-} from '@/app/modules/finance';
-import { accountBusiness } from '../../business';
-import { Filters ,Tabs } from '@/app/ds';
-import React ,{ useMemo } from 'react';
-import { useAppTranslation } from '@/app/shared';
+} from '../../types';
+
+import {
+  IncomeList ,
+  usePersistIncomeModal,
+} from '../../../income';
+
+import {
+  TabsAllocations ,
+  usePersistAllocationModal,
+} from '../../../allocation';
 
 type AccountDetailPageProps = {
   identifier: string;
@@ -31,24 +44,39 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
     return accountBusiness.INITIAL_FILTERS.reference_year ?? new Date().getFullYear();
   }, [filters]);
 
-  const tabAllocations = useMemo(() => {
-    const allocations = data?.allocations;
-    if (!allocations || allocations?.length === 0) {
-      return [];
-    }
-
-    return allocations.map((allocation) => ({
-      id: allocation.id,
-      title: allocation.name,
-      children: <AllocationDetail allocation={allocation} referenceYear={referenceYear}/>,
-    }));
-  }, [data, referenceYear]);
-
-
+  const { openPersist: openCreateIncome, modal: incomeModal } = usePersistIncomeModal({
+    incomes: data?.incomes ?? [],
+    account: data,
+  });
+  
+  const { openPersist: openCreateAllocation, modal: allocationModal } = usePersistAllocationModal({
+    allocations: data?.allocations ?? [],
+    account: data,
+  });
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-950 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+      <div className="mx-auto flex w-full flex-col gap-4">
+        <div className="flex justify-end">
+          <Dropdown
+            align="right"
+            items={[
+              {
+                label: t('income.create.title'),
+                icon: <MdTrendingUp size={16} />,
+                iconPosition: 'left',
+                onClick: () => openCreateIncome(),
+              },
+              {
+                label: t('allocation.create.title'),
+                icon: <MdPieChart size={16} />,
+                iconPosition: 'left',
+                onClick: () => openCreateAllocation(),
+              },
+            ]}
+          />
+        </div>
+
         { inputFilters && inputFilters.length > 0 && (
           <Filters
             filters={ inputFilters }
@@ -57,21 +85,22 @@ export default function AccountDetailPage({ identifier }: AccountDetailPageProps
             onClear={ clearInputFilters }
           />
         ) }
+
+        {data && (
+          <section className="flex flex-col gap-10 rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-sm sm:p-5">
+            <IncomeList
+              incomes={data.incomes}
+              referenceYear={referenceYear}
+              onPersist={openCreateIncome}
+            />
+
+            <TabsAllocations allocations={data?.allocations ?? []} referenceYear={referenceYear}/>
+          </section>
+        )}
       </div>
 
-      {data && (
-        <section className="mt-4 flex flex-col gap-10  rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-sm sm:p-5">
-          <IncomeList incomes={data.incomes} account={data} referenceYear={referenceYear} />
-          { tabAllocations && tabAllocations.length > 0 && (
-            <Tabs
-              items={tabAllocations}
-              defaultTabId="overview"
-              onChange={(tabId) => console.log('Tab ativa:', tabId)}
-            />
-          )}
-        </section>
-      )}
-
+      {incomeModal}
+      {allocationModal}
     </main>
   );
 }

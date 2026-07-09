@@ -1,80 +1,58 @@
 'use client';
 import React ,{ useEffect } from 'react';
 
-import { isObjectEmpty } from '@/app/utils';
-
 import {
   createI18nMessage ,
   translateI18nMessage ,
   useAppTranslation,
 } from '@/app/shared';
-
-import { Button ,Card ,Input ,Text ,useLoading } from '@/app/ds';
+import { Button ,Card ,Input, Text ,useLoading } from '@/app/ds';
 
 import {
   ActionState ,
-  INITIAL_ACTION_STATE ,
-  mapError ,
-  toErrorState,
+  INITIAL_ACTION_STATE ,mapError ,
+  toErrorState ,
 } from '@/app/modules/actions';
 
-import { financeBffService } from '@/app/modules/finance';
 
 import type { TAccount } from '../../../account';
-import { InputMonths ,TMonthPersist } from '../../../month';
-
-import { incomeBusiness } from '../../business';
-
-import type { TIncome, TIncomeCreate, TIncomeUpdate, TDraftIncome } from '../../types';
-
+import type { TAllocation ,  TAllocationCreate, TAllocationUpdate, TDraftAllocation } from '../../types';
+import { allocationBusiness } from '../../business';
 
 import {
-  INCOME_DEFAULT_CREATE_ERROR_MESSAGE ,
-  INCOME_DEFAULT_UPDATE_ERROR_MESSAGE ,
-  validateCreatePayload ,
-  validateUpdatePayload ,
+  ALLOCATION_DEFAULT_CREATE_ERROR_MESSAGE ,ALLOCATION_DEFAULT_UPDATE_ERROR_MESSAGE ,
+  validateCreatePayload ,validateUpdatePayload ,
 } from '../../validation';
+import { financeBffService } from '@/app/modules/finance';
+import { isObjectEmpty } from '@/app/utils';
 
-type PersistIncomeProps = {
+type PersistAllocationProps = {
   account: TAccount;
-  income?: TIncome;
+  allocation?: TAllocation;
   onClose: (actionState: ActionState) => void;
   disabled?: boolean;
-  referenceYear?: number;
-};
+}
 
-
-export default function PersistIncome({
-  income,
-  account,
-  onClose,
-  disabled = false,
-  referenceYear = new Date().getFullYear(),
-}: PersistIncomeProps) {
+export default function PersistAllocation({ account, allocation, onClose, disabled }: PersistAllocationProps) {
   const { t } = useAppTranslation();
   const { startContentLoading, stopContentLoading } = useLoading();
   const [state ,setState] = React.useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = React.useState(false);
-  const [draftIncome, setDraftIncome] = React.useState<TDraftIncome>(incomeBusiness.initDraft(referenceYear, income));
-  const [monthsDraft, setMonthsDraft] = React.useState<Array<TMonthPersist>>([]);
+  const [draftAllocation ,setDraftAllocation] = React.useState<TDraftAllocation>(allocationBusiness.initDraft(allocation));
 
-
-  const updateDraftValue = <K extends keyof TDraftIncome>(key: K, value: TDraftIncome[K]) => {
-    setDraftIncome((previousState) => ({
-      ...previousState,
-      [key]: value,
+  const updateDraftValue = <K extends keyof TDraftAllocation>(key: K ,value: TDraftAllocation[K]) => {
+    setDraftAllocation((previousState) => ({
+      ...previousState ,
+      [key]: value ,
     }));
   };
 
-
   const handleCreate = async () => {
     startContentLoading();
-    const payload: TIncomeCreate = {
-      months: monthsDraft.map((month) => ({ ...month, id: undefined })),
-      source: draftIncome.source ,
-      account_id: account.id,
-      description: draftIncome.description ,
-      reference_year: draftIncome.reference_year,
+    const payload: TAllocationCreate = {
+      name: draftAllocation.name ,
+      account_id: account.id ,
+      description: draftAllocation.description ,
     };
     const validationError = validateCreatePayload(payload);
 
@@ -85,15 +63,15 @@ export default function PersistIncome({
     }
 
     try {
-      const response = await financeBffService.income.create({ payload });
+      const response = await financeBffService.allocation.create({ payload });
 
       if (response.error) {
-        setState(toErrorState(response.i18nMessageError || response.message || INCOME_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
+        setState(toErrorState(response.i18nMessageError || response.message || ALLOCATION_DEFAULT_CREATE_ERROR_MESSAGE ,'create'));
         setIsPending(false);
         return;
       }
     } catch (error) {
-      setState(mapError(error ,INCOME_DEFAULT_CREATE_ERROR_MESSAGE));
+      setState(mapError(error ,ALLOCATION_DEFAULT_CREATE_ERROR_MESSAGE));
       setIsPending(false);
       return;
     } finally {
@@ -103,26 +81,24 @@ export default function PersistIncome({
     setState({
       type: 'create' ,
       status: 'success' ,
-      message: createI18nMessage('income.messages.created') ,
+      message: createI18nMessage('allocation.messages.created') ,
     });
     setIsPending(false);
     stopContentLoading();
   };
 
-  const handleUpdate = async (income: TIncome) => {
+  const handleUpdate = async (allocation: TAllocation) => {
     startContentLoading();
-    const payload: TIncomeUpdate = {};
-    if (draftIncome.source !== income.source) {
-      payload.source = draftIncome.source;
+    const payload: TAllocationUpdate = {};
+    if (draftAllocation.name !== allocation.name) {
+      payload.name = draftAllocation.name;
     }
-    if (draftIncome.account_id && draftIncome.account_id !== income.account_id) {
-      payload.account_id = draftIncome.account_id;
+    if (draftAllocation.account_id && draftAllocation.account_id !== allocation.account_id) {
+      payload.account_id = draftAllocation.account_id;
     }
-    if (draftIncome.description !== income.description) {
-      payload.description = draftIncome.description;
+    if (draftAllocation.description !== allocation.description) {
+      payload.description = draftAllocation.description;
     }
-
-    payload.months = monthsDraft;
 
     const emptyPayload = isObjectEmpty(payload);
     if (!emptyPayload) {
@@ -134,18 +110,18 @@ export default function PersistIncome({
       }
 
       try {
-        const response = await financeBffService.income.update({
-          identifier: income.id ,
+        const response = await financeBffService.category.update({
+          identifier: allocation.id ,
           payload ,
         });
 
         if (response.error) {
-          setState(toErrorState(response.i18nMessageError || response.message || INCOME_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
+          setState(toErrorState(response.i18nMessageError || response.message || ALLOCATION_DEFAULT_UPDATE_ERROR_MESSAGE ,'update'));
           setIsPending(false);
           return;
         }
       } catch (error) {
-        setState(mapError(error ,INCOME_DEFAULT_UPDATE_ERROR_MESSAGE));
+        setState(mapError(error ,ALLOCATION_DEFAULT_UPDATE_ERROR_MESSAGE));
         setIsPending(false);
         return;
       } finally {
@@ -156,7 +132,7 @@ export default function PersistIncome({
     setState({
       type: 'update' ,
       status: 'success' ,
-      message: createI18nMessage('income.messages.updated') ,
+      message: createI18nMessage('allocation.messages.updated') ,
     });
     setIsPending(false);
     stopContentLoading();
@@ -171,13 +147,12 @@ export default function PersistIncome({
 
     setIsPending(true);
 
-    if (!income) {
+    if (!allocation) {
       await handleCreate();
       return;
     }
 
-    await handleUpdate(income);
-
+    await handleUpdate(allocation);
   };
 
   useEffect(() => {
@@ -190,17 +165,22 @@ export default function PersistIncome({
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={ handleSubmit } className="flex flex-col gap-4">
+        { !disabled && (
+          <Text as="p" size="sm" color="text-slate-600">
+            { t('allocation.form.subtitle') }
+          </Text>
+        ) }
         <Input
-          id="source"
-          label={t('income.source')}
-          name="source"
+          id="name"
+          label={ t('form.nameLabel') }
+          name="name"
           type="text"
-          value={draftIncome.source}
+          value={ draftAllocation.name }
           required
-          disabled={disabled}
-          onValueChange={(nextValue) => updateDraftValue('source', nextValue)}
-          placeholder={t('income.form.placeholder.source')}
+          disabled={ disabled }
+          onValueChange={ (nextValue) => updateDraftValue('name' ,nextValue) }
+          placeholder={ t('form.namePlaceholder') }
         />
 
         <label className="flex flex-col gap-1.5">
@@ -216,7 +196,7 @@ export default function PersistIncome({
           <textarea
             id="description"
             name="description"
-            value={draftIncome.description}
+            value={draftAllocation.description}
             required
             disabled={disabled}
             rows={4}
@@ -225,8 +205,6 @@ export default function PersistIncome({
             placeholder={t('form.descriptionPlaceholder')}
           />
         </label>
-
-        <InputMonths months={income?.months} disabled={disabled} onChange={(draft) => setMonthsDraft(draft)}/>
 
         { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">
@@ -270,7 +248,7 @@ export default function PersistIncome({
                 <Button type="submit" disabled={ isPending }>
                   { isPending ?
                     t('form.submitting') :
-                    income ? t('form.save') : t('form.submit') }
+                    allocation ? t('form.save') : t('form.submit') }
                 </Button>
               </>
             )

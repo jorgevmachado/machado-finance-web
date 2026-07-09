@@ -7,6 +7,7 @@ import {
 import type { TFinance, TFinanceFilter } from '../types';
 import { CategoryBffService } from '@/app/modules/finance/category';
 import { IncomeBffService } from '@/app/modules/finance/income';
+import { ExpenseBffService } from '@/app/modules/finance/expense';
 import {
   AccountBffService ,
 } from '@/app/modules/finance/account';
@@ -19,6 +20,7 @@ import { TransferBffService } from '@/app/modules/finance/transfer';
 export class FinanceBffService extends BffBaseServiceAbstract<TFinance,unknown, unknown, TFinanceFilter> {
   private readonly categoryModule: CategoryBffService;
   private readonly incomeModule: IncomeBffService;
+  private readonly expenseModule: ExpenseBffService;
   private readonly accountModule: AccountBffService;
   private readonly allocationModule: AllocationBffService;
   private readonly allocationContributionModule: AllocationContributionBffService;
@@ -28,6 +30,7 @@ export class FinanceBffService extends BffBaseServiceAbstract<TFinance,unknown, 
     super('finance' ,'' ,baseUrl);
     this.categoryModule = new CategoryBffService(baseUrl);
     this.incomeModule = new IncomeBffService(baseUrl);
+    this.expenseModule = new ExpenseBffService(baseUrl);
     this.accountModule = new AccountBffService(baseUrl);
     this.allocationModule = new AllocationBffService(baseUrl);
     this.allocationContributionModule = new AllocationContributionBffService(
@@ -41,6 +44,10 @@ export class FinanceBffService extends BffBaseServiceAbstract<TFinance,unknown, 
 
   get income(): IncomeBffService {
     return this.incomeModule;
+  }
+
+  get expense(): ExpenseBffService{
+    return this.expenseModule;
   }
 
   get account(): AccountBffService {

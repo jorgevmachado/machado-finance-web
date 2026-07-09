@@ -1,1 +1,1 @@
-export { default } from './AllocationDetail';
+export { default as AllocationDetail } from './AllocationDetail';

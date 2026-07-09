@@ -173,6 +173,24 @@
       "error": "Ocorreu um erro ao excluir a receita."
     }
   },
+  "allocation": {
+    "title": "Alocações",
+    "create": {
+      "title": "Criar Alocação",
+      "success": "Alocação criada com sucesso.",
+      "error": "Ocorreu um erro ao criar a alocação."
+    },
+    "edit": {
+      "title": "Editar Alocação {{name}}",
+      "success": "Alocação editada com sucesso.",
+      "error": "Ocorreu um erro ao editar a alocação."
+    },
+    "delete": {
+      "title": "Deseja excluir esta alocação?",
+      "success": "Alocação excluída com sucesso.",
+      "error": "Ocorreu um erro ao excluir a alocação."
+    }
+  },
   "transfer": {
     "title": "Transferências",
     "outgoing": {
@@ -238,12 +256,42 @@
   },
   "expense": {
     "title": "Despesas",
+    "create": {
+      "title": "Criar Despesa",
+      "success": "Despesa criada com sucesso.",
+      "error": "Ocorreu um erro ao criar a despesa."
+    },
+    "edit": {
+      "title": "Editar Despesa {{name}}",
+      "success": "Despesa editada com sucesso.",
+      "error": "Ocorreu um erro ao editar a despesa."
+    },
+    "delete": {
+      "title": "Deseja excluir esta despesa?",
+      "success": "Despesa excluída com sucesso.",
+      "error": "Ocorreu um erro ao excluir a despesa."
+    },
     "category": {
       "name": "Categoria"
     }
   },
   "allocation-contributions": {
     "title": "Contribuições",
+    "create": {
+      "title": "Criar Contribuição",
+      "success": "Contribuição criada com sucesso.",
+      "error": "Ocorreu um erro ao criar a contribuição."
+    },
+    "edit": {
+      "title": "Editar Contribuição {{name}}",
+      "success": "Contribuição editada com sucesso.",
+      "error": "Ocorreu um erro ao editar a contribuição."
+    },
+    "delete": {
+      "title": "Deseja excluir esta contribuição?",
+      "success": "Contribuição excluída com sucesso.",
+      "error": "Ocorreu um erro ao excluir a contribuição."
+    },
     "contributor_name": "Contribuição"
   },
   "month": {

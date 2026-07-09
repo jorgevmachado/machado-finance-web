@@ -36,6 +36,7 @@ export {
   type TIncomeCreate ,
   type TIncomeFilter ,
   type TIncomeUpdate,
+  usePersistIncomeModal,
 } from './income';
 export { EMonthStatus, monthBusiness,type TEntityMonth } from './month';
 export { movementBusiness } from './movement';

@@ -9,6 +9,6 @@ import type {
 
 export class AllocationContributionBffService extends BffBaseServiceAbstract<TAllocationContribution ,TAllocationContributionCreate ,TAllocationContributionUpdate ,TAllocationContributionFilter> {
   constructor(baseUrl: string) {
-    super('allocation-contributions' ,'allocation-contributions' ,baseUrl);
+    super('allocation-contributions' ,'contribution' ,baseUrl);
   }
 }
