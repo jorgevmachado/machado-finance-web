@@ -145,16 +145,10 @@
       "success": "Categoría eliminada con éxito.",
       "error": "Ocurrió un error al eliminar la categoría."
     },
-    "types": {
-      "FOOD": "Alimentación",
-      "OTHER": "Otros",
-      "STUDIES": "Estudios",
-      "UTILITY": "Servicios",
-      "HEALTH": "Salud",
-      "PERSONAL": "Personal",
-      "TRANSPORT": "Transporte",
-      "ENTERTAINMENT": "Entretenimiento",
-      "GOVERNMENT_FEES": "Tasas gubernamentales"
+    "messages": {
+      "updated": "Categoría actualizada con éxito.",
+      "created": "Categoría creada con éxito.",
+      "deleted": "Categoría eliminada con éxito."
     }
   },
   "income": {
@@ -174,6 +168,11 @@
         "title": "¿Deseas eliminar este ingreso?",
         "success": "Ingreso eliminado con éxito.",
         "error": "Ocurrió un error al eliminar el ingreso."
+    },
+    "messages": {
+        "updated": "Ingreso actualizado con éxito.",
+        "created": "Ingreso creado con éxito.",
+        "deleted": "Ingreso eliminado con éxito."
     }
   },
   "allocation": {
@@ -192,6 +191,11 @@
       "title": "¿Deseas eliminar esta asignación?",
       "success": "Asignación eliminada con éxito.",
       "error": "Ocurrió un error al eliminar la asignación."
+    },
+    "messages": {
+      "updated": "Asignación actualizada con éxito.",
+      "created": "Asignación creada con éxito.",
+      "deleted": "Asignación eliminada con éxito."
     }
   },
   "transfer": {
@@ -255,7 +259,12 @@
     "total_transfers": "Total Transferencias",
     "total_outgoing_transfers": "Total Transferencias Salientes",
     "total_incoming_transfers": "Total Transferencias Entrantes",
-    "total_allocation_contributions": "Total Contribuciones"
+    "total_allocation_contributions": "Total Contribuciones",
+    "messages": {
+      "updated": "Cuenta actualizada con éxito.",
+      "created": "Cuenta creada con éxito.",
+      "deleted": "Cuenta eliminada con éxito."
+    }
   },
   "expense": {
     "title": "Gastos",
@@ -290,6 +299,11 @@
         "category": "Selecciona la categoría del gasto",
         "account": "Selecciona la cuenta del gasto"
       }
+    },
+    "messages": {
+      "updated": "Gasto actualizado con éxito.",
+      "created": "Gasto creado con éxito.",
+      "deleted": "Gasto eliminado con éxito."
     }
   },
   "allocation-contributions": {
@@ -309,7 +323,24 @@
       "success": "Contribución eliminada con éxito.",
       "error": "Ocurrió un error al eliminar la contribución."
     },
-    "contributor_name": "Contribución"
+    "contributor_name": "Contribución",
+    "form": {
+      "label": {
+        "contributor_name": "Nombre del contribuyente",
+        "amount": "Monto de la contribución",
+        "allocation": "Asignación de la contribución"
+      },
+      "placeholder": {
+        "contributor_name": "Ingresa el nombre del contribuyente",
+        "amount": "Ingresa el monto de la contribución",
+        "allocation": "Selecciona la asignación de la contribución"
+      }
+    },
+    "messages": {
+      "updated": "Contribución actualizada con éxito.",
+      "created": "Contribución creada con éxito.",
+      "deleted": "Contribución eliminada con éxito."
+    }
   },
   "month": {
     "title": "Mes",

@@ -7,6 +7,7 @@ import { Dropdown, Text } from '@/app/ds';
 
 import type { TCategory } from '../../../category';
 import { usePersistExpenseModal, ExpenseList } from '../../../expense';
+import { usePersistAllocationContributionModal, AllocationContributionList } from '../../../allocation-contribution';
 import type { TAllocation } from '../../types';
 
 type AllocationDetailProps = {
@@ -21,6 +22,11 @@ export default function AllocationDetail({ categories, allocation, referenceYear
   const { openPersist: openCreateExpense, modal: expenseModal } = usePersistExpenseModal({
     expenses: allocation?.expenses ?? [],
     categories,
+    allocation,
+  });
+  
+  const { openPersist: openCreateAllocationContribution, modal: allocationContributionModal } = usePersistAllocationContributionModal({
+    allocationContributions: allocation?.allocation_contributions ?? [],
     allocation,
   });
 
@@ -46,21 +52,25 @@ export default function AllocationDetail({ categories, allocation, referenceYear
                 label: t('allocation-contribution.create.title'),
                 icon: <MdPieChart size={16} />,
                 iconPosition: 'left',
-                onClick: () => console.log('# => Open Create Contributions'),
+                onClick: () => openCreateAllocationContribution(),
               },
             ]}
           />
         </div>
       </div>
       <div className="flex flex-col gap-10">
-        {/*<Table*/}
-        {/*  items={expenseTable.body}*/}
-        {/*  headers={translatedHeaders}*/}
-        {/*  withFooter={true}*/}
-        {/*  showNotFoundError={true}*/}
-        {/*/>*/}
-        <ExpenseList expenses={allocation?.expenses ?? []} referenceYear={referenceYear} onPersist={openCreateExpense}/>
-        {expenseModal}
+        <div>
+          <ExpenseList expenses={allocation?.expenses ?? []} referenceYear={referenceYear} onPersist={openCreateExpense}/>
+          {expenseModal}
+        </div>
+        <div>
+          <AllocationContributionList
+            onPersist={openCreateAllocationContribution}
+            referenceYear={referenceYear}
+            allocationContributions={allocation?.allocation_contributions ?? []}
+          />
+          {allocationContributionModal}
+        </div>
       </div>
     </div>
   );

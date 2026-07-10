@@ -3,7 +3,7 @@ import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
 
 import type { TAllocation } from '../allocation';
-import type { TEntityMonth } from '../month';
+import type { TEntityMonth ,TMonthPersist } from '../month';
 
 export type TAllocationContributionMonth = TEntityMonth & {
   allocation_contribution_id: string;
@@ -12,37 +12,36 @@ export type TAllocationContributionMonth = TEntityMonth & {
 export type TAllocationContribution =  TEntity & {
   months: Array<TAllocationContributionMonth>;
   allocation: TAllocation;
-  account_id: string;
-  finance_id: string;
   description: string;
-  reference_year: number;
-  reference_month: number;
   contributor_name: string;
 };
 
 export type TAllocationContributionFilter = TPaginateBaseFilter & {
-  source?: string;
-  account_id?: string;
-  allocation_id: string;
+  allocation_id?: string;
   reference_year?: number;
   reference_month?: number;
-  contributor_name?: number;
+  contributor_name?: string;
 }
 
 export type TAllocationContributionCreate = {
-  amount: number;
-  account_id: string;
+  months: Array<TMonthPersist>;
   description: string;
   allocation_id: string;
   reference_year: number;
-  reference_month: number;
   contributor_name: string;
 }
 
 export type TAllocationContributionUpdate = {
-  amount?: number;
+  months?: Array<TMonthPersist>;
   description?: string;
+  allocation_id?: string;
   reference_year?: number;
-  reference_month?: number;
   contributor_name?: string;
+}
+
+export type TDraftAllocationContribution = {
+  description: string;
+  allocation_id: string;
+  reference_year: number;
+  contributor_name: string;
 }

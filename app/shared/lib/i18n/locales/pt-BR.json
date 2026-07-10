@@ -145,16 +145,10 @@
       "success": "Categoria excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a categoria."
     },
-    "types": {
-      "FOOD": "Alimentação",
-      "OTHER": "Outros",
-      "STUDIES": "Estudos",
-      "UTILITY": "Utilidades",
-      "HEALTH": "Saúde",
-      "PERSONAL": "Pessoal",
-      "TRANSPORT": "Transporte",
-      "ENTERTAINMENT": "Entretenimento",
-      "GOVERNMENT_FEES": "Taxas governamentais"
+    "messages": {
+      "updated": "Categoria atualizada com sucesso.",
+      "created": "Categoria criada com sucesso.",
+      "deleted": "Categoria excluída com sucesso."
     }
   },
   "income": {
@@ -174,6 +168,11 @@
       "title": "Deseja excluir esta receita?",
       "success": "Receita excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a receita."
+    },
+    "messages": {
+      "updated": "Receita atualizada com sucesso.",
+      "created": "Receita criada com sucesso.",
+      "deleted": "Receita excluída com sucesso."
     }
   },
   "allocation": {
@@ -192,6 +191,11 @@
       "title": "Deseja excluir esta alocação?",
       "success": "Alocação excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a alocação."
+    },
+    "messages": {
+      "updated": "Alocação atualizada com sucesso.",
+      "created": "Alocação criada com sucesso.",
+      "deleted": "Alocação excluída com sucesso."
     }
   },
   "transfer": {
@@ -203,6 +207,11 @@
     "incoming": {
       "title": "Transferência de entrada",
       "description": "Entrada"
+    },
+    "messages": {
+      "updated": "Transferência atualizada com sucesso.",
+      "created": "Transferência criada com sucesso.",
+      "deleted": "Transferência excluída com sucesso."
     }
   },
   "account": {
@@ -255,7 +264,12 @@
     "total_transfers": "Total Transferências",
     "total_outgoing_transfers": "Total Transferências de Saída",
     "total_incoming_transfers": "Total Transferências de Entrada",
-    "total_allocation_contributions": "Total Contribuições"
+    "total_allocation_contributions": "Total Contribuições",
+    "messages": {
+      "updated": "Conta atualizada com sucesso.",
+      "created": "Conta criada com sucesso.",
+      "deleted": "Conta excluída com sucesso."
+    }
   },
   "expense": {
     "title": "Despesas",
@@ -290,6 +304,11 @@
         "category": "Selecione a categoria da despesa",
         "description": "Digite a descrição da despesa"
       }
+    },
+    "messages": {
+      "updated": "Despesa atualizada com sucesso.",
+      "created": "Despesa criada com sucesso.",
+      "deleted": "Despesa excluída com sucesso."
     }
   },
   "allocation-contributions": {
@@ -309,7 +328,26 @@
       "success": "Contribuição excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a contribuição."
     },
-    "contributor_name": "Contribuição"
+    "contributor_name": "Contribuição",
+    "form": {
+      "label": {
+        "contributor_name": "Nome do Contribuidor",
+        "amount": "Valor",
+        "allocation": "Alocação",
+        "description": "Descrição"
+      },
+      "placeholder": {
+        "contributor_name": "Digite o nome do contribuidor",
+        "amount": "Digite o valor da contribuição",
+        "allocation": "Selecione a alocação da contribuição",
+        "description": "Digite a descrição da contribuição"
+      }
+    },
+    "messages": {
+      "updated": "Contribuição atualizada com sucesso.",
+      "created": "Contribuição criada com sucesso.",
+      "deleted": "Contribuição excluída com sucesso."
+    }
   },
   "month": {
     "title": "Mês",

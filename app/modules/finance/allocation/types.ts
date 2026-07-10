@@ -2,6 +2,7 @@ import type { TEntity } from '@/app/modules';
 import type { TPaginateBaseFilter } from '@/app/ui';
 
 import type { TExpense } from '../expense';
+import type { TAllocationContribution } from '../allocation-contribution';
 
 export type TAllocation = TEntity & {
   name: string;
@@ -10,6 +11,7 @@ export type TAllocation = TEntity & {
   is_active: boolean;
   account_id: string;
   description: string;
+  allocation_contributions: Array<TAllocationContribution>;
 }
 
 export type TAllocationFilter = TPaginateBaseFilter & {

@@ -145,16 +145,10 @@
       "success": "Category deleted successfully.",
       "error": "An error occurred while deleting the category."
     },
-    "types": {
-      "FOOD": "Food",
-      "OTHER": "Other",
-      "STUDIES": "Studies",
-      "UTILITY": "Utility",
-      "HEALTH": "Health",
-      "PERSONAL": "Personal",
-      "TRANSPORT": "Transport",
-      "ENTERTAINMENT": "Entertainment",
-      "GOVERNMENT_FEES": "Government Fees"
+    "messages": {
+      "updated": "Category updated successfully.",
+      "created": "Category created successfully.",
+      "deleted": "Category deleted successfully."
     }
   },
   "income": {
@@ -174,6 +168,11 @@
         "title": "Do you want to delete this income ?",
         "success": "Income deleted successfully.",
         "error": "An error occurred while deleting the income."
+    },
+    "messages": {
+      "updated": "Income updated successfully.",
+      "created": "Income created successfully.",
+      "deleted": "Income deleted successfully."
     }
   },
   "allocation": {
@@ -192,6 +191,11 @@
         "title": "Do you want to delete this allocation ?",
         "success": "Allocation deleted successfully.",
         "error": "An error occurred while deleting the allocation."
+    },
+    "messages": {
+      "updated": "Allocation updated successfully.",
+      "created": "Allocation created successfully.",
+      "deleted": "Allocation deleted successfully."
     }
   },
   "transfer": {
@@ -203,6 +207,11 @@
     "incoming": {
       "title": "Incoming Transfer",
       "description": "Incoming"
+    },
+    "messages": {
+      "updated": "Transfer updated successfully.",
+      "created": "Transfer created successfully.",
+      "deleted": "Transfer deleted successfully."
     }
   },
   "account": {
@@ -256,7 +265,12 @@
     "total_transfers": "Total Transfers",
     "total_outgoing_transfers": "Total Outgoing Transfers",
     "total_incoming_transfers": "Total Incoming Transfers",
-    "total_allocation_contributions": "Total Contributions"
+    "total_allocation_contributions": "Total Contributions",
+    "messages": {
+      "updated": "Account updated successfully.",
+      "created": "Account created successfully.",
+      "deleted": "Account deleted successfully."
+    }
   },
   "expense": {
     "title": "Expenses",
@@ -291,6 +305,11 @@
         "category": "Select a category",
         "description": "Enter description"
       }
+    },
+    "messages": {
+      "updated": "Expense updated successfully.",
+      "created": "Expense created successfully.",
+      "deleted": "Expense deleted successfully."
     }
   },
   "allocation-contribution": {
@@ -310,7 +329,26 @@
         "success": "Contribution deleted successfully.",
         "error": "An error occurred while deleting the contribution."
     },
-    "contributor_name": "Contribution"
+    "contributor_name": "Contribution",
+    "form": {
+      "label": {
+        "contributor_name": "Contributor Name",
+        "amount": "Amount",
+        "allocation": "Allocation",
+        "description": "Description"
+      },
+      "placeholder": {
+        "contributor_name": "Enter contributor name",
+        "amount": "Enter amount",
+        "allocation": "Select an allocation",
+        "description": "Enter description"
+      }
+    },
+    "messages": {
+      "updated": "Contribution updated successfully.",
+      "created": "Contribution created successfully.",
+      "deleted": "Contribution deleted successfully."
+    }
   },
   "month": {
     "title": "Month",

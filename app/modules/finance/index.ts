@@ -15,10 +15,14 @@ export {
   type TAllocationUpdate,
 } from './allocation';
 export {
+  allocationContributionBusiness,
+  AllocationContributionList,
+  PersistAllocationContribution, 
   type  TAllocationContribution ,
   type TAllocationContributionCreate ,
   type TAllocationContributionFilter ,
   type TAllocationContributionUpdate,
+  usePersistAllocationContributionModal,
 } from './allocation-contribution';
 export { financeBffService } from './bff-service';
 export {
