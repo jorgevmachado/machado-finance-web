@@ -155,7 +155,7 @@ export default function PersistExpense({
       }
 
       try {
-        const response = await financeBffService.income.update({
+        const response = await financeBffService.expense.update({
           identifier: expense.id ,
           payload ,
         });
@@ -177,7 +177,7 @@ export default function PersistExpense({
     setState({
       type: 'update' ,
       status: 'success' ,
-      message: createI18nMessage('income.messages.updated') ,
+      message: createI18nMessage('expense.messages.updated') ,
     });
     setIsPending(false);
     stopContentLoading();
@@ -214,7 +214,7 @@ export default function PersistExpense({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <Input
           id="payee"
-          label={t('expense.payee')}
+          label={t('expense.form.label.payee')}
           name="payee"
           type="text"
           value={draftExpense.payee}
@@ -227,12 +227,14 @@ export default function PersistExpense({
         <div className="flex items-end gap-2">
           <div className="flex-1">
             <Select
-              label={t('expense.category')}
+              label={t('expense.form.label.category')}
               name="category"
               value={draftCategory?.id ?? ''}
               options={categoryOptions}
               required
               disabled={disabled || !hasCategories}
+              defaultNoOptionLabel={t('common.noOptions')}
+              placeholder={t('common.select')}
               onValueChange={(value) => {
                 const found = categories.find((c) => c.id === value);
                 setDraftCategory(found);
@@ -242,7 +244,7 @@ export default function PersistExpense({
           </div>
           <button
             type="button"
-            title={t('expense.form.manageCategories')}
+            title={t('expense.form.label.category')}
             onClick={() => router.push('/category')}
             className="mb-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-blue-400 hover:text-blue-600"
           >
@@ -273,7 +275,16 @@ export default function PersistExpense({
           />
         </label>
 
-        <InputMonths months={expense?.months} disabled={disabled} onChange={(draft) => setMonthsDraft(draft)}/>
+        <InputMonths
+          months={expense?.months}
+          disabled={disabled}
+          rules={{
+            dateField: 'paid_at',
+            showStatusSelect: true,
+            showDateOnlyWhenStatusPaid: true,
+          }}
+          onChange={(draft) => setMonthsDraft(draft)}
+        />
 
         { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">

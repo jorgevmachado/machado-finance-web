@@ -226,7 +226,12 @@ export default function PersistIncome({
           />
         </label>
 
-        <InputMonths months={income?.months} disabled={disabled} onChange={(draft) => setMonthsDraft(draft)}/>
+        <InputMonths
+          months={income?.months}
+          disabled={disabled}
+          rules={{ dateField: 'received_at' }}
+          onChange={(draft) => setMonthsDraft(draft)}
+        />
 
         { state.status === 'error' && (
           <Card variant="outlined" rounded="lg" className="border-red-200 bg-red-50 p-3">

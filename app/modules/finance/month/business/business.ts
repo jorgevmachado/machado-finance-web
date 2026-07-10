@@ -2,12 +2,12 @@ import { TMonthKey ,TMonthMap ,TMonthSummary } from './types';
 import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
 import {
   validateBasicEntity ,
-  validateDateAt ,
   validateValue ,
 } from '@/app/utils';
 import { TEntity } from '@/app/modules';
 import { EMonthStatus  } from '@/app/modules/finance';
 import { TMonthPersist } from '@/app/modules/finance/month';
+import { TConvertMonthPersistOptions } from './types';
 
 export class MonthBusiness {
   public MONTH_KEYS: Array<TMonthKey> = [
@@ -33,13 +33,20 @@ export class MonthBusiness {
     return monthFormatter.format(monthDate).toLowerCase() as TMonthKey;
   }
 
+
   public createMonthSummary(year: number, month: number, item?: Record<string, unknown>, monthFormatter: Intl.DateTimeFormat = this.monthFormatter): TMonthSummary {
     const entity = item ?  validateBasicEntity<TEntity>(item) : { id: '', created_at: new Date(), updated_at: undefined, deleted_at: undefined };
+    const receivedAt = this.normalizeMonthDate(item?.['received_at']);
+    const paidAt = this.normalizeMonthDate(item?.['paid_at']);
+    const transactionDate = this.normalizeMonthDate(item?.['transaction_date']);
+    const status = this.validateStatus(item?.['status']);
     return {
       ...entity,
       month: this.getMonthName(month, monthFormatter),
       amount: validateValue((item?.['amount'] as number | undefined), 'number') as number,
-      received_at: item?.['received_at'] as string | undefined,
+      status,
+      received_at: receivedAt ?? transactionDate,
+      paid_at: paidAt ?? transactionDate,
       reference_month: month,
       reference_year: year,
     };
@@ -56,7 +63,10 @@ export class MonthBusiness {
     const entityMonths = months.map((month) => {
       const entity =  validateBasicEntity<TEntity>(month);
       const amount = validateValue((month?.['amount'] as number | undefined), 'number') as number;
-      const paid_at = validateDateAt(month?.['paid_at'] as string | undefined) as Date | undefined;
+      const status = this.validateStatus(month?.['status']);
+      const paid_at = this.normalizeMonthDate(month?.['paid_at']);
+      const received_at = this.normalizeMonthDate(month?.['received_at']);
+      const transaction_date = this.normalizeMonthDate(month?.['transaction_date']);
       const income_id = validateValue((month?.['income_id'] as string | undefined), 'string') as string;
       const expense_id = validateValue((month?.['expense_id'] as string | undefined), 'string') as string;
       const reference_year = validateValue((month?.['reference_year'] as number | undefined), 'number') as number;
@@ -68,7 +78,9 @@ export class MonthBusiness {
         ...entity,
         amount,
         month: monthFormatter.format(monthDate),
+        status,
         paid_at,
+        received_at: received_at ?? transaction_date,
         income_id: income_id === 'unknown' ? undefined : income_id,
         expense_id: expense_id === 'unknown' ? undefined : expense_id,
         reference_year,
@@ -143,22 +155,44 @@ export class MonthBusiness {
     return months.map((month) => this.convertToMonthSummary(month, referenceYear));
   }
 
-  public convertToMonthPersist(monthsSummary: Array<TMonthSummary>): Array<TMonthPersist> {
+  public convertToMonthPersist(
+    monthsSummary: Array<TMonthSummary>,
+    {
+      dateField = 'received_at',
+      includeStatus = true,
+    }: TConvertMonthPersistOptions = {}
+  ): Array<TMonthPersist> {
     return monthsSummary.map((summary) => {
-      const received_at = summary.received_at ? new Date(summary.received_at) : undefined;
+      const monthDate = dateField === 'paid_at' ? summary.paid_at : summary.received_at;
+      const transactionDate = monthDate ? new Date(monthDate) : undefined;
       const result: TMonthPersist = {
         amount: summary.amount,
-        status: summary?.status ,
         reference_day: 10 ,
         reference_month: summary.reference_month ,
-        transaction_date: received_at
+        transaction_date: transactionDate
       };
+      if (includeStatus && summary.status) {
+        result.status = summary.status;
+      }
       return result;
     });
   }
 
   public orderMonthsByReferenceMonth(months: Array<TMonthSummary>): Array<TMonthSummary> {
     return months.sort((a, b) => a.reference_month - b.reference_month);
+  }
+
+  private normalizeMonthDate(value: unknown): string | undefined {
+    if (!value) {
+      return undefined;
+    }
+    if (value instanceof Date) {
+      return value.toISOString().slice(0, 10);
+    }
+    if (typeof value === 'string') {
+      return value.slice(0, 10);
+    }
+    return undefined;
   }
 
 }

@@ -4,32 +4,54 @@ import React, { useState, useCallback } from 'react';
 import { useAppTranslation } from '@/app/shared';
 import { Button ,Input ,Select ,Text ,Table ,ETypeTableHeader } from '@/app/ds';
 
+import { EMonthStatus } from '../../enum';
 import { monthBusiness, TMonthKey, type TMonthSummary } from '../../business';
 import { TMonthPersist } from '../../types';
+
+type TMonthDateField = 'received_at' | 'paid_at';
+
+type TMonthInputRules = {
+  dateField?: TMonthDateField;
+  showStatusSelect?: boolean;
+  showDateOnlyWhenStatusPaid?: boolean;
+};
 
 type InputMonthsProps = {
   months?: Array<Record<string, unknown>>;
   referenceYear?: number;
   disabled?: boolean;
+  rules?: TMonthInputRules;
   onChange?: (months: Array<TMonthPersist>) => void;
 };
 
 type MonthInput = {
   amount: string;
+  status?: EMonthStatus;
   received_at: string;
+  paid_at: string;
 };
 
 export default function InputMonths({
   months = [],
   referenceYear = new Date().getFullYear(),
   disabled = false,
+  rules,
   onChange,
 }: InputMonthsProps) {
   const { t } = useAppTranslation();
+  const dateField = rules?.dateField ?? 'received_at';
+  const showStatusSelect = rules?.showStatusSelect ?? false;
+  const showDateOnlyWhenStatusPaid = rules?.showDateOnlyWhenStatusPaid ?? false;
 
   const [selectedMonth, setSelectedMonth] = useState<TMonthKey | ''>('');
-  const [currentInput, setCurrentInput] = useState<MonthInput>({ amount: '', received_at: '' });
+  const [currentInput, setCurrentInput] = useState<MonthInput>({
+    amount: '',
+    status: showStatusSelect ? EMonthStatus.PENDING : undefined,
+    received_at: '',
+    paid_at: '',
+  });
   const [addedMonths, setAddedMonths] = useState<Array<TMonthSummary>>(monthBusiness.convertListToMonthSummary(months, referenceYear));
+  const shouldShowDateInput = !showDateOnlyWhenStatusPaid || currentInput.status === EMonthStatus.PAID;
 
   const usedMonths = new Set(addedMonths.map((m) => m.reference_month));
 
@@ -38,11 +60,14 @@ export default function InputMonths({
   );
 
   const handleOnChange = useCallback((monthsSummary: Array<TMonthSummary>) => {
-    const persistMonths = monthBusiness.convertToMonthPersist(monthsSummary);
+    const persistMonths = monthBusiness.convertToMonthPersist(monthsSummary, {
+      dateField,
+      includeStatus: showStatusSelect,
+    });
     if (onChange) {
       onChange(persistMonths);
     }
-  },[onChange]);
+  },[dateField, onChange, showStatusSelect]);
 
 
   const handleRemove = useCallback((item: TMonthSummary) => {
@@ -59,7 +84,9 @@ export default function InputMonths({
   const handleEdit = useCallback((item: TMonthSummary) => {
     setCurrentInput({
       amount: item.amount.toString() || '',
-      received_at: (item as TMonthSummary).received_at || '',
+      status: showStatusSelect ? (item.status ?? EMonthStatus.PENDING) : undefined,
+      received_at: item.received_at || '',
+      paid_at: item.paid_at || '',
     });
     const monthKey = monthBusiness.getMonthName(item.reference_month);
     const currentMonth = addedMonths.find((m) => m.id === item.id);
@@ -68,7 +95,7 @@ export default function InputMonths({
     }
     handleRemove(currentMonth);
     setSelectedMonth(monthKey);
-  }, [addedMonths, handleRemove]);
+  }, [addedMonths, handleRemove, showStatusSelect]);
   
   const handleAdd = useCallback(() => {
     if (!selectedMonth) {
@@ -79,7 +106,9 @@ export default function InputMonths({
       id: `${selectedMonth}-${Date.now()}`,
       month: selectedMonth,
       amount: parseFloat(currentInput.amount.replace(/\D/g, '')) / 100 || 0,
+      status: showStatusSelect ? currentInput.status : undefined,
       received_at: currentInput.received_at,
+      paid_at: currentInput.paid_at,
       reference_year: referenceYear,
       reference_month: monthIndex + 1,
       created_at: new Date(),
@@ -90,9 +119,26 @@ export default function InputMonths({
     setAddedMonths(orderedMonths);
     handleOnChange(orderedMonths);
     setSelectedMonth('');
-    setCurrentInput({ amount: '', received_at: '' });
-  }, [addedMonths, currentInput.amount, currentInput.received_at, handleOnChange, referenceYear, selectedMonth]);
+    setCurrentInput({
+      amount: '',
+      status: showStatusSelect ? EMonthStatus.PENDING : undefined,
+      received_at: '',
+      paid_at: '',
+    });
+  }, [addedMonths, currentInput.amount, currentInput.paid_at, currentInput.received_at, currentInput.status, handleOnChange, referenceYear, selectedMonth, showStatusSelect]);
 
+  const dateInputLabel = dateField === 'paid_at' ? t('month.paid_at') : t('month.received_at');
+  const dateInputValue = dateField === 'paid_at' ? currentInput.paid_at : currentInput.received_at;
+  const shouldRequireDateForCurrentState = !showDateOnlyWhenStatusPaid || currentInput.status === EMonthStatus.PAID;
+  const canAdd = Boolean(selectedMonth)
+    && Boolean(currentInput.amount)
+    && (!showStatusSelect || Boolean(currentInput.status))
+    && (!shouldShowDateInput || !shouldRequireDateForCurrentState || Boolean(dateInputValue));
+  const statusOptions = Object.values(EMonthStatus).map((status) => ({
+    key: status,
+    value: status,
+    label: status,
+  }));
 
 
 
@@ -101,9 +147,9 @@ export default function InputMonths({
     <div className="space-y-4">
       {/* Seletor de meses e inputs */}
       <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_1fr_1fr_auto]">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           <Select
-            label={t('month.select')}
+            label={t('month.title')}
             name="select-month"
             value={selectedMonth.toLowerCase()}
             disabled={disabled || availableMonths.length === 0}
@@ -112,8 +158,29 @@ export default function InputMonths({
               value: key,
               label: t(`month.${key}`),
             }))}
+            defaultNoOptionLabel={t('common.noOptions')}
+            placeholder={t('common.select')}
             onValueChange={(value) => setSelectedMonth(value.toLowerCase() as TMonthKey)}
           />
+
+          {showStatusSelect && (
+            <Select<EMonthStatus>
+              label={t('common.status')}
+              name="input-status"
+              value={currentInput.status ?? ''}
+              disabled={disabled || !selectedMonth}
+              options={statusOptions}
+              defaultNoOptionLabel={t('common.noOptions')}
+              placeholder={t('common.select')}
+              onValueChange={(statusValue) => {
+                setCurrentInput((previousInput) => ({
+                  ...previousInput,
+                  status: statusValue,
+                  paid_at: statusValue === EMonthStatus.PAID ? previousInput.paid_at : '',
+                }));
+              }}
+            />
+          )}
 
           <Input
             id="input-amount"
@@ -128,23 +195,28 @@ export default function InputMonths({
             }
           />
 
-          <Input
-            id="input-received-at"
-            name="input-received-at"
-            label={t('month.received_at')}
-            type="date"
-            value={currentInput.received_at}
-            disabled={disabled || !selectedMonth}
-            onValueChange={(value) =>
-              setCurrentInput((prev) => ({ ...prev, received_at: value }))
-            }
-          />
+          {shouldShowDateInput && (
+            <Input
+              id={`input-${dateField}`}
+              name={`input-${dateField}`}
+              label={dateInputLabel}
+              type="date"
+              value={dateInputValue}
+              disabled={disabled || !selectedMonth}
+              onValueChange={(value) =>
+                setCurrentInput((previousInput) => ({
+                  ...previousInput,
+                  [dateField]: value,
+                }))
+              }
+            />
+          )}
 
           <Button
             type="button"
             appearance="solid"
             size="md"
-            disabled={disabled || !selectedMonth || !currentInput.amount}
+            disabled={disabled || !canAdd}
             onClick={handleAdd}
             className="self-end"
           >
@@ -164,7 +236,13 @@ export default function InputMonths({
             headers={[
               { label: t('month.title'), value: 'month', sortable: true },
               { label: t('common.amount'), value: 'amount', type: ETypeTableHeader.MONEY, sortable: true },
-              { label: t('month.received_at'), value: 'received_at', type: ETypeTableHeader.DATE, sortable: false },
+              ...(showStatusSelect ? [{ label: t('month.status'), value: 'status', sortable: false }] : []),
+              {
+                label: dateInputLabel,
+                value: dateField,
+                type: ETypeTableHeader.DATE,
+                sortable: false,
+              },
             ]}
             actions={{
               edit: {

@@ -4,6 +4,6 @@ import type { TExpense, TExpenseCreate, TExpenseUpdate, TExpenseFilter } from '.
 
 export class ExpenseBffService extends BffBaseServiceAbstract<TExpense, TExpenseCreate, TExpenseUpdate, TExpenseFilter> {
   constructor(baseUrl: string) {
-    super('expense', 'expenses', baseUrl);
+    super('expense', 'expense', baseUrl);
   }
 }

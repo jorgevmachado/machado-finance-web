@@ -80,10 +80,13 @@
     "add": "Add",
     "added": "Added",
     "total": "Total",
+    "select": "Select",
+    "status": "Status",
     "amount": "Amount",
     "actions": "Actions",
     "viewMore": "View more",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "noOptions": "No options available."
   },
   "filters": {
     "year": "Year",
@@ -274,6 +277,20 @@
     },
     "category": {
       "name": "Category"
+    },
+    "form": {
+      "label": {
+        "payee": "Payee",
+        "amount": "Amount",
+        "category": "Category",
+        "description": "Description"
+      },
+      "placeholder": {
+        "payee": "Enter payee",
+        "amount": "Enter amount",
+        "category": "Select a category",
+        "description": "Enter description"
+      }
     }
   },
   "allocation-contribution": {

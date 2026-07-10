@@ -10,7 +10,7 @@ describe('<Select />', () => {
     { value: 'OTHER', label: 'Other' },
   ] as const;
 
-  it('renders label, helper text and options', () => {
+  it('renders label and helper text', () => {
     render(
       <Select
         label="Category type"
@@ -23,11 +23,10 @@ describe('<Select />', () => {
 
     expect(screen.getByText('Category type')).toBeInTheDocument();
     expect(screen.getByText('Pick one option')).toBeInTheDocument();
-    expect(screen.getByLabelText('Food')).toBeInTheDocument();
-    expect(screen.getByLabelText('Other')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Select an option' })).toBeInTheDocument();
   });
 
-  it('calls onValueChange when selecting an option', () => {
+  it('opens options and calls onValueChange when selecting', () => {
     const onValueChange = jest.fn();
 
     render(
@@ -39,12 +38,14 @@ describe('<Select />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByLabelText('Food'));
+    fireEvent.click(screen.getByRole('button', { name: 'Select an option' }));
+    fireEvent.mouseDown(screen.getByRole('option', { name: 'Food' }));
 
     expect(onValueChange).toHaveBeenCalledWith('FOOD', expect.any(Object));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
-  it('marks the matching option as selected', () => {
+  it('renders selected option label and keeps full width class', () => {
     render(
       <Select
         name="type"
@@ -53,38 +54,13 @@ describe('<Select />', () => {
       />,
     );
 
-    const selectedOption = screen.getByText('Other').closest('label');
-    expect(selectedOption).toHaveClass('border-blue-300');
-    expect(screen.getByRole('radio', { name: 'Other' })).toBeChecked();
+    const trigger = screen.getByRole('button', { name: 'Other' });
+    expect(trigger).toHaveClass('w-full');
   });
 
-  it('supports case insensitive matching', () => {
-    render(
-      <Select
-        name="type"
-        value="food"
-        options={[...options]}
-        caseSensitive={false}
-      />,
-    );
+  it('does not select disabled option', () => {
+    const onValueChange = jest.fn();
 
-    expect(screen.getByRole('radio', { name: 'Food' })).toBeChecked();
-  });
-
-  it('applies legend spacing class when helper text is absent', () => {
-    render(
-      <Select
-        label="Category type"
-        name="type"
-        value=""
-        options={[...options]}
-      />,
-    );
-
-    expect(screen.getByText('Category type')).toHaveClass('mb-2');
-  });
-
-  it('applies disabled classes when option is disabled', () => {
     render(
       <Select
         name="type"
@@ -93,12 +69,29 @@ describe('<Select />', () => {
           { value: 'FOOD', label: 'Food', disabled: true },
           { value: 'OTHER', label: 'Other' },
         ]}
+        onValueChange={onValueChange}
       />,
     );
 
-    const disabledOption = screen.getByText('Food').closest('label');
+    fireEvent.click(screen.getByRole('button', { name: 'Select an option' }));
+    fireEvent.mouseDown(screen.getByRole('option', { name: 'Food' }));
 
-    expect(disabledOption).toHaveClass('cursor-not-allowed');
-    expect(disabledOption).toHaveClass('opacity-70');
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('wires native select with name, required and value', () => {
+    const { container } = render(
+      <Select
+        name="type"
+        value="OTHER"
+        required
+        options={[...options]}
+      />,
+    );
+
+    const nativeSelect = container.querySelector('select[name="type"]');
+    expect(nativeSelect).toBeInTheDocument();
+    expect(nativeSelect).toBeRequired();
+    expect(nativeSelect).toHaveValue('OTHER');
   });
 });

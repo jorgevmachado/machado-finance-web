@@ -80,10 +80,13 @@
     "add": "Agregar",
     "added": "Agregado",
     "total": "Total",
+    "select": "Seleccionar",
+    "status": "Estado",
     "amount": "Monto",
     "actions": "Acciones",
     "viewMore": "Ver más",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "noOptions": "No se encontraron opciones."
   },
   "filters": {
     "year": "Año",
@@ -273,6 +276,20 @@
     },
     "category": {
       "name": "Categoría"
+    },
+    "form": {
+      "label": {
+        "payee": "Nombre del gasto",
+        "amount": "Monto del gasto",
+        "category": "Categoría del gasto",
+        "account": "Cuenta del gasto"
+      },
+      "placeholder": {
+        "payee": "Ingresa el nombre del gasto",
+        "amount": "Ingresa el monto del gasto",
+        "category": "Selecciona la categoría del gasto",
+        "account": "Selecciona la cuenta del gasto"
+      }
     }
   },
   "allocation-contributions": {

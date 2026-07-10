@@ -10,20 +10,21 @@ export type SelectOption<T extends string = string> = {
 export type SelectSize = 'sm' | 'md';
 
 export type SelectProps<T extends string = string> = {
-  label?: ReactNode;
-  helperText?: ReactNode;
+  size?: SelectSize;
   name: string;
+  label?: ReactNode;
   value: T | '';
   options: Array<SelectOption<T>>;
   required?: boolean;
   disabled?: boolean;
-  size?: SelectSize;
+  helperText?: ReactNode;
+  placeholder?: string;
   caseSensitive?: boolean;
   onValueChange?: (value: T, event: ChangeEvent<HTMLInputElement>) => void;
-  containerClassName?: string;
   legendClassName?: string;
   helperClassName?: string;
-  optionsContainerClassName?: string;
   optionClassName?: string;
+  containerClassName?: string;
+  defaultNoOptionLabel?: string;
 };
 

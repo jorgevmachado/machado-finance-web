@@ -20,24 +20,25 @@ const VARIANT_CLASS_MAP = {
 
 const Select = <T extends string>({
   label,
-  helperText,
   name,
+  size = 'sm',
+  helperText,
   value,
   options,
   required = false,
   disabled = false,
-  size = 'sm',
+  placeholder = 'Select an option',
   onValueChange,
-  containerClassName,
   legendClassName,
   helperClassName,
-  optionsContainerClassName,
   optionClassName,
+  containerClassName,
+  defaultNoOptionLabel = 'No options available',
 }: SelectProps<T>): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   const selectedOption = options.find((opt) => opt.value === value);
-  const displayLabel = selectedOption?.label || 'Selecione uma opção';
+  const displayLabel = selectedOption?.label || placeholder;
 
   const handleSelectOption = useCallback((optionValue: T) => {
     onValueChange?.(optionValue, {} as never);
@@ -83,7 +84,7 @@ const Select = <T extends string>({
           disabled={disabled}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onBlur={handleBlur}
-          className={wrapperClassName}
+          className={joinClass(['w-full', wrapperClassName])}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
         >
@@ -115,7 +116,7 @@ const Select = <T extends string>({
                     key={option.key ?? option.value}
                     role="option"
                     aria-selected={isSelected}
-                    onMouseDown={() => handleSelectOption(option.value)}
+                    onMouseDown={() => !option.disabled && handleSelectOption(option.value)}
                     className={joinClass([
                       'cursor-pointer rounded-lg px-3 py-2 text-sm transition',
                       isSelected
@@ -130,11 +131,28 @@ const Select = <T extends string>({
               })
             ) : (
               <li className="px-3 py-2 text-sm text-slate-400">
-                Nenhuma opção disponível
+                {defaultNoOptionLabel}
               </li>
             )}
           </ul>
         ) : null}
+        <select
+          className="sr-only"
+          aria-hidden="true"
+          tabIndex={-1}
+          name={name}
+          value={value}
+          required={required}
+          disabled={disabled}
+          onChange={() => undefined}
+        >
+          <option value="" />
+          {options.map((option) => (
+            <option key={option.key ?? option.value} value={option.value} disabled={option.disabled}>
+              {option.value}
+            </option>
+          ))}
+        </select>
       </div>
     </label>
   );

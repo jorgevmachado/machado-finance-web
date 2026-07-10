@@ -3,26 +3,26 @@ import React ,{ useMemo } from 'react';
 
 import { useAppTranslation } from '@/app/shared';
 
-import { Button ,Table ,Text } from '@/app/ds';
+import { Table } from '@/app/ds';
 
 import { movementBusiness } from '../../../movement';
 
 import type { TExpense } from '../../types';
 
 
-type IncomeListProps = {
+type ExpenseListProps = {
   expenses: Array<TExpense>;
   referenceYear: number;
   onPersist: (item?: unknown, disabled?: boolean) => void;
 }
 
-export default function ExpenseList({ expenses, referenceYear, onPersist }: IncomeListProps) {
+export default function ExpenseList({ expenses, referenceYear, onPersist }: ExpenseListProps) {
   const { t } = useAppTranslation();
 
   const textTree = useMemo(() => {
     return [
-      { value: 'payee', label: 'expense.payee' },
-      { value: 'category.name', label: 'expense.category' },
+      { value: 'payee', label: 'expense.title' },
+      { value: 'category.name', label: 'expense.category.name' },
       { value: 'total', label: 'common.total' },
     ];
   }, []);
@@ -52,18 +52,6 @@ export default function ExpenseList({ expenses, referenceYear, onPersist }: Inco
 
   return (
     <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <Text as="h2" className="text-3xl font-bold text-slate-950 sm:text-4xl">
-            { t('income.title') } ({ referenceYear })
-          </Text>
-        </div>
-        <div>
-          <Button type="button" onClick={ () => onPersist() } appearance="solid" tone="primary">
-            { t('income.create.title') }
-          </Button>
-        </div>
-      </div>
       <div className="w-full overflow-x-auto">
         <Table
           items={expenseTable.body}

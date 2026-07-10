@@ -80,10 +80,13 @@
     "add": "Adicionar",
     "added": "Adicionado",
     "total": "Total",
+    "select": "Selecionar",
+    "status": "Status",
     "amount": "Valor",
     "actions": "Ações",
     "viewMore": "Ver mais",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "noOptions": "Nenhuma opção encontrada."
   },
   "filters": {
     "year": "Ano",
@@ -273,6 +276,20 @@
     },
     "category": {
       "name": "Categoria"
+    },
+    "form": {
+      "label": {
+        "payee": "Beneficiário",
+        "amount": "Valor",
+        "category": "Categoria",
+        "description": "Descrição"
+      },
+      "placeholder": {
+        "payee": "Digite o nome do beneficiário",
+        "amount": "Digite o valor da despesa",
+        "category": "Selecione a categoria da despesa",
+        "description": "Digite a descrição da despesa"
+      }
     }
   },
   "allocation-contributions": {

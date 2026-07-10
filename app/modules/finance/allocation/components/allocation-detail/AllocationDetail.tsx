@@ -1,15 +1,13 @@
-import React ,{ useMemo } from 'react';
-
+'use client';
+import React  from 'react';
+import { MdPieChart ,MdTrendingUp } from 'react-icons/md';
 import { useAppTranslation } from '@/app/shared';
 
-import { Dropdown ,Table ,Text } from '@/app/ds';
+import { Dropdown, Text } from '@/app/ds';
 
-import { movementBusiness } from '../../../movement';
 import type { TCategory } from '../../../category';
+import { usePersistExpenseModal, ExpenseList } from '../../../expense';
 import type { TAllocation } from '../../types';
-import { MdPieChart ,MdTrendingUp } from 'react-icons/md';
-import { usePersistExpenseModal } from '@/app/modules/finance/expense';
-
 
 type AllocationDetailProps = {
   categories: Array<TCategory>;
@@ -19,39 +17,6 @@ type AllocationDetailProps = {
 
 export default function AllocationDetail({ categories, allocation, referenceYear }: AllocationDetailProps) {
   const { t } = useAppTranslation();
-
-
-
-  const textTree = useMemo(() => {
-    return [
-      { value: 'payee', label: 'expense.title' },
-      { value: 'category.name', label: 'expense.category.name' },
-      { value: 'total', label: 'common.total' },
-    ];
-  }, []);
-  
-  const expenseTable = useMemo(() => {
-    return movementBusiness.generateMovementTable({
-      entities: allocation.expenses,
-      sortable: true,
-      referenceYear,
-      chooseValues: textTree.map((item) => item.value),
-    });
-  }, [allocation.expenses, referenceYear, textTree]);
-  
-  const translatedHeaders = useMemo(() => {
-    return expenseTable.headers.map((header) => {
-      const translatedLabel = textTree.find((item) => item.value === header.value)?.label || header.label;
-      const currentFooter  = textTree.find((item) => item.value === header.footer)?.label;
-      const translatedFooter = currentFooter ? t(currentFooter.toString()) : header.footer;
-
-      return  {
-        ...header,
-        label: t(translatedLabel),
-        footer: translatedFooter,
-      };
-    });
-  }, [expenseTable.headers, t, textTree]);
 
   const { openPersist: openCreateExpense, modal: expenseModal } = usePersistExpenseModal({
     expenses: allocation?.expenses ?? [],
@@ -87,13 +52,16 @@ export default function AllocationDetail({ categories, allocation, referenceYear
           />
         </div>
       </div>
-      <Table
-        items={expenseTable.body}
-        headers={translatedHeaders}
-        withFooter={true}
-        showNotFoundError={true}
-      />
-      {expenseModal}
+      <div className="flex flex-col gap-10">
+        {/*<Table*/}
+        {/*  items={expenseTable.body}*/}
+        {/*  headers={translatedHeaders}*/}
+        {/*  withFooter={true}*/}
+        {/*  showNotFoundError={true}*/}
+        {/*/>*/}
+        <ExpenseList expenses={allocation?.expenses ?? []} referenceYear={referenceYear} onPersist={openCreateExpense}/>
+        {expenseModal}
+      </div>
     </div>
   );
 }

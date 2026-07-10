@@ -19,7 +19,7 @@ export type TMonthSummary = TEntity & {
   month: string;
   amount: number;
   status?: EMonthStatus;
-  paid_at?: Date;
+  paid_at?: string;
   income_id?: string;
   expense_id?: string;
   received_at?: string;
@@ -34,8 +34,14 @@ export type TMonthPersist = {
   amount: number;
   status?: EMonthStatus;
   received_at?: string;
+  paid_at?: string;
   reference_year: number;
   reference_month: number;
+}
+
+export type TConvertMonthPersistOptions = {
+  dateField?: 'received_at' | 'paid_at';
+  includeStatus?: boolean;
 }
 
 export type TDraftMonth = Record<TMonthKey, TMonthPersist>;
