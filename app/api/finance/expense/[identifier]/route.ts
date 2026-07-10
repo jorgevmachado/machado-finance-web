@@ -9,6 +9,27 @@ type ExpenseRouteContext = {
   }>;
 };
 
+export async function GET(
+  request: NextRequest,
+  context: ExpenseRouteContext
+): Promise<NextResponse> {
+  const session = await getServerSession();
+
+  if (!session.isAuthenticated || !session.token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { identifier } = await context.params;
+    const params = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const response = await financeService(session.token).expense.detail(identifier, params);
+    return NextResponse.json(response);
+  } catch (error) {
+    const message = error instanceof Error && error.message ? error.message : 'Could not load Expense.';
+    return NextResponse.json({ message }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   _: NextRequest,
   context: ExpenseRouteContext

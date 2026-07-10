@@ -9,6 +9,27 @@ type IncomeRouteContext = {
   }>;
 };
 
+export async function GET(
+  request: NextRequest,
+  context: IncomeRouteContext
+): Promise<NextResponse> {
+  const session = await getServerSession();
+
+  if (!session.isAuthenticated || !session.token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const { identifier } = await context.params;
+    const params = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const response = await financeService(session.token).income.detail(identifier, params);
+    return NextResponse.json(response);
+  } catch (error) {
+    const message = error instanceof Error && error.message ? error.message : 'Could not load Income.';
+    return NextResponse.json({ message }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   _: NextRequest,
   context: IncomeRouteContext
