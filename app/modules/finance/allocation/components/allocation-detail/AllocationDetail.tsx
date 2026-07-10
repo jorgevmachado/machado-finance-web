@@ -1,6 +1,6 @@
 'use client';
 import React  from 'react';
-import { MdPieChart ,MdTrendingUp } from 'react-icons/md';
+import { MdPieChart ,MdTrendingUp ,MdUpload } from 'react-icons/md';
 import { useAppTranslation } from '@/app/shared';
 
 import { Dropdown, Text } from '@/app/ds';
@@ -19,7 +19,7 @@ type AllocationDetailProps = {
 export default function AllocationDetail({ categories, allocation, referenceYear }: AllocationDetailProps) {
   const { t } = useAppTranslation();
 
-  const { openPersist: openCreateExpense, modal: expenseModal } = usePersistExpenseModal({
+  const { openPersist: openCreateExpense, openUpload: openUploadExpense, modal: expenseModal } = usePersistExpenseModal({
     expenses: allocation?.expenses ?? [],
     categories,
     allocation,
@@ -47,6 +47,12 @@ export default function AllocationDetail({ categories, allocation, referenceYear
                 icon: <MdTrendingUp size={16} />,
                 iconPosition: 'left',
                 onClick: () => openCreateExpense(),
+              },
+              {
+                label: t('expense.upload.title'),
+                icon: <MdUpload size={16} />,
+                iconPosition: 'left',
+                onClick: () => openUploadExpense(),
               },
               {
                 label: t('allocation-contribution.create.title'),

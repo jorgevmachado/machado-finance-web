@@ -291,6 +291,17 @@
     "category": {
       "name": "Categoria"
     },
+    "upload": {
+      "title": "Importar Despesas",
+      "form": {
+        "label": {
+          "file": "Arquivo (PDF ou XLS)"
+        },
+        "helper": {
+          "file": "Formatos aceitos: .pdf, .xls, .xlsx"
+        }
+      }
+    },
     "form": {
       "label": {
         "payee": "Beneficiário",

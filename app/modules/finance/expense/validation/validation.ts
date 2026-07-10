@@ -1,12 +1,18 @@
 import { ActionState ,toErrorState } from '@/app/modules/actions';
 
-import type { TExpenseCreate ,TExpenseUpdate } from '../types';
 import {
-  EXPENSE_INVALID_DESCRIPTION_MESSAGE,
+  TDraftExpenseUpload ,
+  TExpenseCreate ,
+  TExpenseUpdate ,
+} from '../types';
+import {
+  EXPENSE_INVALID_DESCRIPTION_MESSAGE ,
   EXPENSE_INVALID_PAYEE_MESSAGE ,
   EXPENSE_INVALID_ALLOCATION_MESSAGE ,
-  EXPENSE_INVALID_CATEGORY_MESSAGE
+  EXPENSE_INVALID_CATEGORY_MESSAGE ,
+  EXPENSE_INVALID_BANK_MESSAGE ,EXPENSE_DEFAULT_UPLOAD_ERROR_MESSAGE,
 } from './messages';
+import { EBank } from '@/app/modules/finance/bank';
 
 export const validateCreatePayload = ({
   payee ,
@@ -45,5 +51,15 @@ export const validateUpdatePayload = ({
     return toErrorState(EXPENSE_INVALID_DESCRIPTION_MESSAGE);
   }
 
+  return null;
+};
+
+export const validateUploadPayload = ({ bank, file }: TDraftExpenseUpload): ActionState | null => {
+  if (!bank || bank === '' as EBank) {
+    return toErrorState(EXPENSE_INVALID_BANK_MESSAGE);
+  }
+  if (!file) {
+    return toErrorState(EXPENSE_DEFAULT_UPLOAD_ERROR_MESSAGE);
+  }
   return null;
 };

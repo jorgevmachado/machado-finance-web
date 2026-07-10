@@ -13,6 +13,7 @@ import { expenseBusiness } from '../../business';
 import type { TExpense } from '../../types';
 
 import PersistExpense from './PersistExpense';
+import ExpenseUpload from './upload/ExpenseUpload';
 
 type UsePersistIncomeModalParams = {
   expenses: Array<TExpense>;
@@ -54,6 +55,19 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
       ),
     });
   };
+  
+  const openUpload = () => {
+    if (!allocation) return;
+    openModal({
+      title: t('expense.upload.title'),
+      body: (
+        <ExpenseUpload
+          onClose={handleClose}
+          allocation={allocation}
+        />
+      ),
+    });
+  };
 
-  return { openPersist, modal };
+  return { openPersist, openUpload,  modal };
 }

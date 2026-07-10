@@ -5,6 +5,7 @@ import type { TEntity } from '@/app/modules';
 import type { TAllocation } from '../allocation';
 import type { TCategory } from '../category';
 import type { TEntityMonth ,TMonthPersist } from '../month';
+import { EBank } from '../bank';
 
 
 
@@ -57,4 +58,16 @@ export type TDraftExpense = {
   category_id: string;
   allocation_id: string;
   reference_year: number;
+}
+
+export type TDraftExpenseUpload = {
+  file: File | null;
+  bank: EBank | '';
+}
+
+export type TExpenseUpload = {
+  file: File;
+  bank: EBank;
+  allocation_id: string;
+  reference_year?: number;
 }

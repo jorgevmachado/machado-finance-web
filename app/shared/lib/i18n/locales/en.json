@@ -292,6 +292,17 @@
     "category": {
       "name": "Category"
     },
+    "upload": {
+      "title": "Import Expenses",
+      "form": {
+        "label": {
+          "file": "File (PDF or XLS)"
+        },
+        "helper": {
+          "file": "Accepted formats: .pdf, .xls, .xlsx"
+        }
+      }
+    },
     "form": {
       "label": {
         "payee": "Payee",

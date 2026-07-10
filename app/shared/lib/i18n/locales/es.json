@@ -286,6 +286,17 @@
     "category": {
       "name": "Categoría"
     },
+    "upload": {
+      "title": "Importar Gastos",
+      "form": {
+        "label": {
+          "file": "Archivo (PDF o XLS)"
+        },
+        "helper": {
+          "file": "Formatos aceptados: .pdf, .xls, .xlsx"
+        }
+      }
+    },
     "form": {
       "label": {
         "payee": "Nombre del gasto",
