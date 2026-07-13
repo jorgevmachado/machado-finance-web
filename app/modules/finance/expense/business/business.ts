@@ -13,9 +13,9 @@ import {
   TExpenseCreate ,
   TExpenseFilter ,
   TExpenseListPersist ,
-  TExpenseUploadResponse,
+  TExpenseUploadResponse ,
   TExpenseUploadExpenseItemResponse ,
-  TPersistExpenseUploadInputs ,
+  TPersistExpenseUploadInputs ,TExpenseMonth ,
 } from '../types';
 
 export class ExpenseBusiness {
@@ -149,5 +149,13 @@ export class ExpenseBusiness {
       parent ,
       expenses: expensesToPersist
     };
+  }
+
+  public totalMonths(months: Array<TExpenseMonth>): number {
+    return months.reduce((total, month) => total + (month.amount || 0), 0);
+  }
+
+  public totalExpenses(children: Array<TExpense>): number {
+    return children.reduce((total, expense) => total + this.totalMonths(expense.months), 0);
   }
 }

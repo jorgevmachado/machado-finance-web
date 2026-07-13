@@ -4,6 +4,7 @@ import {
 } from './types';
 import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
 import {
+  formatDateToDateString ,
   validateBasicEntity ,
   validateValue ,
 } from '@/app/utils';
@@ -172,7 +173,7 @@ export class MonthBusiness {
         amount: summary.amount,
         reference_day: 10 ,
         reference_month: summary.reference_month ,
-        transaction_date: transactionDate
+        transaction_date: transactionDate ? formatDateToDateString(transactionDate) : undefined
       };
       if (includeStatus && summary.status) {
         result.status = summary.status;
@@ -234,7 +235,7 @@ export class MonthBusiness {
         amount: amount,
         reference_day: referenceDay,
         reference_month: referenceMonth,
-        transaction_date: transactionDate,
+        transaction_date: formatDateToDateString(transactionDate),
       });
       return months;
     }
@@ -247,7 +248,7 @@ export class MonthBusiness {
           amount: amount,
           reference_day: referenceDay,
           reference_month: currentReferenceMonth,
-          transaction_date: new Date(currentTransactionDate.getFullYear(), currentReferenceMonth - 1, currentTransactionDate.getDate()),
+          transaction_date: formatDateToDateString(new Date(currentTransactionDate.getFullYear(), currentReferenceMonth - 1, currentTransactionDate.getDate())),
         });
       }
     });

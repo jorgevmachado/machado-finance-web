@@ -1,5 +1,5 @@
 export { ExpenseBffService } from './bff-service';
-export { ExpenseList, PersistExpense, usePersistExpenseModal } from './components';
+export { ExpenseList, ExpenseLists, PersistExpense, usePersistExpenseModal } from './components';
 export { ExpenseService } from './service';
 export type {
   TDraftExpense ,

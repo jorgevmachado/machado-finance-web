@@ -64,8 +64,8 @@ export const validateUploadPayload = ({ bank, file }: TDraftExpenseUpload): Acti
   return null;
 };
 
-export const validatePersistList = ({ parent, allocation_id }: TExpenseListPersist): ActionState | null => {
-  if (!allocation_id) {
+export const validatePersistList = ({ parent }: TExpenseListPersist): ActionState | null => {
+  if (!parent.allocation_id) {
     return toErrorState(EXPENSE_INVALID_ALLOCATION_MESSAGE);
   }
   

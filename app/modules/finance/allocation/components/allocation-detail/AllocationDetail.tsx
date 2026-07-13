@@ -6,7 +6,7 @@ import { useAppTranslation } from '@/app/shared';
 import { Dropdown, Text } from '@/app/ds';
 
 import type { TCategory } from '../../../category';
-import { usePersistExpenseModal, ExpenseList } from '../../../expense';
+import { usePersistExpenseModal, ExpenseLists } from '../../../expense';
 import { usePersistAllocationContributionModal, AllocationContributionList } from '../../../allocation-contribution';
 import type { TAllocation } from '../../types';
 
@@ -66,7 +66,7 @@ export default function AllocationDetail({ categories, allocation, referenceYear
       </div>
       <div className="flex flex-col gap-10">
         <div>
-          <ExpenseList expenses={allocation?.expenses ?? []} referenceYear={referenceYear} onPersist={openCreateExpense}/>
+          <ExpenseLists expenses={allocation?.expenses ?? []} referenceYear={referenceYear} onPersist={openCreateExpense}/>
           {expenseModal}
         </div>
         <div>

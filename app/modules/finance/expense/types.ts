@@ -19,6 +19,7 @@ export type TExpense = TEntity & {
   payee: string;
   months: Array<TExpenseMonth>;
   category: TCategory;
+  children?: Array<TExpense>;
   parent_id?: string;
   allocation: TAllocation;
   description: string;

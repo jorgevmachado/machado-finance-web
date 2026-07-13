@@ -13,5 +13,5 @@ export type TMonthPersist = {
   status?: EMonthStatus;
   reference_day?: number;
   reference_month: number;
-  transaction_date?: Date;
+  transaction_date?: string;
 }
