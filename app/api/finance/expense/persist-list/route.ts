@@ -15,6 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const response = await financeService(session.token).expense.persistList(payload);
     return NextResponse.json(response);
   } catch (error) {
+    console.log('# => error => ', error);
     const message = error instanceof Error && error.message ? error.message : 'Could not Persist list Expense.';
     const status = error instanceof Error && (error as { statusCode?: number}).statusCode ? (error as { statusCode?: number}).statusCode : 500;
     return NextResponse.json({ message }, { status });

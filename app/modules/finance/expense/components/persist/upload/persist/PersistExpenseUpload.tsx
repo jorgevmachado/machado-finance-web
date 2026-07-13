@@ -53,6 +53,8 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
   const [currentInput, setCurrentInput] = useState<TPersistExpenseUploadInputs>(expenseBusiness.initPersistExpenseUploadInputs());
 
   const { startContentLoading, stopContentLoading } = useLoading();
+  console.log('# => PersistExpenseUpload => response.expenses.length', response.expenses.length);
+  console.log('# => PersistExpenseUpload => draftExpenses.length', draftExpenses.length);
 
   const summary = useMemo(() => {
     const monthName = monthBusiness.getMonthName(response.reference_month);
@@ -76,13 +78,15 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
   }, [response.bank, response.bill_due_date, response.bill_total, response.previous_bill_total, response.previous_bill_due_date, response.reference_month, response.reference_year, t]);
 
   const handleRemove = useCallback((item: TDraftExpenseUploaded) => {
-    const index = draftExpenses.findIndex((e) => e.order === item.order);
-    if (index >= 0) {
-      const newDraftExpenses = draftExpenses.filter((_, idx) => idx !== index);
-      const orderedDraftExpenses = newDraftExpenses.sort((a, b) => a.order - b.order);
-      setDraftExpenses(orderedDraftExpenses);
-    }
-  }, [draftExpenses]);
+    setDraftExpenses((previousDraftExpenses) => {
+      const index = previousDraftExpenses.findIndex((e) => e.order === item.order);
+      if (index < 0) {
+        return previousDraftExpenses;
+      }
+      const newDraftExpenses = previousDraftExpenses.filter((_, idx) => idx !== index);
+      return newDraftExpenses.sort((a, b) => a.order - b.order);
+    });
+  }, []);
   
   const handleEdit = useCallback((item: TDraftExpenseUploaded) => {
     setCurrentInput(expenseBusiness.initPersistExpenseUploadInputs(item));
@@ -103,6 +107,7 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
     const newListDraftExpenses = [...draftExpenses, newDraftExpense];
     const orderedDraftExpenses = newListDraftExpenses.sort((a, b) => a.order - b.order);
     setDraftExpenses(orderedDraftExpenses);
+    setDraftExpense(undefined);
     setCurrentInput(expenseBusiness.initPersistExpenseUploadInputs());
   };
 
@@ -199,6 +204,13 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
     stopContentLoading();
 
   }, [draftExpenses, paid, response, startContentLoading, stopContentLoading]);
+
+  useEffect(() => {
+    setDraftExpenses(expenseBusiness.initDraftExpenseUploaded(response.expenses));
+    setDraftExpense(undefined);
+    setCurrentInput(expenseBusiness.initPersistExpenseUploadInputs());
+    setPaid(false);
+  }, [response]);
 
   useEffect(() => {
     if (state.status !== 'idle') {
