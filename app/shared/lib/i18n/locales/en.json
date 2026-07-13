@@ -8,6 +8,7 @@
     "close": "Close",
     "edit": "Edit",
     "view": "View",
+    "upload": "Upload",
     "create": "Create",
     "submit": "Submit",
     "cancel": "Cancel",
@@ -301,19 +302,30 @@
         "helper": {
           "file": "Accepted formats: .pdf, .xls, .xlsx"
         }
+      },
+      "persist": {
+        "title": "Persist Uploaded Expenses"
       }
     },
     "form": {
       "label": {
+        "paid": "Paid",
+        "date": "Date",
+        "bank": "Bank",
         "payee": "Payee",
         "amount": "Amount",
+        "account": "Account",
         "category": "Category",
-        "description": "Description"
+        "description": "Description",
+        "installments": "Installments"
       },
       "placeholder": {
+        "bank": "Select a bank",
         "payee": "Enter payee",
         "amount": "Enter amount",
+        "account": "Select an account",
         "category": "Select a category",
+        "installments": "Enter installments",
         "description": "Enter description"
       }
     },
@@ -321,7 +333,10 @@
       "updated": "Expense updated successfully.",
       "created": "Expense created successfully.",
       "deleted": "Expense deleted successfully."
-    }
+    },
+    "bill_due_date": "Bill Due Date",
+    "previous_bill_total": "Previous Bill Total",
+    "previous_bill_due_date": "Previous Bill Due Date"
   },
   "allocation-contribution": {
     "title": "Contributions",
@@ -388,5 +403,10 @@
     "nov": "Nov",
     "december": "December",
     "dec": "Dec"
+  },
+  "bank": {
+    "itau": "Itaú",
+    "caixa": "Caixa",
+    "nubank": "Nubank"
   }
 }

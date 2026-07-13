@@ -45,3 +45,13 @@ export type TConvertMonthPersistOptions = {
 }
 
 export type TDraftMonth = Record<TMonthKey, TMonthPersist>;
+
+export type BuildMonthPersistByInstallmentsParams = {
+  paid?: boolean;
+  amount: number,
+  withStatus?: boolean;
+  referenceDay: number;
+  referenceMonth: number;
+  transactionDate: Date,
+  totalOfInstallments: number;
+}

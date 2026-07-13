@@ -34,7 +34,7 @@ export {
   type TCategoryUpdate,
   useCategory,
 } from './category';
-export { type  TExpense ,type TExpenseFilter, type TExpenseUpload } from './expense';
+export { type  TExpense ,type TExpenseFilter, type TExpenseUpload, type TExpenseUploadResponse } from './expense';
 export {
   IncomeList,
   type TIncome ,

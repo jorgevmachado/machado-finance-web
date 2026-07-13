@@ -1,3 +1,4 @@
+export { formatDate } from './date';
 export { validateBasicEntity, validateCreatedAt, validateDateAt, validateValue } from './entity';
 export { default as joinClass } from './join-class';
 export { currencyFormatter } from './money';

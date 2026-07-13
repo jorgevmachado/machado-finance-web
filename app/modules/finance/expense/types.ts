@@ -71,3 +71,48 @@ export type TExpenseUpload = {
   allocation_id: string;
   reference_year?: number;
 }
+
+export type TExpenseUploadExpenseItemResponse = {
+  date: Date;
+  payee: string;
+  amount: number;
+  category: TCategory;
+  reference_month: number;
+  current_installment: number;
+  total_of_installments: number;
+}
+
+export type TExpenseUploadResponse = {
+  bank: EBank;
+  error: boolean;
+  message: string;
+  category: TCategory;
+  expenses: Array<TExpenseUploadExpenseItemResponse>;
+  bill_total: number;
+  allocation: TAllocation;
+  bill_due_date?: Date;
+  date_of_issue?: Date;
+  reference_year: number;
+  reference_month: number;
+  previous_bill_total: number;
+  previous_bill_due_date?: Date;
+}
+
+export type TDraftExpenseUploaded = TExpenseUploadExpenseItemResponse & {
+  order: number;
+}
+
+export type TPersistExpenseUploadInputs = {
+  order: number;
+  payee: string;
+  amount: string;
+  category?: TCategory;
+}
+
+export type TExpenseListPersist = {
+  parent: Omit<TExpenseCreate ,'months'>;
+  expenses: Array<Omit<TExpenseCreate ,'allocation_id'>>;
+  allocation_id: string;
+  reference_year: number;
+  reference_month: number;
+}

@@ -8,6 +8,7 @@
     "close": "Cerrar",
     "edit": "Editar",
     "view": "Ver",
+    "upload": "Subir",
     "create": "Crear",
     "submit": "Enviar",
     "cancel": "Cancelar",
@@ -295,27 +296,40 @@
         "helper": {
           "file": "Formatos aceptados: .pdf, .xls, .xlsx"
         }
+      },
+      "persist": {
+        "title": "Persistir Gastos Importados"
       }
     },
     "form": {
       "label": {
+        "paid": "Pagado",
+        "date": "Fecha del gasto",
+        "bank": "Banco",
         "payee": "Nombre del gasto",
         "amount": "Monto del gasto",
+        "account": "Cuenta del gasto",
         "category": "Categoría del gasto",
-        "account": "Cuenta del gasto"
+
+        "installments": "Cuotas"
       },
       "placeholder": {
+        "bank": "Ingresa el banco del gasto",
         "payee": "Ingresa el nombre del gasto",
         "amount": "Ingresa el monto del gasto",
         "category": "Selecciona la categoría del gasto",
-        "account": "Selecciona la cuenta del gasto"
+        "account": "Selecciona la cuenta del gasto",
+        "installments": "Ingresa las cuotas"
       }
     },
     "messages": {
       "updated": "Gasto actualizado con éxito.",
       "created": "Gasto creado con éxito.",
       "deleted": "Gasto eliminado con éxito."
-    }
+    },
+    "bill_due_date": "Fecha de vencimiento de la factura",
+    "previous_bill_total": "Total de la factura anterior",
+    "previous_bill_due_date": "Fecha de vencimiento de la factura anterior"
   },
   "allocation-contributions": {
     "title": "Contribuciones",
@@ -380,5 +394,10 @@
     "nov": "Nov",
     "december": "Diciembre",
     "dec": "Dic"
+  },
+  "bank": {
+    "itau": "Itaú",
+    "caixa": "Caixa",
+    "nubank": "Nubank"
   }
 }

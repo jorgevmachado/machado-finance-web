@@ -16,7 +16,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(response);
   } catch (error) {
     const message = error instanceof Error && error.message ? error.message : 'Could not load Expense.';
-    return NextResponse.json({ message }, { status: 500 });
+    const status = error instanceof Error && (error as { statusCode?: number}).statusCode ? (error as { statusCode?: number}).statusCode : 500;
+    return NextResponse.json({ message }, { status });
   }
 }
 
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(response);
   } catch (error) {
     const message = error instanceof Error && error.message ? error.message : 'Could not create Expense.';
-    return NextResponse.json({ message }, { status: 500 });
+    const status = error instanceof Error && (error as { statusCode?: number}).statusCode ? (error as { statusCode?: number}).statusCode : 500;
+    return NextResponse.json({ message }, { status });
   }
 }

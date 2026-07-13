@@ -2,7 +2,7 @@ import { ActionState ,toErrorState } from '@/app/modules/actions';
 
 import {
   TDraftExpenseUpload ,
-  TExpenseCreate ,
+  TExpenseCreate ,TExpenseListPersist ,
   TExpenseUpdate ,
 } from '../types';
 import {
@@ -61,5 +61,17 @@ export const validateUploadPayload = ({ bank, file }: TDraftExpenseUpload): Acti
   if (!file) {
     return toErrorState(EXPENSE_DEFAULT_UPLOAD_ERROR_MESSAGE);
   }
+  return null;
+};
+
+export const validatePersistList = ({ parent, allocation_id }: TExpenseListPersist): ActionState | null => {
+  if (!allocation_id) {
+    return toErrorState(EXPENSE_INVALID_ALLOCATION_MESSAGE);
+  }
+  
+  if ( !parent.category_id) {
+    return toErrorState(EXPENSE_INVALID_CATEGORY_MESSAGE);
+  }
+
   return null;
 };

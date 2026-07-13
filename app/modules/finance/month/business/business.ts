@@ -1,4 +1,7 @@
-import { TMonthKey ,TMonthMap ,TMonthSummary } from './types';
+import {
+  BuildMonthPersistByInstallmentsParams ,
+  TMonthKey ,TMonthMap ,TMonthSummary,
+} from './types';
 import { TableHeaderItem, ETypeTableHeader } from '@/app/ds';
 import {
   validateBasicEntity ,
@@ -193,6 +196,63 @@ export class MonthBusiness {
       return value.slice(0, 10);
     }
     return undefined;
+  }
+
+  private getStatusByCurrentMonth(month: number, referenceMonth: number, paid: boolean = false): EMonthStatus {
+    if (month < referenceMonth) {
+      return EMonthStatus.PAID;
+    }
+    if (month > referenceMonth) {
+      return EMonthStatus.PENDING;
+    }
+
+    if (month === referenceMonth && paid) {
+      return EMonthStatus.PAID;
+    }
+
+    return EMonthStatus.PENDING;
+  }
+
+  public buildMonthPersistByInstallments({
+    paid = false,
+    amount,
+    withStatus = false,
+    referenceDay,
+    referenceMonth,
+    transactionDate,
+    totalOfInstallments
+  }: BuildMonthPersistByInstallmentsParams): Array<TMonthPersist> {
+    const months: Array<TMonthPersist> = [];
+    const status = !paid ? EMonthStatus.PENDING : EMonthStatus.PAID;
+    if (totalOfInstallments <= 0) {
+      return months;
+    }
+    
+    if (totalOfInstallments === 1) {
+      months.push({
+        status: withStatus ? status : undefined,
+        amount: amount,
+        reference_day: referenceDay,
+        reference_month: referenceMonth,
+        transaction_date: transactionDate,
+      });
+      return months;
+    }
+    const currentTransactionDate = new Date(transactionDate);
+    this.MONTH_KEYS.forEach((_, index) => {
+      const currentReferenceMonth = index + 1;
+      if (currentReferenceMonth <= totalOfInstallments) {
+        months.push({
+          status: withStatus ? this.getStatusByCurrentMonth(currentReferenceMonth, referenceMonth, paid) : undefined,
+          amount: amount,
+          reference_day: referenceDay,
+          reference_month: currentReferenceMonth,
+          transaction_date: new Date(currentTransactionDate.getFullYear(), currentReferenceMonth - 1, currentTransactionDate.getDate()),
+        });
+      }
+    });
+
+    return months;
   }
 
 }

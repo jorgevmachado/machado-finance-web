@@ -8,6 +8,7 @@
     "close": "Fechar",
     "edit": "Editar",
     "view": "Visualizar",
+    "upload": "Enviar arquivo",
     "create": "Criar",
     "submit": "Enviar",
     "cancel": "Cancelar",
@@ -300,27 +301,41 @@
         "helper": {
           "file": "Formatos aceitos: .pdf, .xls, .xlsx"
         }
+      },
+      "persist": {
+       "title": "Persistir upload de Despesas"
       }
     },
     "form": {
       "label": {
+        "paid": "Pago",
+        "date": "Data",
+        "bank": "Banco",
         "payee": "Beneficiário",
         "amount": "Valor",
+        "account": "Conta",
         "category": "Categoria",
-        "description": "Descrição"
+        "description": "Descrição",
+        "installments": "Parcelamento"
       },
       "placeholder": {
+        "date": "Digite a data da despesa",
         "payee": "Digite o nome do beneficiário",
         "amount": "Digite o valor da despesa",
+        "account": "Selecione a conta da despesa",
         "category": "Selecione a categoria da despesa",
-        "description": "Digite a descrição da despesa"
+        "description": "Digite a descrição da despesa",
+        "installments": "Digite o parcelamento"
       }
     },
     "messages": {
       "updated": "Despesa atualizada com sucesso.",
       "created": "Despesa criada com sucesso.",
       "deleted": "Despesa excluída com sucesso."
-    }
+    },
+    "bill_due_date": "Data de vencimento da fatura",
+    "previous_bill_total": "Total da fatura anterior",
+    "previous_bill_due_date": "Data de vencimento da fatura anterior"
   },
   "allocation-contributions": {
     "title": "Contribuições",
@@ -387,5 +402,10 @@
     "nov": "Nov",
     "december": "Dezembro",
     "dec": "Dez"
+  },
+  "bank": {
+    "itau": "Itaú",
+    "caixa": "Caixa",
+    "nubank": "Nubank"
   }
 }

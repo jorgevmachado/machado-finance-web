@@ -10,10 +10,10 @@ import type { TAllocation } from '../../../allocation';
 
 import { expenseBusiness } from '../../business';
 
-import type { TExpense } from '../../types';
+import type { TExpense, TExpenseUploadResponse } from '../../types';
 
 import PersistExpense from './PersistExpense';
-import ExpenseUpload from './upload/ExpenseUpload';
+import { ExpenseUpload, PersistExpenseUpload } from './upload';
 
 type UsePersistIncomeModalParams = {
   expenses: Array<TExpense>;
@@ -37,6 +37,25 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
     closeModal();
   };
 
+  const handleOpenPersistUpload = (actionState: ActionState, response?: TExpenseUploadResponse) => {
+    if (actionState.status === 'cancel') {
+      closeModal();
+      return;
+    }
+    if (actionState.status === 'error') {
+      const message = expenseBusiness.getResponseMessage(actionState);
+      showAlert({
+        type: 'error',
+        message: t(message),
+      });
+      return;
+    }
+    if (actionState.status === 'success' && response) {
+      closeModal();
+      openPersistUpload(response);
+    }
+  };
+
   const openPersist = (item?: unknown, disabled?: boolean) => {
     if (!allocation) return;
     const expense = expenseBusiness.getOriginal(expenses ?? [], item);
@@ -56,13 +75,21 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
     });
   };
   
+  const openPersistUpload = (response: TExpenseUploadResponse) => {
+    openModal({
+      width: '3xl',
+      title: t('expense.upload.persist.title'),
+      body: (<PersistExpenseUpload response={response} categories={categories} onClose={handleClose} />),
+    });
+  };
+  
   const openUpload = () => {
     if (!allocation) return;
     openModal({
       title: t('expense.upload.title'),
       body: (
         <ExpenseUpload
-          onClose={handleClose}
+          onClose={(state, response) => handleOpenPersistUpload(state, response)}
           allocation={allocation}
         />
       ),

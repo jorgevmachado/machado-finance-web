@@ -24,11 +24,11 @@ import {
 } from '../../../validation';
 
 
-import { TDraftExpenseUpload ,TExpenseUpload } from '../../../types';
+import { TDraftExpenseUpload ,TExpenseUpload, TExpenseUploadResponse } from '../../../types';
 
 
 type ExpenseUploadProps = {
-  onClose: (actionState: ActionState) => void;
+  onClose: (actionState: ActionState, response?: TExpenseUploadResponse) => void;
   allocation: TAllocation;
   referenceYear?: number;
 }
@@ -40,12 +40,13 @@ export default function ExpenseUpload({ onClose, allocation, referenceYear }: Ex
   const [state ,setState] = useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = useState(false);
   const [draftUpload, setDraftUpload] = useState<TDraftExpenseUpload>({ file: null, bank: '' });
+  const [ response, setResponse ] = useState<TExpenseUploadResponse | undefined>(undefined);
   const [disabled] = useState(false);
   const isSubmitDisabled = isPending || disabled || !draftUpload.file || !draftUpload.bank;
 
   const { startContentLoading, stopContentLoading } = useLoading();
   
-  const banksOptions = BANKS.map((bank) => ({ label: bank, value: bank }));
+  const banksOptions = BANKS.map((bank) => ({ label: t(`bank.${bank.toLowerCase()}`), value: bank }));
 
   const updateDraftValue = <K extends keyof TDraftExpenseUpload>(key: K, value: TDraftExpenseUpload[K]) => {
     setDraftUpload((previousState) => ({
@@ -83,6 +84,7 @@ export default function ExpenseUpload({ onClose, allocation, referenceYear }: Ex
         setIsPending(false);
         return;
       }
+      setResponse(response.data);
     } catch (error) {
       setState(mapError(error ,EXPENSE_DEFAULT_UPLOAD_ERROR_MESSAGE));
       setIsPending(false);
@@ -103,10 +105,12 @@ export default function ExpenseUpload({ onClose, allocation, referenceYear }: Ex
   useEffect(() => {
     if (state.status !== 'idle') {
       onClose(
-        { type: state.type ,status: state.status ,message: state.message });
+        { type: state.type ,status: state.status ,message: state.message },
+        response
+      );
       return;
     }
-  } ,[onClose ,state]);
+  } ,[onClose ,state, response]);
 
 
   return (
@@ -115,8 +119,8 @@ export default function ExpenseUpload({ onClose, allocation, referenceYear }: Ex
 
         <div className="flex-1">
           <Select
-            label={t('expense.form.label.category')}
-            name="category"
+            label={t('expense.form.label.bank')}
+            name="bank"
             value={draftUpload?.bank ?? ''}
             options={banksOptions}
             required

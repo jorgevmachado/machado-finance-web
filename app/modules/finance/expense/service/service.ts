@@ -1,10 +1,11 @@
 import { BaseServiceAbstract } from '@/app/shared';
 
-import type {
+import {
   TExpense ,
   TExpenseCreate ,
   TExpenseUpload ,
-  TExpenseUpdate,
+  TExpenseUpdate ,
+  TExpenseUploadResponse ,TExpenseListPersist ,
 } from '../types';
 
 export class ExpenseService  extends BaseServiceAbstract<TExpense ,TExpenseCreate ,TExpenseUpdate> {
@@ -12,7 +13,7 @@ export class ExpenseService  extends BaseServiceAbstract<TExpense ,TExpenseCreat
     super(baseUrl ,'expenses' ,token);
   }
 
-  public async upload(payload: TExpenseUpload): Promise<Array<TExpense>> {
+  public async upload(payload: TExpenseUpload): Promise<TExpenseUploadResponse> {
     const formData = new FormData();
     formData.append('file', payload.file);
     formData.append('bank', payload.bank);
@@ -20,6 +21,10 @@ export class ExpenseService  extends BaseServiceAbstract<TExpense ,TExpenseCreat
     if (payload.reference_year !== undefined) {
       formData.append('reference_year', payload.reference_year.toString());
     }
-    return await this.post<FormData, Array<TExpense>>(`${this.pathUrl}/upload`, { body: formData });
+    return await this.post<FormData, TExpenseUploadResponse>(`${this.pathUrl}/upload`, { body: formData });
+  }
+
+  public async persistList(payload: TExpenseListPersist): Promise<Array<TExpense>> {
+    return await this.post<TExpenseListPersist, Array<TExpense>>(`${this.pathUrl}/persist-list`, { body: payload });
   }
 }
