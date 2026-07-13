@@ -127,7 +127,7 @@ export class ExpenseBusiness {
       allocation_id: allocation.id ,
       reference_year: reference_year ,
     };
-    const expensesToPersist: Array<Omit<TExpenseCreate ,'allocation_id'>> = expenses.map(
+    const expensesToPersist: Array<TExpenseCreate> = expenses.map(
       (expense) => ({
         payee: expense.payee ,
         months: monthBusiness.buildMonthPersistByInstallments({
@@ -141,15 +141,13 @@ export class ExpenseBusiness {
         }) ,
         category_id: expense.category.id ,
         description: expense.payee ,
+        allocation_id: allocation.id ,
         reference_year ,
         reference_month,
       }));
     return {
       parent ,
-      expenses: expensesToPersist ,
-      allocation_id: allocation.id ,
-      reference_year ,
-      reference_month,
+      expenses: expensesToPersist
     };
   }
 }

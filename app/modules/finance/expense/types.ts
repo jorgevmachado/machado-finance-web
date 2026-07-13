@@ -110,9 +110,6 @@ export type TPersistExpenseUploadInputs = {
 }
 
 export type TExpenseListPersist = {
-  parent: Omit<TExpenseCreate ,'months'>;
-  expenses: Array<Omit<TExpenseCreate ,'allocation_id'>>;
-  allocation_id: string;
-  reference_year: number;
-  reference_month: number;
+  parent: TExpenseCreate;
+  expenses: Array<TExpenseCreate>;
 }
