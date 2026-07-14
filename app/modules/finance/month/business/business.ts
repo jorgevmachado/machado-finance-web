@@ -199,6 +199,20 @@ export class MonthBusiness {
     return undefined;
   }
 
+  private getStatusByInstallmentNumber(
+    installmentNumber: number,
+    currentInstallment: number,
+    paid: boolean = false,
+  ): EMonthStatus {
+    if (installmentNumber < currentInstallment) {
+      return EMonthStatus.PAID;
+    }
+    if (installmentNumber === currentInstallment && paid) {
+      return EMonthStatus.PAID;
+    }
+    return EMonthStatus.PENDING;
+  }
+
   public buildMonthPersistByInstallments({
     paid = false,
     amount,
@@ -214,31 +228,35 @@ export class MonthBusiness {
       return months;
     }
 
-    const safeCurrentInstallment = Math.min(Math.max(currentInstallment, 1), totalOfInstallments);
-    const remainingInstallments = totalOfInstallments - safeCurrentInstallment + 1;
-    const baseTransactionDate = new Date(transactionDate);
-    const baseMonthIndex = referenceMonth - 1;
-    const totalAmountInCents = Math.round(amount * 100);
-    const baseInstallmentAmountInCents = Math.floor(totalAmountInCents / remainingInstallments);
-    const remainderInCents = totalAmountInCents - (baseInstallmentAmountInCents * remainingInstallments);
+    const currentTransactionDate = new Date(transactionDate);
+    const normalizedCurrentInstallment = Math.min(
+      Math.max(currentInstallment, 1),
+      totalOfInstallments,
+    );
+    const firstInstallmentDate = new Date(
+      currentTransactionDate.getFullYear(),
+      referenceMonth - normalizedCurrentInstallment,
+      currentTransactionDate.getDate(),
+    );
 
-    for (let installmentOffset = 0; installmentOffset < remainingInstallments; installmentOffset += 1) {
-      const transactionDateByInstallment = new Date(
-        baseTransactionDate.getFullYear(),
-        baseMonthIndex + installmentOffset,
-        baseTransactionDate.getDate(),
+    for (let installmentNumber = 1; installmentNumber <= totalOfInstallments; installmentNumber += 1) {
+      const installmentDate = new Date(
+        firstInstallmentDate.getFullYear(),
+        firstInstallmentDate.getMonth() + installmentNumber - 1,
+        firstInstallmentDate.getDate(),
       );
-      const currentReferenceMonth = ((baseMonthIndex + installmentOffset) % 12) + 1;
-      const installmentAmountInCents = baseInstallmentAmountInCents + (installmentOffset < remainderInCents ? 1 : 0);
-
       months.push({
         status: withStatus ?
-          (installmentOffset === 0 && paid ? EMonthStatus.PAID : EMonthStatus.PENDING) :
+          this.getStatusByInstallmentNumber(
+            installmentNumber,
+            normalizedCurrentInstallment,
+            paid,
+          ) :
           undefined,
-        amount: installmentAmountInCents / 100,
+        amount: amount,
         reference_day: referenceDay,
-        reference_month: currentReferenceMonth,
-        transaction_date: formatDateToDateString(transactionDateByInstallment),
+        reference_month: installmentDate.getMonth() + 1,
+        transaction_date: formatDateToDateString(installmentDate),
       });
     }
 

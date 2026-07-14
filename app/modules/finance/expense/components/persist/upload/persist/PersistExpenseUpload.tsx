@@ -206,13 +206,6 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
   }, [draftExpenses, paid, response, startContentLoading, stopContentLoading]);
 
   useEffect(() => {
-    setDraftExpenses(expenseBusiness.initDraftExpenseUploaded(response.expenses));
-    setDraftExpense(undefined);
-    setCurrentInput(expenseBusiness.initPersistExpenseUploadInputs());
-    setPaid(false);
-  }, [response]);
-
-  useEffect(() => {
     if (state.status !== 'idle') {
       onClose(
         { type: state.type ,status: state.status ,message: state.message });

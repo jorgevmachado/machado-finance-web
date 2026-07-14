@@ -127,8 +127,6 @@ export class ExpenseBusiness {
       allocation_id: allocation.id ,
       reference_year: reference_year ,
     };
-    const total = expenses.reduce((total, expense) => total + Number(expense.amount) ,0);
-    console.log('# => total expenses => ', total)
     const expensesToPersist: Array<TExpenseCreate> = expenses.map(
       (expense) => ({
         payee: expense.payee ,
@@ -148,8 +146,6 @@ export class ExpenseBusiness {
         reference_year ,
         reference_month,
       }));
-    const totalExpensesMonths = expensesToPersist.reduce((total, expense) => total + expense.months.reduce((total, month) => total + (month.amount || 0), 0), 0);
-    console.log('# => totalExpensesMonths => ', totalExpensesMonths)
     return {
       parent ,
       expenses: expensesToPersist
