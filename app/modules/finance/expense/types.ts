@@ -48,6 +48,7 @@ export type TExpenseCreate = {
 export type TExpenseUpdate = {
   payee?: string;
   months?: Array<TMonthPersist>;
+  parent_id?: string;
   category_id?: string;
   description?: string;
   allocation_id?: string;
@@ -55,6 +56,7 @@ export type TExpenseUpdate = {
 
 export type TDraftExpense = {
   payee: string;
+  parent_id?: string;
   description: string;
   category_id: string;
   allocation_id: string;

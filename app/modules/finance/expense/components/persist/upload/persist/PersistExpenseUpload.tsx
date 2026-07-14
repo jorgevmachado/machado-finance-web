@@ -53,8 +53,6 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
   const [currentInput, setCurrentInput] = useState<TPersistExpenseUploadInputs>(expenseBusiness.initPersistExpenseUploadInputs());
 
   const { startContentLoading, stopContentLoading } = useLoading();
-  console.log('# => PersistExpenseUpload => response.expenses.length', response.expenses.length);
-  console.log('# => PersistExpenseUpload => draftExpenses.length', draftExpenses.length);
 
   const summary = useMemo(() => {
     const monthName = monthBusiness.getMonthName(response.reference_month);

@@ -13,7 +13,7 @@ import type { TExpense } from '../../types';
 type ExpenseListProps = {
   expenses: Array<TExpense>;
   referenceYear: number;
-  onPersist: (item?: unknown, disabled?: boolean) => void;
+  onPersist?: (item?: unknown, disabled?: boolean) => void;
 }
 
 export default function ExpenseList({ expenses, referenceYear, onPersist }: ExpenseListProps) {
@@ -57,7 +57,7 @@ export default function ExpenseList({ expenses, referenceYear, onPersist }: Expe
           items={expenseTable.body}
           headers={translatedHeaders}
           withFooter={true}
-          onRowClick={(item) => onPersist(item)}
+          onRowClick={!onPersist ? undefined : (item) => onPersist?.(item)}
           showNotFoundError={true}
         />
       </div>

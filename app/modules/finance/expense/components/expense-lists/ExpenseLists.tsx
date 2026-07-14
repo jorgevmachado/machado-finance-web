@@ -21,9 +21,13 @@ type ExpenseListChildren = {
 }
 
 export default function ExpenseLists({ expenses, referenceYear, onPersist }: ExpenseListsProps) {
-  
+
   const expensesParents = useMemo(() => {
-    return expenses.filter((expense) => !expense.parent_id);
+    return expenses.filter((expense) => !expense.parent_id && expense?.children && expense.children.length > 0);
+  }, [expenses]);
+
+  const expensesSingles = useMemo(() => {
+    return expenses.filter((expense) => !expense.parent_id && expense?.children?.length === 0);
   }, [expenses]);
   
   
@@ -37,12 +41,17 @@ export default function ExpenseLists({ expenses, referenceYear, onPersist }: Exp
     }
     return result;
   }, [expensesParents, expenses]);
-
-  console.log('# => expensesListChildren', expensesListChildren);
   
   return (
     <div className="flex flex-col gap-6">
-      <ExpenseList expenses={expensesParents} referenceYear={referenceYear} onPersist={onPersist}/>
+      { expensesSingles && expensesSingles.length > 0 && (
+        <ExpenseList expenses={expensesSingles} referenceYear={referenceYear} onPersist={onPersist}/>
+      )}
+
+      { expensesParents && expensesParents.length > 0 && (
+        <ExpenseList expenses={expensesParents} referenceYear={referenceYear}/>
+      )}
+
       { expensesListChildren && expensesListChildren.length > 0 && expensesListChildren.map((expenseListChildren) => (
         <Accordion title={expenseListChildren.parent} subtitle={currencyFormatter(expenseBusiness.totalExpenses(expenseListChildren.children))} key={expenseListChildren.parent}>
           <ExpenseList expenses={expenseListChildren.children} referenceYear={referenceYear} onPersist={onPersist}/>

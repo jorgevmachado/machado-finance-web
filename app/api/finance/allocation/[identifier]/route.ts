@@ -45,8 +45,6 @@ export async function PUT(
     const response = await financeService(session.token).allocation.update(identifier, payload);
     return NextResponse.json(response);
   } catch (error) {
-    console.log('# => error => ', error);
-
     const message = error instanceof Error && error.message ? error.message : 'Could not update Allocation.';
     return NextResponse.json({ message }, { status: 500 });
   }

@@ -13,7 +13,15 @@ import {
   useAppTranslation,
 } from '@/app/shared';
 
-import { Button ,Card ,Input ,Select ,Text ,useLoading } from '@/app/ds';
+import {
+  Button ,
+  Card ,
+  Input ,
+  Select ,
+  Switch ,
+  Text ,
+  useLoading,
+} from '@/app/ds';
 
 import {
   ActionState ,
@@ -43,6 +51,7 @@ import {
 type PersistIncomeProps = {
   onClose: (actionState: ActionState) => void;
   expense?: TExpense;
+  expenses: Array<TExpense>;
   disabled?: boolean;
   categories: Array<TCategory>;
   allocation: TAllocation;
@@ -52,6 +61,7 @@ type PersistIncomeProps = {
 
 export default function PersistExpense({
   expense,
+  expenses,
   onClose,
   disabled = false,
   categories,
@@ -67,10 +77,18 @@ export default function PersistExpense({
   const [draftCategory, setDraftCategory] = useState<TCategory | undefined>(
     expense ? categories.find((c) => c.id === expense.category.id) : undefined
   );
+  const [draftParent, setDraftParent] = useState<TExpense | undefined>(
+    expense ? expenses.find((e) => e.id === expense.parent_id) : undefined
+  );
   const [monthsDraft, setMonthsDraft] = useState<Array<TMonthPersist>>([]);
+  const [withParent, setWithParent] = useState<boolean>(!!expense?.parent_id);
 
   const categoryOptions = categories.map((c) => ({ key: c.id, value: c.id, label: c.name }));
   const hasCategories = categories.length > 0;
+
+  const expenseOptions = expenses.map((e) => ({ key: e.id, value: e.id, label: e.payee }));
+  const hasExpenses = expenses.length > 0;
+
 
 
   const updateDraftValue = <K extends keyof TDraftExpense>(key: K, value: TDraftExpense[K]) => {
@@ -89,6 +107,7 @@ export default function PersistExpense({
     const payload: TExpenseCreate = {
       months: monthsDraft.map((month) => ({ ...month, id: undefined })),
       payee: draftExpense.payee ,
+      parent_id: draftParent?.id,
       category_id: draftCategory.id,
       allocation_id: allocation.id,
       description: draftExpense.description ,
@@ -142,8 +161,13 @@ export default function PersistExpense({
     if (draftExpense.description !== expense.description) {
       payload.description = draftExpense.description;
     }
+    if (draftExpense.parent_id && draftExpense.parent_id !== expense.parent_id) {
+      payload.parent_id = draftExpense.parent_id;
+    }
 
-    payload.months = monthsDraft;
+    if (monthsDraft && monthsDraft.length > 0) {
+      payload.months = monthsDraft;
+    }
 
     const emptyPayload = isObjectEmpty(payload);
     if (!emptyPayload) {
@@ -223,6 +247,35 @@ export default function PersistExpense({
           onValueChange={(nextValue) => updateDraftValue('payee', nextValue)}
           placeholder={t('expense.form.placeholder.payee')}
         />
+
+        { hasExpenses && (
+          <div className="flex flex-col">
+            <Switch
+              id="withParent"
+              name="withParent"
+              label={t('expense.form.label.withParent')}
+              checked={withParent}
+              onCheckedChange={(value) => setWithParent(value)}
+            />
+            { withParent && (
+              <Select
+                label={t('expense.form.label.parent')}
+                name="parent"
+                value={draftParent?.id ?? ''}
+                options={expenseOptions}
+                required
+                disabled={disabled || !hasExpenses}
+                defaultNoOptionLabel={t('common.noOptions')}
+                placeholder={t('common.select')}
+                onValueChange={(value) => {
+                  const found = expenses.find((e) => e.id === value);
+                  setDraftParent(found);
+                  updateDraftValue('parent_id', value);
+                }}
+              />
+            )}
+          </div>
+        )}
 
         <div className="flex items-end gap-2">
           <div className="flex-1">

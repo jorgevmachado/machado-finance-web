@@ -55,6 +55,14 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
       openPersistUpload(response);
     }
   };
+  
+  const filterExpenses = (expenses: Array<TExpense>, expense?: TExpense): Array<TExpense> => {
+    const filteredWithoutParentId  = expenses.filter((e) => !e.parent_id);
+    if (expense) {
+      return filteredWithoutParentId.filter((e) => e.id !== expense.id);
+    }
+    return filteredWithoutParentId;
+  };
 
   const openPersist = (item?: unknown, disabled?: boolean) => {
     if (!allocation) return;
@@ -66,6 +74,7 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
       body: (
         <PersistExpense
           expense={expense}
+          expenses={filterExpenses(expenses, expense)}
           onClose={handleClose}
           categories={categories}
           allocation={allocation}
