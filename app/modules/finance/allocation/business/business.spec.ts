@@ -73,6 +73,7 @@ describe('CategoryBusiness', () => {
         created_at: new Date() ,
         account_id: 'account_id' ,
         description: 'x' ,
+        allocation_contributions: [],
       },
       {
         id: '2' ,
@@ -83,6 +84,7 @@ describe('CategoryBusiness', () => {
         created_at: new Date() ,
         account_id: 'account_id' ,
         description: 'y' ,
+        allocation_contributions: [],
       },
     ];
 
@@ -101,6 +103,7 @@ describe('CategoryBusiness', () => {
       created_at: new Date() ,
       account_id: 'account_id' ,
       description: 'x' ,
+      allocation_contributions: [],
     }] as const;
 
     expect(

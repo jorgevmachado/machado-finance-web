@@ -68,7 +68,7 @@ export class ExpenseBusiness {
   }
 
   public getResponseMessage(actionState: ActionState) {
-    return `expense.${ actionState.status }.${ actionState.type }`;
+    return `expense.messages.${ actionState.status }.${ actionState.type }`;
   }
 
   public getOriginal(

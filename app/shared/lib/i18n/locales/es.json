@@ -87,7 +87,8 @@
     "actions": "Acciones",
     "viewMore": "Ver más",
     "loading": "Cargando...",
-    "noOptions": "No se encontraron opciones."
+    "noOptions": "No se encontraron opciones.",
+    "noDataFound": "No se encontraron datos."
   },
   "filters": {
     "year": "Año",
@@ -99,7 +100,9 @@
     "type": "Tipo",
     "status": "Estado",
     "isActive": "Está activo",
-    "isInactive": "Está inactivo"
+    "isInactive": "Está inactivo",
+    "createdAt": "Creado en",
+    "updatedAt": "Actualizado en"
   },
   "pagination": {
     "ariaLabel": "Paginación",
@@ -174,6 +177,20 @@
         "updated": "Ingreso actualizado con éxito.",
         "created": "Ingreso creado con éxito.",
         "deleted": "Ingreso eliminado con éxito."
+    },
+    "form": {
+        "label": {
+            "source": "Origen del ingreso",
+            "amount": "Monto del ingreso",
+            "date": "Fecha del ingreso",
+            "account": "Cuenta del ingreso"
+        },
+        "placeholder": {
+            "source": "Ingresa el origen del ingreso",
+            "amount": "Ingresa el monto del ingreso",
+            "date": "Selecciona la fecha del ingreso",
+            "account": "Selecciona la cuenta del ingreso"
+        }
     }
   },
   "allocation": {
@@ -197,6 +214,9 @@
       "updated": "Asignación actualizada con éxito.",
       "created": "Asignación creada con éxito.",
       "deleted": "Asignación eliminada con éxito."
+    },
+    "form": {
+      "subtitle": "Completa los datos para guardar la asignación."
     }
   },
   "transfer": {

@@ -3,7 +3,7 @@ import React ,{ useMemo } from 'react';
 
 import { useAppTranslation } from '@/app/shared';
 
-import { Button ,Table ,Text } from '@/app/ds';
+import { Table ,Text } from '@/app/ds';
 
 import { movementBusiness } from '../../../movement';
 
@@ -56,11 +56,6 @@ export default function IncomeList({ incomes, referenceYear, onPersist }: Income
           <Text as="h2" className="text-3xl font-bold text-slate-950 sm:text-4xl">
             { t('income.title') } ({ referenceYear })
           </Text>
-        </div>
-        <div>
-          <Button type="button" onClick={ () => onPersist() } appearance="solid" tone="primary">
-            { t('income.create.title') }
-          </Button>
         </div>
       </div>
       <div className="w-full overflow-x-auto">

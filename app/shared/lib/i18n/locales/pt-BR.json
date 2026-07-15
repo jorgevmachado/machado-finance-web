@@ -87,7 +87,8 @@
     "actions": "Ações",
     "viewMore": "Ver mais",
     "loading": "Carregando...",
-    "noOptions": "Nenhuma opção encontrada."
+    "noOptions": "Nenhuma opção encontrada.",
+    "noDataFound": "Nenhum dado encontrado."
   },
   "filters": {
     "year": "Ano",
@@ -99,7 +100,9 @@
     "type": "Tipo",
     "status": "Status",
     "isActive": "Está ativo",
-    "isInactive": "Está inativo"
+    "isInactive": "Está inativo",
+    "createdAt": "Criado em",
+    "updatedAt": "Atualizado em"
   },
   "pagination": {
     "ariaLabel": "Paginação",
@@ -174,6 +177,22 @@
       "updated": "Receita atualizada com sucesso.",
       "created": "Receita criada com sucesso.",
       "deleted": "Receita excluída com sucesso."
+    },
+    "form": {
+      "label": {
+        "date": "Data",
+        "source": "Fonte",
+        "amount": "Valor",
+        "account": "Conta",
+        "description": "Descrição"
+      },
+      "placeholder": {
+        "date": "Digite a data da receita",
+        "source": "Digite a fonte da receita",
+        "amount": "Digite o valor da receita",
+        "account": "Selecione a conta da receita",
+        "description": "Digite a descrição da receita"
+      }
     }
   },
   "allocation": {
@@ -197,6 +216,9 @@
       "updated": "Alocação atualizada com sucesso.",
       "created": "Alocação criada com sucesso.",
       "deleted": "Alocação excluída com sucesso."
+    },
+    "form": {
+      "subtitle": "Preencha os dados para salvar a alocação."
     }
   },
   "transfer": {

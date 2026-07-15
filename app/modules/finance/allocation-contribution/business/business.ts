@@ -58,7 +58,7 @@ export class AllocationContributionBusiness {
   }
 
   public getResponseMessage(actionState: ActionState) {
-    return `allocation-contribution.${actionState.status}.${actionState.type}`;
+    return `allocation-contribution.messages.${actionState.status}.${actionState.type}`;
   }
   
   public getOriginal(items: Array<TAllocationContribution>, tableItem: unknown): TAllocationContribution | undefined {

@@ -64,7 +64,7 @@ export class AccountBusiness {
   }
 
   public getResponseMessage(actionState: ActionState) {
-    return `account.${actionState.status}.${actionState.type}`;
+    return `account.messages.${actionState.status}.${actionState.type}`;
   }
 
   public getOriginalAccount(items: Array<TAccount>, tableItem: unknown): TAccount | undefined {

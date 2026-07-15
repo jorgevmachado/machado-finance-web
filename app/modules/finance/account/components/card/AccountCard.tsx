@@ -41,6 +41,8 @@ export default function AccountCard({ onEdit, item }: AccountCardProps) {
   };
 
   const attributes = useMemo(() => {
+    const totalExpenses = item?.allocations.reduce((acc, allocation) => acc + (allocation.expenses?.length ?? 0), 0);
+    const totalAllocationContributions = item?.allocations.reduce((acc, allocation) => acc + (allocation.allocation_contributions?.length ?? 0), 0);
     const list: Array<{ label: string; value: string | number | undefined; color?: string }> = [
       {
         label: t('account.form.label.initial_balance') ,
@@ -51,7 +53,7 @@ export default function AccountCard({ onEdit, item }: AccountCardProps) {
         value: currencyFormatter(item.current_balance ,locale),
         color: item.current_balance > 0 ? 'text-green-600' : item.current_balance < 0 ? 'text-red-600' : 'text-slate-500',
       } ,
-      { label: t('account.total_expenses') ,value: item?.expenses?.length } ,
+      { label: t('account.total_expenses') ,value: totalExpenses } ,
       { label: t('account.total_incomes') ,value: item?.incomes?.length } ,
       {
         label: t('account.total_outgoing_transfers') ,
@@ -59,19 +61,11 @@ export default function AccountCard({ onEdit, item }: AccountCardProps) {
       } ,
       {
         label: t('account.total_allocation_contributions') ,
-        value: item?.allocation_contributions?.length,
+        value: totalAllocationContributions,
       } ,
     ];
     return list;
-  } ,[
-    item?.allocation_contributions?.length ,
-    item.current_balance ,
-    item?.expenses?.length ,
-    item?.incomes?.length ,
-    item.initial_balance ,
-    item?.outgoing_transfers?.length ,
-    locale ,
-    t]);
+  } ,[item?.allocations, item.current_balance, item?.incomes?.length, item.initial_balance, item?.outgoing_transfers?.length, locale, t]);
   
   return (
     <Card
@@ -79,10 +73,7 @@ export default function AccountCard({ onEdit, item }: AccountCardProps) {
       rounded="lg"
       hoverEffect="lift"
       interactive={ true }
-      onClick={ (e) => {
-        e.preventDefault();
-        onEdit(item);
-      } }
+      onClick={ () => onEdit(item) }
       className="flex h-full flex-col gap-4 border-slate-200 bg-white"
     >
       <div className="flex min-h-44 items-center justify-center rounded-lg bg-slate-100">
@@ -126,8 +117,7 @@ export default function AccountCard({ onEdit, item }: AccountCardProps) {
           size="lg"
           appearance="solid"
           fullWidth={true}
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             router.push(`/account/${item.id}`);
           }}
         >

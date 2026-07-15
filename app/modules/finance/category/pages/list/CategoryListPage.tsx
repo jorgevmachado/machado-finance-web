@@ -7,7 +7,7 @@ import {
   TCategoryFilter ,
 } from '@/app/modules/finance';
 import { ActionState } from '@/app/modules/actions';
-import { Table ,useAlert ,useModal } from '@/app/ds';
+import { ETypeTableHeader ,Table ,useAlert ,useModal } from '@/app/ds';
 import { useAppTranslation } from '@/app/shared';
 
 import { PersistCategory } from '../../components';
@@ -79,10 +79,7 @@ export default function CategoryListPage() {
       applyInputFilters={applyInputFilters}>
       {modal}
       <Table
-        items={items?.map((item) => ({
-          ...item,
-          type: t(`category.types.${item.type}`),
-        }))}
+        items={items}
         headers={[
           {
             value: 'name' ,
@@ -91,11 +88,12 @@ export default function CategoryListPage() {
             sortable: true ,
           },
           {
-            value: 'type' ,
-            label: t('filters.type') ,
+            value: 'created_at' ,
+            type: ETypeTableHeader.DATE ,
+            label: t('filters.createdAt') ,
             align: 'left' ,
             sortable: true ,
-          }
+          },
         ]}
         actions={{
           text: t('common.actions'),

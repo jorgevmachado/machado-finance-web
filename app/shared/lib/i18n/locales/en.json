@@ -87,7 +87,8 @@
     "actions": "Actions",
     "viewMore": "View more",
     "loading": "Loading...",
-    "noOptions": "No options available."
+    "noOptions": "No options available.",
+    "noDataFound": "No data found."
   },
   "filters": {
     "year": "Year",
@@ -99,7 +100,9 @@
     "type": "Type",
     "status": "Status",
     "isActive": "Is Active",
-    "isInactive": "Is Inactive"
+    "isInactive": "Is Inactive",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
   },
   "pagination": {
     "ariaLabel": "Pagination",
@@ -147,6 +150,16 @@
       "error": "An error occurred while deleting the category."
     },
     "messages": {
+      "error": {
+        "create": "An error occurred while creating the category.",
+        "update": "An error occurred while updating the category.",
+        "delete": "An error occurred while deleting the category."
+      },
+        "success": {
+        "create": "Category created successfully.",
+        "update": "Category updated successfully.",
+        "delete": "Category deleted successfully."
+        },
       "updated": "Category updated successfully.",
       "created": "Category created successfully.",
       "deleted": "Category deleted successfully."
@@ -169,6 +182,20 @@
         "title": "Do you want to delete this income ?",
         "success": "Income deleted successfully.",
         "error": "An error occurred while deleting the income."
+    },
+    "form": {
+      "label": {
+        "source": "Source",
+        "amount": "Amount",
+        "account": "Account",
+        "description": "Description"
+      },
+      "placeholder": {
+        "source": "Enter source",
+        "amount": "Enter amount",
+        "account": "Select an account",
+        "description": "Enter description"
+      }
     },
     "messages": {
       "updated": "Income updated successfully.",
@@ -194,9 +221,22 @@
         "error": "An error occurred while deleting the allocation."
     },
     "messages": {
+      "error": {
+        "create": "An error occurred while creating the allocation.",
+        "update": "An error occurred while updating the allocation.",
+        "delete": "An error occurred while deleting the allocation."
+      },
+      "success": {
+        "create": "Allocation created successfully.",
+        "update": "Allocation updated successfully.",
+        "delete": "Allocation deleted successfully."
+      },
       "updated": "Allocation updated successfully.",
       "created": "Allocation created successfully.",
       "deleted": "Allocation deleted successfully."
+    },
+    "form": {
+      "subtitle": "Fill out the data to save the allocation."
     }
   },
   "transfer": {
@@ -268,6 +308,16 @@
     "total_incoming_transfers": "Total Incoming Transfers",
     "total_allocation_contributions": "Total Contributions",
     "messages": {
+      "error": {
+        "create": "An error occurred while creating the account.",
+        "update": "An error occurred while updating the account.",
+        "delete": "An error occurred while deleting the account."
+      },
+      "success": {
+        "create": "Account created successfully.",
+        "update": "Account updated successfully.",
+        "delete": "Account deleted successfully."
+      },
       "updated": "Account updated successfully.",
       "created": "Account created successfully.",
       "deleted": "Account deleted successfully."
@@ -330,6 +380,16 @@
       }
     },
     "messages": {
+      "error": {
+        "create": "An error occurred while creating the expense.",
+        "update": "An error occurred while updating the expense.",
+        "delete": "An error occurred while deleting the expense."
+      },
+        "success": {
+            "create": "Expense created successfully.",
+            "update": "Expense updated successfully.",
+            "delete": "Expense deleted successfully."
+        },
       "updated": "Expense updated successfully.",
       "created": "Expense created successfully.",
       "deleted": "Expense deleted successfully."
@@ -371,9 +431,16 @@
       }
     },
     "messages": {
-      "updated": "Contribution updated successfully.",
-      "created": "Contribution created successfully.",
-      "deleted": "Contribution deleted successfully."
+      "error": {
+        "create": "An error occurred while creating the contribution.",
+        "update": "An error occurred while updating the contribution.",
+        "delete": "An error occurred while deleting the contribution."
+      },
+      "success": {
+        "create": "Contribution created successfully.",
+        "update": "Contribution updated successfully.",
+        "delete": "Contribution deleted successfully."
+      }
     }
   },
   "month": {

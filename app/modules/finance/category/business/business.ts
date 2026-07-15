@@ -25,7 +25,7 @@ export class CategoryBusiness {
   }
 
   public getResponseMessage(actionState: ActionState) {
-    return `category.${actionState.status}.${actionState.type}`;
+    return `category.messages.${actionState.status}.${actionState.type}`;
   }
   
   public getOriginal(items: Array<TCategory>, tableItem: unknown): TCategory | undefined {

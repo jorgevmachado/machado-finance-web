@@ -42,7 +42,7 @@ export class AllocationBusiness {
   }
 
   public getResponseMessage(actionState: ActionState) {
-    return `allocation.${actionState.status}.${actionState.type}`;
+    return `allocation.messages.${actionState.status}.${actionState.type}`;
   }
 
   public getOriginal(items: Array<TAllocation>, tableItem: unknown): TAllocation | undefined {
