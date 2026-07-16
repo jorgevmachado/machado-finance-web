@@ -9,7 +9,7 @@ import {
 
 import { Button ,useLoading } from '@/app/ds';
 
-import { type ActionState } from '@/app/modules/actions';
+import { type ActionState } from '@/app/actions';
 
 type FetchDeleteFn = (params: TBffDeleteParams) => Promise<TBffResponse<MessageResponse>>;
 

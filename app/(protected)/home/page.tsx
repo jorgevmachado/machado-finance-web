@@ -1,5 +1,3 @@
-import { FinancePage } from '@/app/modules/finance';
-
 export default function FinanceRouterPage() {
-  return <FinancePage/>;
+  return <div><h1>Home</h1></div>;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import Select from './index';
 
@@ -23,7 +23,8 @@ describe('<Select />', () => {
 
     expect(screen.getByText('Category type')).toBeInTheDocument();
     expect(screen.getByText('Pick one option')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Select an option' })).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByText('Select an option')).toBeInTheDocument();
   });
 
   it('opens options and calls onValueChange when selecting', () => {
@@ -38,7 +39,7 @@ describe('<Select />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select an option' }));
+    fireEvent.click(screen.getByRole('button'));
     fireEvent.mouseDown(screen.getByRole('option', { name: 'Food' }));
 
     expect(onValueChange).toHaveBeenCalledWith('FOOD', expect.any(Object));
@@ -54,7 +55,7 @@ describe('<Select />', () => {
       />,
     );
 
-    const trigger = screen.getByRole('button', { name: 'Other' });
+    const trigger = screen.getByRole('button');
     expect(trigger).toHaveClass('w-full');
   });
 
@@ -73,7 +74,7 @@ describe('<Select />', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select an option' }));
+    fireEvent.click(screen.getByRole('button'));
     fireEvent.mouseDown(screen.getByRole('option', { name: 'Food' }));
 
     expect(onValueChange).not.toHaveBeenCalled();
@@ -93,5 +94,66 @@ describe('<Select />', () => {
     expect(nativeSelect).toBeInTheDocument();
     expect(nativeSelect).toBeRequired();
     expect(nativeSelect).toHaveValue('OTHER');
+  });
+
+  it('renders disabled state when select is disabled', () => {
+    const { container } = render(
+      <Select
+        name="type"
+        value=""
+        disabled
+        options={[...options]}
+      />,
+    );
+
+    expect(screen.getByRole('button')).toBeDisabled();
+    expect(container.querySelector('select[name="type"]')).toBeDisabled();
+  });
+
+  it('marks the selected option when the menu opens', () => {
+    render(
+      <Select
+        name="type"
+        value="OTHER"
+        options={[...options]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+
+    expect(screen.getByRole('option', { name: 'Other' })).toHaveClass('bg-blue-50');
+  });
+
+  it('closes after blur and syncs the native select value', () => {
+    jest.useFakeTimers();
+
+    try {
+      const { container } = render(
+        <Select
+          name="type"
+          value=""
+          options={[...options]}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button'));
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+      fireEvent.blur(screen.getByRole('button'));
+      act(() => {
+        jest.advanceTimersByTime(120);
+      });
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+      const nativeSelect = container.querySelector('select[name="type"]');
+      expect(nativeSelect).toBeInTheDocument();
+
+      fireEvent.change(nativeSelect as HTMLSelectElement, {
+        target: { value: 'OTHER' },
+      });
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });

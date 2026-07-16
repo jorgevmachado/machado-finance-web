@@ -1,2 +1,0 @@
-export { CategoryService } from './service';
-

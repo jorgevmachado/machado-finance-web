@@ -97,6 +97,32 @@ describe('<Input />', () => {
     expect(screen.getByRole('textbox')).toHaveValue('$1,234.56');
   });
 
+  it('formats money input with EUR when switchLanguage is es', () => {
+    render(
+      <Input
+        type='money'
+        switchLanguage='es'
+        value='123456'
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('1234,56 €');
+  });
+
+  it('falls back to BRL when switchLanguage is null', () => {
+    render(
+      <Input
+        type='money'
+        switchLanguage={null as unknown as 'pt-BR'}
+        value='123456'
+        onChange={() => undefined}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('R$ 1.234,56');
+  });
+
   it('shows clear button and triggers onClear', () => {
     const onClear = jest.fn();
 

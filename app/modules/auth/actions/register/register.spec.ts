@@ -1,4 +1,4 @@
-import { toErrorState } from '@/app/modules/actions';
+import { toErrorState } from '@/app/actions';
 
 import {
   INVALID_BIRTH_DATE_MESSAGE,

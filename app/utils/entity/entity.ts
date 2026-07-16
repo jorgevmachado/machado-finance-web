@@ -20,8 +20,6 @@ export function validateCreatedAt(dateString?: string): Date {
   return new Date();
 }
 
-
-
 export function validateValue(
   value?: string | number,
   type: 'string' | 'number' = 'string',

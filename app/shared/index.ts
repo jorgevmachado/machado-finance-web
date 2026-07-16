@@ -26,3 +26,4 @@ export {
 } from './http';
 export * from './lib';
 export * from './service';
+export type { TEntity } from './types';

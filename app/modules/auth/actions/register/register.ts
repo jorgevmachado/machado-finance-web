@@ -2,7 +2,7 @@ import {
   type ActionState ,
   getStringValue ,
   toErrorState ,
-} from '@/app/modules/actions';
+} from '@/app/actions';
 
 import {
   INVALID_BIRTH_DATE_MESSAGE ,

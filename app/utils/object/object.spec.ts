@@ -1,4 +1,4 @@
-import { isObjectEmpty } from '@/app/utils/object/object';
+import { isObject ,isObjectEmpty } from './object';
 
 describe('Object', () => {
   const mockList = [
@@ -26,6 +26,16 @@ describe('Object', () => {
 
     it('should return false when value is not object.', () => {
       expect(isObjectEmpty(0)).toBeFalsy();
+    });
+  });
+
+  describe('isObject', () => {
+    it('should return true when param is a object', () => {
+      expect(isObject(mockList[0])).toBeTruthy();
+    });
+
+    it('should return false when param is not a valid object', () => {
+      expect(isObject('not-object')).toBeFalsy();
     });
   });
 });

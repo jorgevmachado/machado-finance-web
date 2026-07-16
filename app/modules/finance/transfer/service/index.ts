@@ -1,2 +1,0 @@
-export { TransferService } from './service';
-

@@ -126,6 +126,34 @@ describe('Table.tsx', () => {
     expect(mockOnSortedColumn).toHaveBeenNthCalledWith(2, { sort: 'id', order: 'desc' });
   });
 
+  it('sorts when only onChangeOrder is provided', () => {
+    render(
+      <Table
+        items={items}
+        headers={headers}
+        onChangeOrder={mockOnChangeOrder}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole('button')[0]);
+
+    expect(mockOnChangeOrder).toHaveBeenCalledWith({ sort: 'id', order: 'asc' });
+  });
+
+  it('sorts when only onSortedColumn is provided', () => {
+    render(
+      <Table
+        items={items}
+        headers={headers}
+        onSortedColumn={mockOnSortedColumn}
+      />,
+    );
+
+    fireEvent.click(screen.getAllByRole('button')[0]);
+
+    expect(mockOnSortedColumn).toHaveBeenCalledWith({ sort: 'id', order: 'asc' });
+  });
+
   it('ignores click on non-sortable columns', () => {
     render(
       <Table items={items} headers={headers} onChangeOrder={mockOnChangeOrder} />

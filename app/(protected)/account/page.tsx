@@ -1,5 +1,0 @@
-import { AccountListPage } from '@/app/modules/finance';
-
-export default function AccountRouterPage() {
-  return <AccountListPage />;
-}

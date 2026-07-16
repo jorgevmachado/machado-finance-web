@@ -35,6 +35,20 @@ describe('table business', () => {
     expect((result[2] as unknown as { user: { name: string } }).user.name).toBe('Charlie');
   });
 
+  it('returns original order when a nested value is missing', () => {
+    const items = [{ user: {} }, { user: { name: 'Alice' } }];
+    const result = business.sortItems({ sort: 'user.name', order: 'asc' }, items);
+
+    expect(result).toEqual(items);
+  });
+
+  it('keeps original order when no sort direction is set', () => {
+    const items = [{ user: { name: 'Charlie' } }, { user: { name: 'Alice' } }];
+    const result = business.sortItems({ sort: 'user.name', order: '' }, items);
+
+    expect(result).toEqual(items);
+  });
+
   it('renders nested value by path', () => {
     const value = business.renderValue({ user: { profile: { name: 'Ana' } } }, 'user.profile.name');
     expect(value).toBe('Ana');
@@ -43,9 +57,11 @@ describe('table business', () => {
   it('formats DATE and MONEY values when needed', () => {
     const date = business.renderDataItem('2024-01-15', ETypeTableHeader.DATE, true);
     const money = business.renderDataItem(5000, ETypeTableHeader.MONEY);
+    const moneyFromString = business.renderDataItem('5000', ETypeTableHeader.MONEY);
 
     expect(typeof date).toBe('string');
     expect(money).toBe('R$ 5.000,00');
+    expect(moneyFromString).toBe('R$ 5.000,00');
   });
 
   it('returns React node as-is and null for unsupported value', () => {

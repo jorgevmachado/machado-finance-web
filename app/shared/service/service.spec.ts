@@ -123,7 +123,7 @@ describe('BaseServiceAbstract', () => {
       mockGet.mockResolvedValue(expected);
       const result = await service.detail('param');
       expect(mockGet).toHaveBeenCalledTimes(1);
-      expect(mockGet).toHaveBeenCalledWith('entity/param');
+      expect(mockGet).toHaveBeenCalledWith('entity/param', {});
       expect(result).toEqual(expected);
     });
   });

@@ -60,6 +60,15 @@ describe('BodyAction.tsx', () => {
     expect(parentClick).not.toHaveBeenCalled();
   });
 
+  it('does nothing when action has no onClick handler', () => {
+    const actionWithoutHandler = { label: 'Noop' } as TableActionsItem;
+
+    render(<BodyAction type="show" item={testItem} action={actionWithoutHandler} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Noop' }));
+    expect(parentClick).not.toHaveBeenCalled();
+  });
+
   it('updates callback when action prop changes', () => {
     const firstAction = jest.fn();
     const secondAction = jest.fn();

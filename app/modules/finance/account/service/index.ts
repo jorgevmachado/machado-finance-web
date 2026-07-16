@@ -1,2 +1,0 @@
-export { AccountService } from './service';
-

@@ -61,7 +61,8 @@ describe('Body.tsx', () => {
     const rows = container.querySelectorAll('tbody tr');
     fireEvent.click(rows[0]);
     fireEvent.keyDown(rows[1], { key: 'Enter' });
-    fireEvent.keyDown(rows[2], { key: ' ' });
+    fireEvent.keyDown(rows[2], { key: ' ', code: 'Space', charCode: 32, keyCode: 32 });
+    fireEvent.keyDown(rows[0], { key: 'Escape' });
 
     expect(rows[0]).toHaveAttribute('role', 'button');
     expect(rows[0]).toHaveAttribute('tabindex', '0');
@@ -69,6 +70,7 @@ describe('Body.tsx', () => {
     expect(mockOnRowClick).toHaveBeenCalledWith(items[0]);
     expect(mockOnRowClick).toHaveBeenCalledWith(items[1]);
     expect(mockOnRowClick).toHaveBeenCalledWith(items[2]);
+    expect(mockOnRowClick).toHaveBeenCalledTimes(3);
   });
 
   it('keeps row non-interactive when onRowClick is not provided', () => {

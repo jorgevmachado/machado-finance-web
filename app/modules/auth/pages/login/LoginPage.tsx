@@ -9,7 +9,7 @@ import { Text, Button } from '@/app/ds';
 
 import { loginAction } from '@/app/modules/auth/actions';
 
-import { INITIAL_ACTION_STATE } from '@/app/modules/actions/state';
+import { INITIAL_ACTION_STATE } from '@/app/actions/state';
 
 export default function LoginPage() {
   const [state, formAction, isPending] = useActionState(loginAction, INITIAL_ACTION_STATE);

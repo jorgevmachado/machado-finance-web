@@ -1,2 +1,0 @@
-export { AllocationService } from './service';
-
