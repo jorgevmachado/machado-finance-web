@@ -21,6 +21,7 @@ export type TExpense = TEntity & {
   category: TCategory;
   children?: Array<TExpense>;
   parent_id?: string;
+  payee_code: string;
   allocation: TAllocation;
   description: string;
 }
@@ -82,6 +83,7 @@ export type TExpenseUploadExpenseItemResponse = {
   category: TCategory;
   reference_month: number;
   current_installment: number;
+  all_installments_paid: boolean;
   total_of_installments: number;
 }
 
@@ -115,4 +117,5 @@ export type TPersistExpenseUploadInputs = {
 export type TExpenseListPersist = {
   parent: TExpenseCreate;
   expenses: Array<TExpenseCreate>;
+  reference_month: number;
 }

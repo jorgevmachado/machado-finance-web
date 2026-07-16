@@ -3,6 +3,7 @@ export { validateBasicEntity, validateCreatedAt, validateDateAt, validateValue }
 export { default as joinClass } from './join-class';
 export { currencyFormatter } from './money';
 export { isObject,isObjectEmpty } from './object';
+export { toSnakeCase } from './string';
 export {
   BACKGROUND_COLOR_CLASS_MAP ,
   BORDER_COLOR_CLASS_MAP,

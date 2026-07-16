@@ -52,7 +52,7 @@ export default function AllocationDetail({ categories, allocation, referenceYear
                 label: t('expense.upload.title'),
                 icon: <MdUpload size={16} />,
                 iconPosition: 'left',
-                onClick: () => openUploadExpense(),
+                onClick: () => openUploadExpense(allocation?.expenses),
               },
               {
                 label: t('allocation-contribution.create.title'),

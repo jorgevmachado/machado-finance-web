@@ -218,10 +218,12 @@ export class MonthBusiness {
     amount,
     withStatus = false,
     referenceDay,
+    referenceYear,
     referenceMonth,
     transactionDate,
     currentInstallment = 1,
-    totalOfInstallments
+    totalOfInstallments,
+    allInstallmentsPaid
   }: BuildMonthPersistByInstallmentsParams): Array<TMonthPersist> {
     const months: Array<TMonthPersist> = [];
     if (totalOfInstallments <= 0) {
@@ -257,6 +259,27 @@ export class MonthBusiness {
         reference_day: referenceDay,
         reference_month: installmentDate.getMonth() + 1,
         transaction_date: formatDateToDateString(installmentDate),
+      });
+    }
+
+    if (allInstallmentsPaid) {
+      return months.map((month) => {
+        const currentTransactionDate  = !month?.transaction_date ? firstInstallmentDate : new Date(month.transaction_date);
+        const currentReferenceYear = currentTransactionDate.getFullYear();
+
+        if (referenceYear !== currentReferenceYear) {
+          return month;
+        }
+
+        if (month.reference_month <= referenceMonth) {
+          return month;
+        }
+
+        return {
+          ...month,
+          amount: 0,
+          status: EMonthStatus.PAID,
+        };
       });
     }
 

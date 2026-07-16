@@ -51,8 +51,10 @@ export type BuildMonthPersistByInstallmentsParams = {
   amount: number,
   withStatus?: boolean;
   referenceDay: number;
+  referenceYear: number;
   referenceMonth: number;
   transactionDate: Date,
   currentInstallment?: number;
   totalOfInstallments: number;
+  allInstallmentsPaid: boolean;
 }

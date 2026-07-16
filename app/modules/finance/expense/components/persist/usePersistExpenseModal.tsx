@@ -37,7 +37,7 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
     closeModal();
   };
 
-  const handleOpenPersistUpload = (actionState: ActionState, response?: TExpenseUploadResponse) => {
+  const handleOpenPersistUpload = (actionState: ActionState, response?: TExpenseUploadResponse, expenses?: Array<TExpense>) => {
     if (actionState.status === 'cancel') {
       closeModal();
       return;
@@ -52,7 +52,7 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
     }
     if (actionState.status === 'success' && response) {
       closeModal();
-      openPersistUpload(response);
+      openPersistUpload(response, expenses);
     }
   };
   
@@ -84,21 +84,21 @@ export function usePersistExpenseModal({ expenses, allocation, categories }: Use
     });
   };
   
-  const openPersistUpload = (response: TExpenseUploadResponse) => {
+  const openPersistUpload = (response: TExpenseUploadResponse, expenses?: Array<TExpense>) => {
     openModal({
       width: '3xl',
       title: t('expense.upload.persist.title'),
-      body: (<PersistExpenseUpload response={response} categories={categories} onClose={handleClose} />),
+      body: (<PersistExpenseUpload response={response} expenses={expenses} categories={categories} onClose={handleClose} />),
     });
   };
   
-  const openUpload = () => {
+  const openUpload = (expenses?: Array<TExpense>) => {
     if (!allocation) return;
     openModal({
       title: t('expense.upload.title'),
       body: (
         <ExpenseUpload
-          onClose={(state, response) => handleOpenPersistUpload(state, response)}
+          onClose={(state, response) => handleOpenPersistUpload(state, response, expenses)}
           allocation={allocation}
         />
       ),

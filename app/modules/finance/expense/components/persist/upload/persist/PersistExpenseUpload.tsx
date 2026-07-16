@@ -25,7 +25,7 @@ import type { TCategory } from '../../../../../category';
 
 import { expenseBusiness } from '../../../../business';
 import {
-  TDraftExpenseUploaded ,
+  TDraftExpenseUploaded ,type TExpense ,
   TExpenseUploadResponse ,TPersistExpenseUploadInputs ,
 } from '../../../../types';
 import {
@@ -39,11 +39,12 @@ import {
 type PersistExpenseUploadProps = {
   onClose: (actionState: ActionState) => void;
   response: TExpenseUploadResponse;
+  expenses?: Array<TExpense>;
   categories: Array<TCategory>;
 }
 
 
-export default function PersistExpenseUpload({ response, onClose, categories }: PersistExpenseUploadProps) {
+export default function PersistExpenseUpload({ response, onClose, expenses, categories }: PersistExpenseUploadProps) {
   const { t } = useAppTranslation();
   const [state ,setState] = useState<ActionState>(INITIAL_ACTION_STATE);
   const [isPending ,setIsPending] = useState(false);
@@ -165,6 +166,7 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
     const toPersist = expenseBusiness.convertUploadedToPersist(
       response,
       draftExpenses,
+      expenses,
       paid,
     );
 
@@ -201,7 +203,7 @@ export default function PersistExpenseUpload({ response, onClose, categories }: 
     setIsPending(false);
     stopContentLoading();
 
-  }, [draftExpenses, paid, response, startContentLoading, stopContentLoading]);
+  }, [draftExpenses, expenses, paid, response, startContentLoading, stopContentLoading]);
 
   useEffect(() => {
     if (state.status !== 'idle') {

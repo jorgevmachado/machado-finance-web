@@ -17,7 +17,7 @@ import {
   TExpenseUploadExpenseItemResponse ,
   TPersistExpenseUploadInputs ,TExpenseMonth ,
 } from '../types';
-import { formatDateToDateString } from '@/app/utils';
+import { formatDateToDateString ,toSnakeCase } from '@/app/utils';
 
 export class ExpenseBusiness {
   public INITIAL_FILTERS: TExpenseFilter = {
@@ -107,6 +107,7 @@ export class ExpenseBusiness {
   public convertUploadedToPersist(
     response: TExpenseUploadResponse ,
     expenses: Array<TDraftExpenseUploaded> ,
+    entities?: Array<TExpense>,
     paid: boolean = false,
   ): TExpenseListPersist {
     const allocation = response.allocation;
@@ -128,34 +129,89 @@ export class ExpenseBusiness {
       allocation_id: allocation.id ,
       reference_year: reference_year ,
     };
-    const expensesToPersist: Array<TExpenseCreate> = expenses.map((expense) => ({
-      payee: expense.payee ,
-      months: monthBusiness.buildMonthPersistByInstallments({
+
+    const payeeCode = toSnakeCase(parent.payee);
+
+    const parentEntity = entities?.find((e) => e.payee_code === payeeCode && e.allocation.id === parent.allocation_id);
+
+    const expensesToPersist: Array<TExpenseCreate> = expenses.map((expense) => {
+      const payee_code = toSnakeCase(expense.payee);
+
+      const entity = entities?.find((e) => e.payee_code === payee_code && e.allocation.id === allocation.id);
+      const entityMonths = entity?.months.filter((m) => m.reference_month < reference_month);
+
+      const expenseToPersistMonths = monthBusiness.buildMonthPersistByInstallments({
         paid ,
         amount: expense.amount ,
         withStatus: true ,
         referenceDay ,
+        referenceYear: reference_year ,
         referenceMonth: reference_month ,
         transactionDate: expense.date ,
         currentInstallment: expense.current_installment ,
         totalOfInstallments: expense.total_of_installments ,
-      }) ,
-      category_id: expense.category.id ,
-      description: expense.payee ,
-      allocation_id: allocation.id ,
-      reference_year ,
-      reference_month,
-    }));
-    parent.months = this.convertParentMonths(expensesToPersist, referenceDay, bill_due_date, paid);
+        allInstallmentsPaid: expense.all_installments_paid ,
+      });
+
+      const months: Array<TMonthPersist> = [];
+      monthBusiness.MONTH_KEYS.forEach((_, index) => {
+        const expenseToPersistMonth = expenseToPersistMonths.find((m) => m.reference_month === index + 1);
+        if (!expenseToPersistMonth) {
+          return;
+        }
+        const entityMonth = entityMonths?.find((m) => m.reference_month === index + 1);
+        if (!entityMonth) {
+          months.push(expenseToPersistMonth);
+          return;
+        }
+
+        const entityPaidAt = entityMonth.paid_at ? new Date(entityMonth.paid_at) : undefined;
+        const entityTransactionDateDay = entityPaidAt ? entityPaidAt.getDate() : 10;
+
+        months.push({
+          status: entityMonth.status ,
+          amount: entityMonth.amount ,
+          reference_day: entityTransactionDateDay ,
+          reference_month: entityMonth.reference_month ,
+          transaction_date: entityPaidAt ? formatDateToDateString(entityPaidAt) : undefined ,
+        });
+      });
+
+      return {
+        payee: expense.payee ,
+        months: months ,
+        category_id: expense.category.id ,
+        description: expense.payee ,
+        allocation_id: allocation.id ,
+        reference_year ,
+        reference_month,
+      };
+    });
+    parent.months = this.convertParentMonths(expensesToPersist, referenceDay, bill_due_date, paid, reference_month, parentEntity);
     return {
       parent ,
-      expenses: expensesToPersist
+      expenses: expensesToPersist,
+      reference_month,
     };
   }
 
-  private convertParentMonths(expenses: Array<TExpenseCreate>, referenceDay: number, transaction_date: Date, paid: boolean) {
+  private convertParentMonths(expenses: Array<TExpenseCreate>, referenceDay: number, transaction_date: Date, paid: boolean, reference_month: number, parentEntity?: TExpense) {
     const months: Array<TMonthPersist> = [];
+    const parentMonths = parentEntity?.months.filter((m) => m.reference_month < reference_month);
     monthBusiness.MONTH_KEYS.forEach((_, index) => {
+      const parentMonth = parentMonths?.find((m) => m.reference_month === index + 1);
+      if (parentMonth) {
+        const parentTransactionDate = parentMonth.paid_at ? new Date(parentMonth.paid_at) : transaction_date;
+        const parentReferenceDay = parentTransactionDate.getDate();
+        months.push({
+          status: parentMonth.status ,
+          amount: parentMonth.amount ,
+          reference_day: parentReferenceDay ,
+          reference_month: parentMonth.reference_month ,
+          transaction_date: formatDateToDateString(parentTransactionDate) ,
+        });
+        return;
+      }
       const amount = this.calculateAmountByMonth(expenses ,index + 1);
       months.push({
         status: paid ? EMonthStatus.PAID : EMonthStatus.PENDING ,
