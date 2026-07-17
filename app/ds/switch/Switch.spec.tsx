@@ -2,6 +2,10 @@ import React from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/ds', () => ({
+  Text: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+}));
+
 import Switch from './index';
 
 describe('<Switch />', () => {

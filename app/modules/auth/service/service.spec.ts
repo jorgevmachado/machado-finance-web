@@ -1,3 +1,27 @@
+jest.mock('@/app/shared', () => ({
+  ApiBaseServiceAbstract: class {
+    public url: string;
+    public pathUrl: string;
+    public config: { headers: Record<string, string> };
+
+    constructor(baseUrl: string, pathUrl: string, token?: string) {
+      this.url = baseUrl;
+      this.pathUrl = pathUrl;
+      this.config = {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      };
+    }
+
+    public async post(): Promise<unknown> {
+      return undefined;
+    }
+
+    public async get(): Promise<unknown> {
+      return undefined;
+    }
+  },
+}));
+
 import { AuthService } from './service';
 
 describe('AuthService', () => {

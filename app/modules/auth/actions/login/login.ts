@@ -1,7 +1,7 @@
 'use server';
 import { redirect } from 'next/navigation';
 
-import { ActionState } from '@/app/actions';
+import { ActionState } from '@/app/shared/actions';
 
 import {
   mapLoginError,

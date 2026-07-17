@@ -7,7 +7,7 @@ import {
   type ActionState ,
   getStringValue ,
   toErrorState,
-} from '../../../../actions';
+} from '../../../../shared/actions';
 
 import {
   DEFAULT_LOGIN_ERROR_MESSAGE ,

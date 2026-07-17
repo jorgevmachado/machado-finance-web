@@ -1,4 +1,4 @@
-import type { ActionState } from '@/app/actions';
+import type { ActionState } from '@/app/shared/actions';
 
 const mockRedirect = jest.fn();
 const mockReadLoginPayload = jest.fn();

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { ColorProvider } from '@/app/shared';
+import { ColorProvider } from './index';
 import { useColor } from './useColor';
 
 const Consumer = () => {

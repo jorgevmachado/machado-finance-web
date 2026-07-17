@@ -1,4 +1,4 @@
-import { toErrorState } from '@/app/actions';
+import { toErrorState } from '@/app/shared/actions';
 
 import {
   DEFAULT_LOGIN_ERROR_MESSAGE,

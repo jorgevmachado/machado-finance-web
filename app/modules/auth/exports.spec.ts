@@ -1,6 +1,30 @@
+jest.mock('./constants', () => ({
+  AUTH_COOKIE_NAME: 'auth-token',
+  PASSWORD_PATTERN: /abc/,
+  PASSWORD_RULE_MESSAGE: 'i18n:auth.errors.passwordRule',
+}));
+jest.mock('./enum', () => ({
+  EUserRole: { USER: 'USER' },
+  EUserStatus: { ACTIVE: 'ACTIVE' },
+}));
+jest.mock('./pages', () => ({
+  LoginPage: () => null,
+}));
+jest.mock('./provider', () => ({
+  UserProvider: () => null,
+  useUser: jest.fn(),
+}));
+jest.mock('./service', () => ({
+  authService: { login: jest.fn() },
+}));
+jest.mock('./token', () => ({
+  createMockAuthToken: jest.fn(),
+  extractAuthToken: jest.fn(),
+  getAuthTokenExpiration: jest.fn(),
+  isValidAuthToken: jest.fn(),
+}));
+
 import * as authModule from './index';
-import * as authActions from './actions';
-import * as authServer from './server';
 
 describe('auth module exports', () => {
   it('exports public auth APIs from root index', () => {
@@ -14,23 +38,8 @@ describe('auth module exports', () => {
     expect(authModule.LoginPage).toBeDefined();
   });
 
-  it('exports auth action functions and messages', () => {
-    expect(authActions.loginAction).toBeDefined();
-    expect(authActions.logoutAction).toBeDefined();
-    expect(authActions.readLoginPayload).toBeDefined();
-    expect(authActions.validateLoginPayload).toBeDefined();
-    expect(authActions.mapLoginError).toBeDefined();
-    expect(authActions.readRegisterPayload).toBeDefined();
-    expect(authActions.validateRegisterPayload).toBeDefined();
-    expect(authActions.DEFAULT_LOGIN_ERROR_MESSAGE).toBeDefined();
-    expect(authActions.PASSWORD_RULE_MESSAGE).toBeDefined();
-  });
-
-  it('exports auth server helpers', () => {
-    expect(authServer.setAuthCookie).toBeDefined();
-    expect(authServer.clearAuthCookie).toBeDefined();
-    expect(authServer.getServerSession).toBeDefined();
-    expect(authServer.getAuthenticatedUser).toBeDefined();
-    expect(authServer.getAuthenticatedUserBootstrap).toBeDefined();
+  it('exports auth constants from root index', () => {
+    expect(authModule.PASSWORD_RULE_MESSAGE).toBe('i18n:auth.errors.passwordRule');
+    expect(authModule.AUTH_COOKIE_NAME).toBe('auth-token');
   });
 });

@@ -1,3 +1,8 @@
 import type { TEntity } from '@/app/shared';
 
-export type TFinance = TEntity & {}
+import type { TCategory } from '@/app/modules/category';
+
+export type TFinance = TEntity & {
+  user_id: string;
+  categories: Array<TCategory>;
+}

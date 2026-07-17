@@ -4,3 +4,4 @@ export type TEntity = {
   updated_at?: Date;
   deleted_at?: Date;
 }
+

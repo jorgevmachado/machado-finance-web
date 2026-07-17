@@ -257,7 +257,7 @@ describe('usePaginatedList', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.errorMessage).toBe('translated:account.list.error');
+      expect(result.current.errorMessage).toBe('');
       expect(result.current.isLoading).toBe(false);
     });
   });
@@ -282,7 +282,30 @@ describe('usePaginatedList', () => {
     );
 
     await waitFor(() => {
+      expect(result.current.errorMessage).toBe('');
+    });
+  });
+
+  it('falls back to fetchErrorMessage when backend error message is undefined', async () => {
+    const fetchPaginatedList = jest.fn().mockResolvedValue({
+      error: true,
+      data: undefined,
+      message: undefined,
+    });
+
+    const { result } = renderHook(() =>
+      usePaginatedList<Item, Filters>({
+        initialFilters,
+        normalizeFilters: (nextFilters) => nextFilters,
+        fetchPaginatedList,
+        initialInputFilters,
+        fetchErrorMessage: 'fallback.error',
+      }),
+    );
+
+    await waitFor(() => {
       expect(result.current.errorMessage).toBe('fallback.error');
+      expect(result.current.isLoading).toBe(false);
     });
   });
 

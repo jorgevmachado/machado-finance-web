@@ -39,13 +39,20 @@ jest.mock('@/app/ds', () => ({
 }));
 
 jest.mock('@/app/shared', () => ({
-  ...jest.requireActual('@/app/shared'),
   createI18nMessage: (key: string) => `i18n:${key}`,
   useAppTranslation: () => ({
     t: (key: string) => key,
   }),
   translateI18nMessage: (_t: (key: string) => string, message?: string) =>
     `translated:${message}`,
+}));
+
+jest.mock('@/app/shared/actions/state', () => ({
+  INITIAL_ACTION_STATE: { status: 'idle', type: 'other', message: '' },
+}));
+
+jest.mock('@/app/modules/auth/actions', () => ({
+  loginAction: jest.fn(),
 }));
 
 import LoginPage from './LoginPage';

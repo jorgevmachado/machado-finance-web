@@ -1,5 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/shared', () => ({
+  useAppTranslation: () => ({
+    t: (key: string, params?: { page?: number }) => {
+      if (key === 'pagination.goToPage') return `Go to page ${params?.page ?? ''}`.trim();
+      if (key === 'pagination.previous') return 'Go to previous page';
+      if (key === 'pagination.next') return 'Go to next page';
+      if (key === 'pagination.ariaLabel') return 'Pagination';
+      return key;
+    },
+  }),
+}));
+
 import Pagination from './Pagination';
 
 describe('Pagination', () => {

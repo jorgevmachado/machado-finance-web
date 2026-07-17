@@ -55,7 +55,7 @@ const usePaginatedList = <TItem, TFilters>({
       }
 
       if (response.error && !response?.data) {
-        const message = response.message || t(response.i18nMessageError);
+        const message = response.message;
         setState((previousState) => ({
           ...previousState,
           isLoading: false,

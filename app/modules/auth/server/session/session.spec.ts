@@ -3,7 +3,7 @@ import {
   clearAuthCookie ,
   getServerSession ,
   setAuthCookie,
-} from '@/app/modules/auth/server';
+} from './session';
 
 describe('auth session helpers', () => {
   it('returns true when token has a valid expiration date', () => {

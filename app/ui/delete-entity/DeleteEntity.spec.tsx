@@ -73,7 +73,7 @@ describe('DeleteEntity', () => {
     fireEvent.click(screen.getByRole('button', { name: 'translated:form.delete' }));
 
     await waitFor(() => {
-      expect(fetchDelete).toHaveBeenCalledWith({ identifier: 'item-1' });
+      expect(fetchDelete).toHaveBeenCalledWith('item-1');
       expect(onClose).toHaveBeenCalledWith({
         status: 'success',
         type: 'delete',

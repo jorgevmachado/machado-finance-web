@@ -1,3 +1,7 @@
+jest.mock('@/app/shared', () => ({
+  createI18nMessage: (key: string) => `i18n:${key}`,
+}));
+
 import {
   DEFAULT_LOGIN_ERROR_MESSAGE,
   INVALID_BIRTH_DATE_MESSAGE,

@@ -2,6 +2,10 @@ import React from 'react';
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/ds', () => ({
+  Text: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+}));
+
 import Select from './index';
 
 describe('<Select />', () => {

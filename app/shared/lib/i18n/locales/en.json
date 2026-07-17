@@ -1,4 +1,50 @@
 {
+  "filters": {
+    "label": {
+      "year": "Year",
+      "name": "Name",
+      "order": "Order",
+      "type": "Type",
+      "status": "Status",
+      "isActive": "Is Active",
+      "isInactive": "Is Inactive",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    },
+    "placeholder": {
+      "year": "Select a year",
+      "name": "Search by name",
+      "order": "Search by order",
+      "type": "Search by type",
+      "status": "Search by status",
+      "isActive": "Search by is active",
+      "isInactive": "Search by is inactive",
+      "createdAt": "Search by created at",
+      "updatedAt": "Search by updated at"
+    },
+    "apply": "Apply filters",
+    "clear": "Clear filters",
+    "noOptions": "No options found."
+  },
+  "common": {
+    "add": "Add",
+    "added": "Added",
+    "total": "Total",
+    "select": "Select",
+    "status": "Status",
+    "amount": "Amount",
+    "actions": "Actions",
+    "viewMore": "View more",
+    "loading": "Loading...",
+    "noOptions": "No options available.",
+    "noDataFound": "No data found.",
+    "messages": {
+      "error": {
+        "name": "Name is invalid.",
+        "description": "Description is invalid."
+      }
+    }
+  },
   "home": {
     "title": "Welcome to the Finance System",
     "subtitle": "Manage your finances efficiently and effectively."
@@ -77,33 +123,7 @@
       "accountCreated": "Account created! Please log in."
     }
   },
-  "common": {
-    "add": "Add",
-    "added": "Added",
-    "total": "Total",
-    "select": "Select",
-    "status": "Status",
-    "amount": "Amount",
-    "actions": "Actions",
-    "viewMore": "View more",
-    "loading": "Loading...",
-    "noOptions": "No options available.",
-    "noDataFound": "No data found."
-  },
-  "filters": {
-    "year": "Year",
-    "apply": "Apply filters",
-    "clear": "Clear filters",
-    "noOptions": "No options found.",
-    "name": "Name",
-    "order": "Order",
-    "type": "Type",
-    "status": "Status",
-    "isActive": "Is Active",
-    "isInactive": "Is Inactive",
-    "createdAt": "Created At",
-    "updatedAt": "Updated At"
-  },
+
   "pagination": {
     "ariaLabel": "Pagination",
     "goToPage": "Go to page {{page}}",
@@ -155,11 +175,11 @@
         "update": "An error occurred while updating the category.",
         "delete": "An error occurred while deleting the category."
       },
-        "success": {
+      "success": {
         "create": "Category created successfully.",
         "update": "Category updated successfully.",
         "delete": "Category deleted successfully."
-        },
+      },
       "updated": "Category updated successfully.",
       "created": "Category created successfully.",
       "deleted": "Category deleted successfully."

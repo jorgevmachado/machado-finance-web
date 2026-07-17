@@ -2,6 +2,71 @@ import React from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/shared', () => ({
+  useAppTranslation: () => ({
+    t: (key: string) => {
+      if (key === 'filters.apply') return 'Apply filters';
+      if (key === 'filters.clear') return 'Clear filters';
+      if (key === 'filters.noOptions') return 'No options found.';
+      if (key.startsWith('Loading ')) return key;
+      return key;
+    },
+  }),
+}));
+
+jest.mock('@/app/ds', () => ({
+  Text: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+  Button: ({
+    children,
+    onClick,
+    disabled,
+    type = 'button',
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+  }) => (
+    <button type={type} onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  ),
+  Input: ({
+    value,
+    placeholder,
+    onValueChange,
+  }: {
+    value: string;
+    placeholder?: string;
+    onValueChange?: (value: string) => void;
+  }) => (
+    <input
+      role='textbox'
+      value={value}
+      placeholder={placeholder}
+      onChange={(event) => onValueChange?.(event.currentTarget.value)}
+    />
+  ),
+  Autocomplete: ({
+    value,
+    placeholder,
+    onValueChange,
+    isLoading,
+  }: {
+    value: string;
+    placeholder?: string;
+    onValueChange?: (value: string) => void;
+    isLoading?: boolean;
+  }) => (
+    <input
+      role='combobox'
+      value={value}
+      placeholder={isLoading ? 'Loading region...' : placeholder}
+      onChange={(event) => onValueChange?.(event.currentTarget.value)}
+    />
+  ),
+}));
+
 import Filters from './Filters';
 import type { FiltersProps } from './types';
 

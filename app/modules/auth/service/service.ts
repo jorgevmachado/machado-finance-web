@@ -1,10 +1,10 @@
-import { BaseServiceAbstract } from '@/app/shared';
+import { ApiBaseServiceAbstract } from '@/app/shared';
 
 import { extractAuthToken } from '../token';
 
 import type { LoginResponsePayload , RegisterResponse , SignInParams , SignUpParams , TUser } from '../types';
 
-export class AuthService extends BaseServiceAbstract<TUser, unknown, unknown> {
+export class AuthService extends ApiBaseServiceAbstract<TUser, unknown, unknown> {
 
   constructor(baseUrl: string ,token?: string) {
     super(baseUrl ,'auth' ,token);

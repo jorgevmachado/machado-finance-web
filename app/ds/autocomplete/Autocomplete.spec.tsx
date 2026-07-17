@@ -2,6 +2,50 @@ import React from 'react';
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/ds', () => ({
+  Input: ({
+    value,
+    name,
+    role,
+    onValueChange,
+    onFocus,
+    onBlur,
+    onKeyDown,
+    onClear,
+    showClearButton,
+    placeholder,
+  }: {
+    value: string;
+    name: string;
+    role?: string;
+    onValueChange?: (value: string, event: React.ChangeEvent<HTMLInputElement>) => void;
+    onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+    onClear?: () => void;
+    showClearButton?: boolean;
+    placeholder?: string;
+  }) => (
+    <div>
+      <input
+        role={role}
+        name={name}
+        value={value}
+        placeholder={placeholder}
+        onChange={(event) => onValueChange?.(event.currentTarget.value, event)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+      />
+      {showClearButton ? (
+        <button type='button' aria-label='Clear input' onClick={onClear}>
+          Clear input
+        </button>
+      ) : null}
+    </div>
+  ),
+}));
+
 import Autocomplete from './index';
 
 const OPTIONS = [

@@ -3,7 +3,6 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 jest.mock('@/app/shared', () => ({
-  ...jest.requireActual('@/app/shared'),
   ColorProvider: ({ children }: Readonly<{ children: React.ReactNode }>) => <>{children}</>,
   useColor: () => ({ main: '#2563eb' }),
 }));
@@ -25,6 +24,15 @@ jest.mock('next/navigation', () => ({
 
 import { usePathname } from 'next/navigation';
 const mockUsePathname = usePathname as jest.Mock;
+const mockStartPageLoading = jest.fn();
+const mockStopPageLoading = jest.fn();
+
+jest.mock('@/app/ds', () => ({
+  useLoading: () => ({
+    startPageLoading: mockStartPageLoading,
+    stopPageLoading: mockStopPageLoading,
+  }),
+}));
 
 // ─── Loading ──────────────────────────────────────────────────────────────────
 

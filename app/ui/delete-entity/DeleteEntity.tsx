@@ -2,16 +2,15 @@ import { useCallback } from 'react';
 
 import {
   MessageResponse ,
-  TBffDeleteParams ,
   TBffResponse ,
   useAppTranslation,
 } from '@/app/shared';
 
 import { Button ,useLoading } from '@/app/ds';
 
-import { type ActionState } from '@/app/actions';
+import { type ActionState } from '@/app/shared/actions';
 
-type FetchDeleteFn = (params: TBffDeleteParams) => Promise<TBffResponse<MessageResponse>>;
+type FetchDeleteFn = (param: string) => Promise<TBffResponse<MessageResponse>>;
 
 type DeleteEntityProps = {
   onClose: (actionState: ActionState) => void;
@@ -33,7 +32,7 @@ export default function DeleteEntity({
   const handleOnDelete = useCallback(async () => {
     startContentLoading();
     try {
-      const response = await fetchDelete({ identifier });
+      const response = await fetchDelete( identifier );
 
       onClose({ status: response.error ? 'error' : 'success', type: 'delete', message: response.message });
     } catch (error) {

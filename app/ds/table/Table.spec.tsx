@@ -1,5 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
+jest.mock('@/app/ds', () => ({
+  Text: ({ children, className }: { children: unknown; className?: string }) => (
+    <span className={className}>{children as string}</span>
+  ),
+}));
+
 import Table from './Table';
 import { ETypeTableHeader } from './header';
 import type { TableHeaderItem } from './header';

@@ -3,6 +3,33 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 
+jest.mock('@/app/ds', () => ({
+  Button: ({
+    children,
+    onClick,
+    disabled,
+    type = 'button',
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+  }) => (
+    <button type={type} disabled={disabled} onClick={onClick}>
+      {children}
+    </button>
+  ),
+  Text: ({
+    children,
+    as: As = 'span',
+    ...props
+  }: {
+    children: React.ReactNode;
+    as?: 'h2' | 'p' | 'span';
+    [key: string]: unknown;
+  }) => <As {...props}>{children}</As>,
+}));
+
 import Modal from './Modal';
 import { useModal } from './useModal';
 
