@@ -21,5 +21,6 @@ export {
   type TPaginatedMeta ,
 } from './http';
 export * from './lib';
+export * from './messages';
 export type { TEntity } from './types';
 export * from './validator';

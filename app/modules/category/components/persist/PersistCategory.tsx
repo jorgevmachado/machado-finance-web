@@ -2,8 +2,12 @@
 import React ,{ useEffect } from 'react';
 
 import {
-  ActionState ,createI18nMessage ,
-  INITIAL_ACTION_STATE ,mapError ,toErrorState ,translateI18nMessage ,
+  ActionState ,
+  createState ,
+  INITIAL_ACTION_STATE ,
+  mapError ,
+  toErrorState ,
+  translateI18nMessage ,
   useAppTranslation ,
 } from '@/app/shared';
 
@@ -12,7 +16,6 @@ import { Button ,Card ,Input ,Text ,useLoading } from '@/app/ds';
 import type { TCategory ,TCategoryDraft } from '../../types';
 import { categoryBffService } from '../../api';
 import { categoryValidator } from '../../validator';
-
 
 type PersistCategoryProps = {
   onClose: (actionState: ActionState) => void;
@@ -53,18 +56,14 @@ export default function PersistCategory({
         return;
       }
     } catch (error) {
-      setState(mapError(error ,'category.messages.error.create'));
+      setState(mapError(error , 'category', 'create'));
       setIsPending(false);
       return;
     } finally {
       stopContentLoading();
     }
 
-    setState({
-      type: 'create' ,
-      status: 'success' ,
-      message: 'category.messages.success.create' ,
-    });
+    setState(createState('category' ,'create' ,'success'));
     setIsPending(false);
     stopContentLoading();
 
@@ -82,7 +81,7 @@ export default function PersistCategory({
           return;
         }
       } catch (error) {
-        setState(mapError(error ,'category.messages.error.update'));
+        setState(mapError(error , 'category', 'update'));
         setIsPending(false);
         return;
       } finally {
@@ -90,15 +89,11 @@ export default function PersistCategory({
       }
     }
 
-    setState({
-      type: 'update' ,
-      status: 'success' ,
-      message: 'category.messages.success.update' ,
-    });
+    setState(createState('category' ,'update' ,'success'));
     setIsPending(false);
     stopContentLoading();
   };
-  
+
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 

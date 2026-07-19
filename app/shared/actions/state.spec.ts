@@ -1,9 +1,10 @@
 import {
-  getStringValue,
-  INITIAL_ACTION_STATE,
-  mapError,
-  toErrorState,
-  UNAUTHORIZED_ERROR_MESSAGE,
+  createState ,
+  getStringValue ,
+  INITIAL_ACTION_STATE ,
+  mapError ,
+  toErrorState ,
+  UNAUTHORIZED_ERROR_MESSAGE ,
 } from './state';
 
 describe('modules/actions state helpers', () => {
@@ -57,14 +58,33 @@ describe('modules/actions state helpers', () => {
           statusCode: 400,
           error: 'bad request',
         },
-        'fallback message',
+        'common',
+        'create',
       ),
     ).toEqual(toErrorState('custom response error'));
   });
 
   it('maps unknown error to default message', () => {
-    expect(mapError(undefined, 'fallback message')).toEqual(
-      toErrorState('fallback message'),
+    expect(mapError(undefined, 'common','create')).toEqual(
+      toErrorState('common.messages.error.create'),
     );
   });
+
+  it('should return create state', () => {
+    const i18nKey = 'category';
+    const type = 'create';
+    const status = 'success';
+
+    const expectedState = {
+      type: 'create',
+      status: 'success',
+      message: 'category.messages.success.create',
+    };
+
+    const result = createState(i18nKey, type, status);
+
+    expect(result).toEqual(expectedState);
+  });
+
+
 });
