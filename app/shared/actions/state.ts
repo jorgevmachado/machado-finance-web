@@ -1,4 +1,4 @@
-import { createI18nMessage ,createMessages ,ResponseError } from '@/app/shared';
+import { createI18nMessage ,createActionMessages ,ResponseError } from '@/app/shared';
 
 export type ActionStateType = 'create' | 'update' | 'delete' | 'other';
 
@@ -35,13 +35,13 @@ export const toErrorState = (message: string, type:  ActionStateType = 'other'):
 
 export const mapError = (error: unknown, i18nKey: string, type:  ActionStateType): ActionState => {
   const responseError = error as ResponseError | undefined;
-  const message = responseError?.message || createMessages(i18nKey, type, 'error');
+  const message = responseError?.message || createActionMessages(i18nKey, type, 'error');
 
   return toErrorState(message);
 };
 
 export const createState = (i18nKey: string, type:  ActionStateType, status: ActionStateStatus): ActionState => {
-  const message = createMessages(i18nKey, type, status);
+  const message = createActionMessages(i18nKey, type, status);
   
   return {  
     type,

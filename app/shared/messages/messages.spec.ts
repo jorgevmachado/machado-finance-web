@@ -1,14 +1,14 @@
-import { createMessages } from '@/app/shared/messages/messages';
+import { createActionMessages } from '@/app/shared/messages/messages';
 
 describe('Messages', () => {
-  describe('createMessages', () => {
+  describe('createActionMessages', () => {
     it('should return the correct message key for create success', () => {
       const key = 'category';
       const type = 'create';
       const status = 'success';
       const expectedMessage = 'category.messages.success.create';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
@@ -18,7 +18,7 @@ describe('Messages', () => {
       const status = 'success';
       const expectedMessage = 'category.messages.success.update';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
@@ -28,7 +28,7 @@ describe('Messages', () => {
       const status = 'success';
       const expectedMessage = 'category.messages.success.delete';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
@@ -39,7 +39,7 @@ describe('Messages', () => {
       const status = 'error';
       const expectedMessage = 'category.messages.error.create';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
@@ -49,7 +49,7 @@ describe('Messages', () => {
       const status = 'error';
       const expectedMessage = 'category.messages.error.update';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
@@ -59,7 +59,7 @@ describe('Messages', () => {
       const status = 'error';
       const expectedMessage = 'category.messages.error.delete';
 
-      const result = createMessages(key, type, status);
+      const result = createActionMessages(key, type, status);
 
       expect(result).toBe(expectedMessage);
     });
