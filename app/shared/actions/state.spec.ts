@@ -17,7 +17,7 @@ describe('modules/actions state helpers', () => {
   });
 
   it('exports unauthorized message as i18n key', () => {
-    expect(UNAUTHORIZED_ERROR_MESSAGE).toBe('i18n:auth.errors.accessDenied');
+    expect(UNAUTHORIZED_ERROR_MESSAGE).toBe('i18n:auth.unauthorized');
   });
 
   it('gets and trims string value from form data', () => {
@@ -66,7 +66,7 @@ describe('modules/actions state helpers', () => {
 
   it('maps unknown error to default message', () => {
     expect(mapError(undefined, 'common','create')).toEqual(
-      toErrorState('common.messages.error.create'),
+      toErrorState('common.message.error.create'),
     );
   });
 
@@ -78,7 +78,7 @@ describe('modules/actions state helpers', () => {
     const expectedState = {
       type: 'create',
       status: 'success',
-      message: 'category.messages.success.create',
+      message: 'category.message.success.create',
     };
 
     const result = createState(i18nKey, type, status);

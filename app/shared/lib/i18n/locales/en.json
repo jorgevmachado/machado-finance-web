@@ -38,16 +38,12 @@
     "loading": "Loading...",
     "noOptions": "No options available.",
     "noDataFound": "No data found.",
-    "messages": {
+    "message": {
       "error": {
         "name": "Name is invalid.",
         "description": "Description is invalid."
       }
     }
-  },
-  "home": {
-    "title": "Welcome to the Finance System",
-    "subtitle": "Manage your finances efficiently and effectively."
   },
   "form": {
     "save": "Save",
@@ -72,55 +68,74 @@
   },
   "auth": {
     "login": {
-      "title": "Sign in",
-      "subtitle": "Welcome back! Enter your credentials below.",
-      "credentialLabel": "Email or Username",
-      "credentialPlaceholder": "you@example.com or your_username",
-      "passwordLabel": "Password",
-      "passwordPlaceholder": "••••••••",
-      "submit": "Sign in",
-      "submitting": "Signing in...",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up"
+      "message": {
+        "error": {
+          "credential": "Please enter your email or username.",
+          "password": "Password must contain at least 7 characters, one uppercase letter, and one special character.",
+          "default": "Unable to sign in. Please try again."
+        },
+        "success": "Login successful. Redirecting..."
+      },
+      "form": {
+        "title": "Sign in",
+        "subtitle": "Welcome back! Enter your credentials below.",
+        "submit": "Sign in",
+        "submitting": "Signing in...",
+        "label": {
+          "credential": "Email or Username",
+          "password": "Password"
+        },
+        "placeholder": {
+          "credential": "you@example.com or your_username",
+          "password": "••••••••"
+        },
+        "redirect": {
+          "description": "Don't have an account?",
+          "link": "Sign up"
+        }
+      }
     },
-    "errors": {
-      "invalidCredential": "Please enter your email or username.",
-      "invalidFullName": "Please enter your full name.",
-      "invalidBirthDate": "Please provide your birth date.",
-      "invalidGender": "Please select your gender.",
-      "invalidUsername": "Please enter a username.",
-      "invalidEmail": "Please enter a valid email address.",
-      "passwordConfirmation": "Password confirmation does not match.",
-      "passwordRule": "Password must contain at least 7 characters, one uppercase letter, and one special character.",
-      "defaultLogin": "Unable to sign in. Please try again.",
-      "accessDenied": "You do not have permission to access this page."
-    },
+    "unauthorized": "You are not authorized to access this page.",
     "register": {
-      "title": "Create an account",
-      "subtitle": "Fill in the details below to get started.",
-      "successTitle": "Account created!",
-      "successAction": "Go to Sign in",
-      "fullName": "Full Name",
-      "fullNamePlaceholder": "Ash Ketchum",
-      "email": "Email",
-      "emailPlaceholder": "you@example.com",
-      "username": "Username",
-      "usernamePlaceholder": "ash_ketchum",
-      "gender": "Gender",
-      "genderPlaceholder": "Select gender",
-      "genderMale": "Male",
-      "genderFemale": "Female",
-      "genderOther": "Other",
-      "birthDate": "Date of Birth",
-      "password": "Password",
-      "confirmPassword": "Confirm Password",
-      "submit": "Create account",
-      "submitting": "Creating account...",
-      "haveAccount": "Already have an account?",
-      "signIn": "Sign in"
-    },
-    "messages": {
-      "accountCreated": "Account created! Please log in."
+      "message": {
+        "error": {
+          "name": "Please enter your name.",
+          "email": "Please enter a valid email address.",
+          "username": "Please enter a username.",
+          "password": "Password must contain at least 7 characters, one uppercase letter, and one special character.",
+          "confirm_password": "Password confirmation does not match.",
+          "default": "Unable to create account. Please try again."
+        },
+        "success": "Account created! Please log in."
+      },
+      "form": {
+        "title": "Create an account",
+        "subtitle": "Fill in the details below to get started.",
+        "submit": "Create account",
+        "submitting": "Creating account...",
+        "label": {
+          "name": "Name",
+          "email": "Email",
+          "username": "Username",
+          "password": "Password",
+          "confirmPassword": "Confirm Password"
+        },
+        "placeholder": {
+          "name": "Your name",
+          "email": "you@example.com",
+          "username": "Your username",
+          "password": "••••••••",
+          "confirmPassword": "••••••••"
+        },
+        "redirect": {
+          "description": "Already have an account?",
+          "link": "Sign in"
+        },
+        "success": {
+          "title": "Account created!",
+          "action": "Go to Sign in"
+        }
+      }
     }
   },
 
@@ -169,7 +184,7 @@
       "success": "Category deleted successfully.",
       "error": "An error occurred while deleting the category."
     },
-    "messages": {
+    "message": {
       "error": {
         "create": "An error occurred while creating the category.",
         "update": "An error occurred while updating the category.",
@@ -217,7 +232,7 @@
         "description": "Enter description"
       }
     },
-    "messages": {
+    "message": {
       "updated": "Income updated successfully.",
       "created": "Income created successfully.",
       "deleted": "Income deleted successfully."
@@ -240,7 +255,7 @@
         "success": "Allocation deleted successfully.",
         "error": "An error occurred while deleting the allocation."
     },
-    "messages": {
+    "message": {
       "error": {
         "create": "An error occurred while creating the allocation.",
         "update": "An error occurred while updating the allocation.",
@@ -269,7 +284,7 @@
       "title": "Incoming Transfer",
       "description": "Incoming"
     },
-    "messages": {
+    "message": {
       "updated": "Transfer updated successfully.",
       "created": "Transfer created successfully.",
       "deleted": "Transfer deleted successfully."
@@ -327,7 +342,7 @@
     "total_outgoing_transfers": "Total Outgoing Transfers",
     "total_incoming_transfers": "Total Incoming Transfers",
     "total_allocation_contributions": "Total Contributions",
-    "messages": {
+    "message": {
       "error": {
         "create": "An error occurred while creating the account.",
         "update": "An error occurred while updating the account.",
@@ -399,7 +414,7 @@
         "description": "Enter description"
       }
     },
-    "messages": {
+    "message": {
       "error": {
         "create": "An error occurred while creating the expense.",
         "update": "An error occurred while updating the expense.",
@@ -450,7 +465,7 @@
         "description": "Enter description"
       }
     },
-    "messages": {
+    "message": {
       "error": {
         "create": "An error occurred while creating the contribution.",
         "update": "An error occurred while updating the contribution.",

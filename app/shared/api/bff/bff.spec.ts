@@ -50,13 +50,13 @@ describe('BffBaseServiceAbstract', () => {
       data: [{ id: '1', name: 'Food' }],
       error: false,
       status: 200,
-      message: 'category.messages.success.list',
+      message: 'category.message.success.list',
       responseMessage: 'Ok',
     });
     await expect(service.list({})).resolves.toEqual({
       error: true,
       status: 500,
-      message: 'category.messages.error.list',
+      message: 'category.message.error.list',
       responseMessage: 'boom',
     });
 
@@ -97,7 +97,7 @@ describe('BffBaseServiceAbstract', () => {
     validator.validateCreate.mockReturnValueOnce({
       status: 'error',
       type: 'create',
-      message: 'category.messages.error.invalid',
+      message: 'category.message.error.invalid',
     });
     const service = new TestBffService(validator);
     const postSpy = jest.spyOn(service, 'post');
@@ -105,8 +105,8 @@ describe('BffBaseServiceAbstract', () => {
     await expect(service.create({ name: ' invalid ' })).resolves.toEqual({
       error: true,
       status: 400,
-      message: 'category.messages.error.invalid',
-      responseMessage: 'category.messages.error.invalid',
+      message: 'category.message.error.invalid',
+      responseMessage: 'category.message.error.invalid',
     });
     expect(postSpy).not.toHaveBeenCalled();
   });
@@ -116,7 +116,7 @@ describe('BffBaseServiceAbstract', () => {
     validator.validateUpdate.mockReturnValueOnce({
       status: 'error',
       type: 'update',
-      message: 'category.messages.error.invalidUpdate',
+      message: 'category.message.error.invalidUpdate',
     });
     const service = new TestBffService(validator);
     const putSpy = jest.spyOn(service, 'path');
@@ -124,8 +124,8 @@ describe('BffBaseServiceAbstract', () => {
     await expect(service.update('1', { name: ' invalid ' })).resolves.toEqual({
       error: true,
       status: 400,
-      message: 'category.messages.error.invalidUpdate',
-      responseMessage: 'category.messages.error.invalidUpdate',
+      message: 'category.message.error.invalidUpdate',
+      responseMessage: 'category.message.error.invalidUpdate',
     });
     expect(putSpy).not.toHaveBeenCalled();
   });

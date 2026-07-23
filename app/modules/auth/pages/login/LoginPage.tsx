@@ -17,13 +17,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-8">
-        <Text weight="bold" size="2xl" color="text-gray-900" className="mb-2">{t('auth.login.title')}</Text>
-        <Text size="sm" color="text-gray-500" className="mb-6">{t('auth.login.subtitle')}</Text>
+        <Text weight="bold" size="2xl" color="text-gray-900" className="mb-2">{t('auth.login.form.title')}</Text>
+        <Text size="sm" color="text-gray-500" className="mb-6">{t('auth.login.form.subtitle')}</Text>
 
         <form action={formAction} className="space-y-4">
           <div>
             <label htmlFor="credential" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('auth.login.credentialLabel')}
+              {t('auth.login.form.label.credential')}
             </label>
             <input
               id="credential"
@@ -32,13 +32,13 @@ export default function LoginPage() {
               required
               autoComplete="username"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder={t('auth.login.credentialPlaceholder')}
+              placeholder={t('auth.login.form.placeholder.credential')}
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              {t('auth.login.passwordLabel')}
+              {t('auth.login.form.label.password')}
             </label>
             <input
               id="password"
@@ -47,7 +47,7 @@ export default function LoginPage() {
               required
               autoComplete="current-password"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder={t('auth.login.passwordPlaceholder')}
+              placeholder={t('auth.login.form.placeholder.password')}
             />
           </div>
 
@@ -62,14 +62,14 @@ export default function LoginPage() {
             disabled={isPending}
             className="w-full py-2 px-4"
           >
-            {isPending ? t('auth.login.submitting') : t('auth.login.submit')}
+            {isPending ? t('auth.login.form.submitting') : t('auth.login.form.submit')}
           </Button>
         </form>
 
         <Text size="sm" color="text-gray-500" className="text-center">
-          {t('auth.login.noAccount')}{' '}
+          {t('auth.login.form.redirect.description')}{' '}
           <Link href="/register" className="text-indigo-600 hover:underline font-medium">
-            {t('auth.login.signUp')}
+            {t('auth.login.form.redirect.link')}
           </Link>
         </Text>
       </div>

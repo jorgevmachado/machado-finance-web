@@ -8,7 +8,7 @@ import {
   readLoginPayload,
   validateLoginPayload
 } from './validation';
-import { authService } from '../../service';
+import { authService } from '../../api/service';
 
 import { setAuthCookie } from '../../server/session';
 

@@ -14,7 +14,7 @@ jest.mock('./provider', () => ({
   UserProvider: () => null,
   useUser: jest.fn(),
 }));
-jest.mock('./service', () => ({
+jest.mock('./api/service', () => ({
   authService: { login: jest.fn() },
 }));
 jest.mock('./token', () => ({

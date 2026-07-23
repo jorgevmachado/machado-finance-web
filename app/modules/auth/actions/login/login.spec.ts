@@ -18,7 +18,7 @@ jest.mock('./validation', () => ({
   mapLoginError: (...args: Array<unknown>) => mockMapLoginError(...args),
 }));
 
-jest.mock('../../service', () => ({
+jest.mock('../../api/service', () => ({
   authService: () => ({
     login: (...args: Array<unknown>) => mockLogin(...args),
   }),

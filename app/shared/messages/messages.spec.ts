@@ -1,4 +1,4 @@
-import { createActionMessages } from '@/app/shared/messages/messages';
+import { createActionMessages } from './messages';
 
 describe('Messages', () => {
   describe('createActionMessages', () => {
@@ -6,7 +6,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'create';
       const status = 'success';
-      const expectedMessage = 'category.messages.success.create';
+      const expectedMessage = 'category.message.success.create';
 
       const result = createActionMessages(key, type, status);
 
@@ -16,7 +16,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'update';
       const status = 'success';
-      const expectedMessage = 'category.messages.success.update';
+      const expectedMessage = 'category.message.success.update';
 
       const result = createActionMessages(key, type, status);
 
@@ -26,7 +26,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'delete';
       const status = 'success';
-      const expectedMessage = 'category.messages.success.delete';
+      const expectedMessage = 'category.message.success.delete';
 
       const result = createActionMessages(key, type, status);
 
@@ -37,7 +37,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'create';
       const status = 'error';
-      const expectedMessage = 'category.messages.error.create';
+      const expectedMessage = 'category.message.error.create';
 
       const result = createActionMessages(key, type, status);
 
@@ -47,7 +47,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'update';
       const status = 'error';
-      const expectedMessage = 'category.messages.error.update';
+      const expectedMessage = 'category.message.error.update';
 
       const result = createActionMessages(key, type, status);
 
@@ -57,7 +57,7 @@ describe('Messages', () => {
       const key = 'category';
       const type = 'delete';
       const status = 'error';
-      const expectedMessage = 'category.messages.error.delete';
+      const expectedMessage = 'category.message.error.delete';
 
       const result = createActionMessages(key, type, status);
 

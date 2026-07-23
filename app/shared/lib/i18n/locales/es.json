@@ -73,7 +73,7 @@
       "haveAccount": "¿Ya tienes una cuenta?",
       "signIn": "Iniciar sesión"
     },
-    "messages": {
+    "message": {
       "accountCreated": "¡Cuenta creada! Inicia sesión."
     }
   },
@@ -149,7 +149,7 @@
       "success": "Categoría eliminada con éxito.",
       "error": "Ocurrió un error al eliminar la categoría."
     },
-    "messages": {
+    "message": {
       "updated": "Categoría actualizada con éxito.",
       "created": "Categoría creada con éxito.",
       "deleted": "Categoría eliminada con éxito."
@@ -173,7 +173,7 @@
         "success": "Ingreso eliminado con éxito.",
         "error": "Ocurrió un error al eliminar el ingreso."
     },
-    "messages": {
+    "message": {
         "updated": "Ingreso actualizado con éxito.",
         "created": "Ingreso creado con éxito.",
         "deleted": "Ingreso eliminado con éxito."
@@ -210,7 +210,7 @@
       "success": "Asignación eliminada con éxito.",
       "error": "Ocurrió un error al eliminar la asignación."
     },
-    "messages": {
+    "message": {
       "updated": "Asignación actualizada con éxito.",
       "created": "Asignación creada con éxito.",
       "deleted": "Asignación eliminada con éxito."
@@ -281,7 +281,7 @@
     "total_outgoing_transfers": "Total Transferencias Salientes",
     "total_incoming_transfers": "Total Transferencias Entrantes",
     "total_allocation_contributions": "Total Contribuciones",
-    "messages": {
+    "message": {
       "updated": "Cuenta actualizada con éxito.",
       "created": "Cuenta creada con éxito.",
       "deleted": "Cuenta eliminada con éxito."
@@ -342,7 +342,7 @@
         "installments": "Ingresa las cuotas"
       }
     },
-    "messages": {
+    "message": {
       "updated": "Gasto actualizado con éxito.",
       "created": "Gasto creado con éxito.",
       "deleted": "Gasto eliminado con éxito."
@@ -381,7 +381,7 @@
         "allocation": "Selecciona la asignación de la contribución"
       }
     },
-    "messages": {
+    "message": {
       "updated": "Contribución actualizada con éxito.",
       "created": "Contribución creada con éxito.",
       "deleted": "Contribución eliminada con éxito."

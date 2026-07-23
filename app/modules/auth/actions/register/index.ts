@@ -1,1 +1,2 @@
-export { readRegisterPayload, validateRegisterPayload } from './register';
+export { registerAction } from './register';
+export { readRegisterPayload, validateRegisterPayload } from './validation';

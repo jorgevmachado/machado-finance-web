@@ -52,46 +52,49 @@ jest.mock('@/app/shared/actions/state', () => ({
 }));
 
 jest.mock('@/app/modules/auth/actions', () => ({
-  loginAction: jest.fn(),
+  registerAction: jest.fn(),
 }));
 
-import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
 
-describe('LoginPage', () => {
+describe('RegisterPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders default login form', () => {
+  it('renders default register form', () => {
     mockUseActionState.mockReturnValue([
       { status: 'idle', message: '' },
       jest.fn(),
       false,
     ]);
 
-    render(<LoginPage />);
+    render(<RegisterPage />);
 
-    expect(screen.getByText('auth.login.form.title')).toBeInTheDocument();
-    expect(screen.getByLabelText('auth.login.form.label.credential')).toBeInTheDocument();
-    expect(screen.getByLabelText('auth.login.form.label.password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'auth.login.form.submit' })).toBeInTheDocument();
+    expect(screen.getByText('auth.register.form.title')).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.register.form.label.name')).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.register.form.label.email')).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.register.form.label.username')).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.register.form.label.password')).toBeInTheDocument();
+    expect(screen.getByLabelText('auth.register.form.label.confirm_password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'auth.register.form.submit' })).toBeInTheDocument();
     expect(screen.queryByText(/translated:/)).not.toBeInTheDocument();
   });
 
   it('renders translated error and pending submit label', () => {
     mockUseActionState.mockReturnValue([
-      { status: 'error', message: 'i18n:auth.login.message.error.credential' },
+      { status: 'error', message: 'i18n:auth.register.message.error.default' },
       jest.fn(),
       true,
     ]);
 
-    render(<LoginPage />);
+    render(<RegisterPage />);
 
     expect(
-      screen.getByText('translated:i18n:auth.login.message.error.credential'),
+      screen.getByText('translated:i18n:auth.register.message.error.default'),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'auth.login.form.submitting' }),
+      screen.getByRole('button', { name: 'auth.register.form.submitting' }),
     ).toBeDisabled();
   });
 });

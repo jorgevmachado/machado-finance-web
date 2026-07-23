@@ -41,7 +41,7 @@ export abstract class BffBaseServiceAbstract<T, TCreate, TUpdate, TDraft, TFilte
       return {
         error: true,
         status: response.statusCode,
-        message: `${this.i18nKey}.messages.error.${key}`,
+        message: `${this.i18nKey}.message.error.${key}`,
         responseMessage: response.message,
       };
     }
@@ -49,7 +49,7 @@ export abstract class BffBaseServiceAbstract<T, TCreate, TUpdate, TDraft, TFilte
       data: response as T,
       error: false,
       status: 200,
-      message: `${this.i18nKey}.messages.success.${key}`,
+      message: `${this.i18nKey}.message.success.${key}`,
       responseMessage: 'Ok',
     };
   }

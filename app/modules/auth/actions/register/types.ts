@@ -1,9 +1,5 @@
-export type RegisterUserPayload = {
-  email: string;
-  gender: string;
-  password: string;
-  username: string;
-  fullName: string;
-  birthDate: string;
+import type { SignUpParams } from '../../types';
+
+export type RegisterUserPayload = SignUpParams & {
   confirmPassword: string;
 };

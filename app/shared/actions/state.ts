@@ -17,7 +17,7 @@ export const INITIAL_ACTION_STATE: ActionState = {
   message: '',
 };
 
-export const UNAUTHORIZED_ERROR_MESSAGE = createI18nMessage('auth.errors.accessDenied');
+export const UNAUTHORIZED_ERROR_MESSAGE = createI18nMessage('auth.unauthorized');
 
 export const getStringValue = (formData: FormData, key: string): string => {
   const value = formData.get(key);

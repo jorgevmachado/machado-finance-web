@@ -1,8 +1,8 @@
 import { ApiBaseServiceAbstract } from '@/app/shared';
 
-import { extractAuthToken } from '../token';
+import { extractAuthToken } from '../../token';
 
-import type { LoginResponsePayload , RegisterResponse , SignInParams , SignUpParams , TUser } from '../types';
+import type { LoginResponsePayload , RegisterResponse , SignInParams , SignUpParams , TUser } from '../../types';
 
 export class AuthService extends ApiBaseServiceAbstract<TUser, unknown, unknown> {
 

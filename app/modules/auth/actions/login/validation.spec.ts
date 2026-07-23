@@ -4,7 +4,7 @@ import {
   DEFAULT_LOGIN_ERROR_MESSAGE,
   INVALID_CREDENTIAL_MESSAGE,
   PASSWORD_RULE_MESSAGE,
-} from '../messages';
+} from './messages';
 import {
   mapLoginError,
   readLoginPayload,

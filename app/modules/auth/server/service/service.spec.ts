@@ -2,7 +2,7 @@ const mockMe = jest.fn();
 const mockClearAuthCookie = jest.fn();
 const mockGetAuthTokenExpiration = jest.fn();
 
-jest.mock('../../service', () => ({
+jest.mock('../../api/service', () => ({
   authService: () => ({
     me: (...args: Array<unknown>) => mockMe(...args),
   }),

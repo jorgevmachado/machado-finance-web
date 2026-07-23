@@ -1,7 +1,7 @@
 import { ResponseError } from '@/app/shared';
 
 import type { TUser } from '../../types';
-import { authService } from '../../service';
+import { authService } from '../../api/service';
 import { getAuthTokenExpiration } from '../../token';
 
 import { clearAuthCookie } from '../session';

@@ -1,105 +1,108 @@
-import { toErrorState } from '@/app/shared/actions';
+import type { ActionState } from '@/app/shared/actions';
 
-import {
-  INVALID_BIRTH_DATE_MESSAGE,
-  INVALID_EMAIL_MESSAGE,
-  INVALID_FULL_NAME_MESSAGE,
-  INVALID_GENDER_MESSAGE,
-  INVALID_USERNAME_MESSAGE,
-  PASSWORD_CONFIRMATION_MESSAGE,
-  PASSWORD_RULE_MESSAGE,
-} from '../messages';
-import { readRegisterPayload, validateRegisterPayload } from './register';
+const mockReadRegisterPayload = jest.fn();
+const mockValidateRegisterPayload = jest.fn();
+const mockMapRegisterError = jest.fn();
+const mockRegister = jest.fn();
 
-const validPayload = {
-  email: 'user@example.com',
-  username: 'johndoe',
-  fullName: 'John Doe',
-  birthDate: '1990-01-01',
-  gender: 'male',
-  password: 'Secure@123',
-  confirmPassword: 'Secure@123',
-};
+jest.mock('./validation', () => ({
+  readRegisterPayload: (...args: Array<unknown>) => mockReadRegisterPayload(...args),
+  validateRegisterPayload: (...args: Array<unknown>) => mockValidateRegisterPayload(...args),
+  mapRegisterError: (...args: Array<unknown>) => mockMapRegisterError(...args),
+}));
 
-describe('auth register helpers', () => {
-  it('reads payload from form data', () => {
-    const formData = new FormData();
-    formData.set('email', ' user@example.com ');
-    formData.set('username', ' johndoe ');
-    formData.set('fullName', ' John Doe ');
-    formData.set('birthDate', '1990-01-01');
-    formData.set('gender', 'male');
-    formData.set('password', ' Secure@123 ');
-    formData.set('confirmPassword', ' Secure@123 ');
+jest.mock('../../api/service', () => ({
+  authService: () => ({
+    register: (...args: Array<unknown>) => mockRegister(...args),
+  }),
+}));
 
-    expect(readRegisterPayload(formData)).toEqual(validPayload);
+import { registerAction } from './register';
+
+
+
+describe('registerAction', () => {
+  const initialState: ActionState = {
+    type: 'other',
+    status: 'idle',
+    message: '',
+  };
+
+  const validPayload = {
+    name: 'John Doe',
+    email: 'user@example.com',
+    username: 'johndoe',
+    password: 'Secure@123',
+    confirmPassword: 'Secure@123',
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('returns full name error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        fullName: 'Jo',
-      }),
-    ).toEqual(toErrorState(INVALID_FULL_NAME_MESSAGE));
+  it('returns validation error without calling service', async () => {
+    const validationError: ActionState = {
+      type: 'other',
+      status: 'error',
+      message: 'invalid',
+    };
+
+    mockReadRegisterPayload.mockReturnValue(validPayload);
+    mockValidateRegisterPayload.mockReturnValue(validationError);
+
+    const result = await registerAction(initialState, new FormData());
+
+    expect(result).toEqual(validationError);
+    expect(mockRegister).not.toHaveBeenCalled();
   });
 
-  it('returns email error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        email: 'invalid-email',
-      }),
-    ).toEqual(toErrorState(INVALID_EMAIL_MESSAGE));
+  it('registers in, and returns success on valid input', async () => {
+    mockReadRegisterPayload.mockReturnValue({
+      name: 'John Doe',
+      email: 'user@example.com',
+      username: 'johndoe',
+      password: 'Secure@123',
+      confirmPassword: 'Secure@123',
+    });
+    mockValidateRegisterPayload.mockReturnValue(null);
+    mockRegister.mockResolvedValue({
+      type: 'create',
+      status: 'success',
+      message: 'Successfully registered',
+    });
+
+    await registerAction(initialState, new FormData());
+
+    expect(mockRegister).toHaveBeenCalledWith({
+      name: 'John Doe',
+      email: 'user@example.com',
+      username: 'johndoe',
+      password: 'Secure@123'
+    });
   });
 
-  it('returns username error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        username: '',
-      }),
-    ).toEqual(toErrorState(INVALID_USERNAME_MESSAGE));
-  });
+  it('maps and returns service errors', async () => {
+    const mappedError: ActionState = {
+      type: 'other',
+      status: 'error',
+      message: 'register failed',
+    };
+    const thrownError = new Error('boom');
 
-  it('returns birth date error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        birthDate: '',
-      }),
-    ).toEqual(toErrorState(INVALID_BIRTH_DATE_MESSAGE));
-  });
+    mockReadRegisterPayload.mockReturnValue({
+      name: 'John Doe',
+      email: 'user@example.com',
+      username: 'johndoe',
+      password: 'Secure@123',
+      confirmPassword: 'Secure@123',
+    });
+    mockValidateRegisterPayload.mockReturnValue(null);
+    mockRegister.mockRejectedValue(thrownError);
+    mockMapRegisterError.mockReturnValue(mappedError);
 
-  it('returns gender error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        gender: '',
-      }),
-    ).toEqual(toErrorState(INVALID_GENDER_MESSAGE));
-  });
+    const result = await registerAction(initialState, new FormData());
 
-  it('returns password rule error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        password: 'weak',
-        confirmPassword: 'weak',
-      }),
-    ).toEqual(toErrorState(PASSWORD_RULE_MESSAGE));
-  });
-
-  it('returns password confirmation error', () => {
-    expect(
-      validateRegisterPayload({
-        ...validPayload,
-        confirmPassword: 'Secure@124',
-      }),
-    ).toEqual(toErrorState(PASSWORD_CONFIRMATION_MESSAGE));
-  });
-
-  it('returns null for valid payload', () => {
-    expect(validateRegisterPayload(validPayload)).toBeNull();
+    expect(mockMapRegisterError).toHaveBeenCalledWith(thrownError);
+    expect(result).toEqual(mappedError);
   });
 });

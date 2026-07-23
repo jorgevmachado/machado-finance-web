@@ -1,7 +1,7 @@
 import { createI18nMessage, translateI18nMessage } from './messages';
 
-describe('i18n messages', () => {
-  it('creates i18n-prefixed messages', () => {
+describe('i18n message', () => {
+  it('creates i18n-prefixed message', () => {
     expect(createI18nMessage('filters.name')).toBe('i18n:filters.name');
   });
 
@@ -20,7 +20,7 @@ describe('i18n messages', () => {
     expect(t).not.toHaveBeenCalled();
   });
 
-  it('translates prefixed messages', () => {
+  it('translates prefixed message', () => {
     const t = jest.fn((value: string) => `translated:${value}`);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error

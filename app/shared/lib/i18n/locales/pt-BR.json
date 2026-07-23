@@ -73,7 +73,7 @@
       "haveAccount": "Já tem uma conta?",
       "signIn": "Entrar"
     },
-    "messages": {
+    "message": {
       "accountCreated": "Conta criada! Faça login."
     }
   },
@@ -149,7 +149,7 @@
       "success": "Categoria excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a categoria."
     },
-    "messages": {
+    "message": {
       "updated": "Categoria atualizada com sucesso.",
       "created": "Categoria criada com sucesso.",
       "deleted": "Categoria excluída com sucesso."
@@ -173,7 +173,7 @@
       "success": "Receita excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a receita."
     },
-    "messages": {
+    "message": {
       "updated": "Receita atualizada com sucesso.",
       "created": "Receita criada com sucesso.",
       "deleted": "Receita excluída com sucesso."
@@ -212,7 +212,7 @@
       "success": "Alocação excluída com sucesso.",
       "error": "Ocorreu um erro ao excluir a alocação."
     },
-    "messages": {
+    "message": {
       "updated": "Alocação atualizada com sucesso.",
       "created": "Alocação criada com sucesso.",
       "deleted": "Alocação excluída com sucesso."
@@ -231,7 +231,7 @@
       "title": "Transferência de entrada",
       "description": "Entrada"
     },
-    "messages": {
+    "message": {
       "updated": "Transferência atualizada com sucesso.",
       "created": "Transferência criada com sucesso.",
       "deleted": "Transferência excluída com sucesso."
@@ -288,7 +288,7 @@
     "total_outgoing_transfers": "Total Transferências de Saída",
     "total_incoming_transfers": "Total Transferências de Entrada",
     "total_allocation_contributions": "Total Contribuições",
-    "messages": {
+    "message": {
       "updated": "Conta atualizada com sucesso.",
       "created": "Conta criada com sucesso.",
       "deleted": "Conta excluída com sucesso."
@@ -350,7 +350,7 @@
         "installments": "Digite o parcelamento"
       }
     },
-    "messages": {
+    "message": {
       "updated": "Despesa atualizada com sucesso.",
       "created": "Despesa criada com sucesso.",
       "deleted": "Despesa excluída com sucesso."
@@ -391,7 +391,7 @@
         "description": "Digite a descrição da contribuição"
       }
     },
-    "messages": {
+    "message": {
       "updated": "Contribuição atualizada com sucesso.",
       "created": "Contribuição criada com sucesso.",
       "deleted": "Contribuição excluída com sucesso."
